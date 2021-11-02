@@ -5,7 +5,7 @@ const host = process.env.HOST || '0.0.0.0'
 const port = process.env.PORT || 8081
 
 const cors_proxy = createServer({
-    originWhitelist: ['http://localhost:8080'],
+    originWhitelist: [],
     removeHeaders: ['cookie', 'cookie2']
   })
   

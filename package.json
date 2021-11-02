@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "cors-anywhere": "^0.4.4",
+    "dotenv": "^10.0.0",
     "nodemon": "^2.0.14",
     "snowpack": "^3.8.8",
     "ube": "^0.2.1",
