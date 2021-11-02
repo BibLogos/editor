@@ -1,0 +1,14 @@
+version: '3'
+services:
+  db:
+    image: "stain/jena-fuseki:4.0.0"
+    ports:
+      - "3030:3030"
+    volumes:
+      - ./docker/facts.ttl:/fuseki/configuration/facts.ttl
+      - ./docker/shiro.ini:/jena-fuseki/shiro.ini
+      - jena:/fuseki
+    environment:
+      - ADMIN_PASSWORD=${JENA_PASSWORD}
+volumes:
+  jena:
