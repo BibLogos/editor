@@ -1,6 +1,7 @@
-import {HTML, render, html} from 'ube';
+import { HTML, render, html } from 'ube';
 import { selectMaker } from '../Helpers/selectMaker'
 import { ApiBible } from '../Services/ApiBible';
+import { BibleReference } from '../types';
 
 export type Bible = {
     abbreviation: string,
@@ -29,27 +30,26 @@ export type Language = {
 
 export class BiblePicker extends HTML.Div {
 
-    private current: {
-        bible: string
-        language: string
-        book: string
-        chapter: number
-    }
+    private current: BibleReference
 
     private languages: Array<Language>
     private bibles: Array<Bible>
     private books: Array<any>
     private chapters: Array<any>
 
-    private dataset: any
+    private removeAttribute: any
+    private setAttribute: any
+    private dispatchEvent: any
 
     private allBibles: Array<Bible>
     private select: typeof selectMaker
 
     public isWorking: boolean
 
+    private previousValue
+
     async upgradedCallback() {
-        this.current = { bible: '06125adad2d5898a-01', language: 'eng', book: 'GEN', chapter: 1 }
+        this.current = { bible: '06125adad2d5898a-01', language: 'eng', book: 'GEN', chapter: 'intro' }
         this.isWorking = true
         this.select = selectMaker.bind(this)
         this.draw()
@@ -60,7 +60,7 @@ export class BiblePicker extends HTML.Div {
         await this.language('eng')
         await this.bible('06125adad2d5898a-01')
         await this.book('GEN', this.cid)
-        await this.chapter('intro')
+        await this.chapter('intro', this.cid)
 
         this.isWorking = false
 
@@ -92,31 +92,45 @@ export class BiblePicker extends HTML.Div {
         this.chapters = await ApiBible.getChapters(this.current.bible, this.current.book)
 
         const currentChapterExistsInSelectedBook = this.chapters.find(chapter => chapter.id === this.current.chapter)
-        await this.chapter(currentChapterExistsInSelectedBook ? this.current.chapter : this.chapters[0].id)
+        await this.chapter(currentChapterExistsInSelectedBook ? this.current.chapter : this.chapters[0].id.split('.')[1], this.cid)
     }
 
-    async chapter (value) {
+    async chapter (value, _cacheKey) {
         this.current.chapter = value
+
+        const currentString = JSON.stringify(this.current)
+        const previousString = JSON.stringify(this.previousValue)
+
+        if (currentString !== previousString) {
+            this.previousValue = Object.assign({}, this.current)
+            this.dispatchEvent(new CustomEvent('update', {
+                detail: this.current
+            }))
+        }
+    }
+
+    get value () {
+        return this.current
     }
 
     draw () {
-        if (this.isWorking) {
-            for (const [key, value] of Object.entries(this.current)) {
-                delete this.dataset[key]
-            }   
-        }
-        else {
-            for (const [key, value] of Object.entries(this.current)) {
-                this.dataset[key] = value
-            }    
-        }
+        for (const [key, value] of Object.entries(this.current)) {
+            this.isWorking ? this.removeAttribute(key, value) : this.setAttribute(key, value)
+        }   
+
+        const transformedChapters = (this.chapters ?? []).map(chapter => {
+            return {
+                id: chapter.id.split('.')[1],
+                name: chapter.number
+            }
+        })
 
         render(this, html`
             ${this.isWorking ? html`loading...` : html`
                 ${this.languages ? this.select(this.languages, 'language', this.current) : null}
                 ${this.bibles ? this.select(this.bibles, 'bible', this.current) : null}
                 ${this.books ? this.select(this.books, 'book', this.current) : null}
-                ${this.chapters ? this.select(this.chapters, 'chapter', this.current, 'number', 'number') : null}            
+                ${this.chapters ? this.select(transformedChapters, 'chapter', this.current) : null}            
             `}
 
         `)

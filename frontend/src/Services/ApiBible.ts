@@ -48,6 +48,18 @@ export class ApiBibleClass {
             throw new Error('Could not fetch chapters from api.bible')
         }
     }
+
+    @cache()
+    async getVerses (bibleId: string, bookId: string, chapterId: string) {
+        try {
+            const response = await fetch(`${env.PROXY}/https://api.scripture.api.bible/v1/bibles/${bibleId}/chapters/${`${bookId}.${chapterId}?content-type=json&include-verse-spans=true&include-notes=true`}`)
+            const { data } = await response.json()
+            return data
+        }
+        catch (exception) {
+            throw new Error('Could not fetch verses from api.bible')
+        }
+    }
 }
 
 export const ApiBible = new ApiBibleClass()

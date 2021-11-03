@@ -13,7 +13,7 @@ export const renderApp = async () => {
         }
     }
     catch (exception) {
-        render(document.body, html`<h3>Exception: ${exception}</h3>`)
+        render(document.body, html`<h3>Exception: ${exception.message}</h3>`)
     }
 }
 
