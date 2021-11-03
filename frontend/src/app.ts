@@ -21,7 +21,9 @@ const previousLogin = localStorage.auth
 
 if (previousLogin) {
     const [username, password] = previousLogin.split(':')
-    Authentication.login(username, password)
+    Authentication.login(username, password).then((stillValid: boolean) => {
+        if (!stillValid) goTo('/login')
+    })
 }
 
 if (!Authentication.isLoggedIn()) goTo('/login')
