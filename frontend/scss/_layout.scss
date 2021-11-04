@@ -1,0 +1,24 @@
+body {
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 200px 200px 200px 1fr;
+    grid-template-rows: 100px 100px auto;
+    grid-template-areas: "left top top top right"
+    "left center center center right"
+    "left bottom bottom bottom right"
+    ;
+}
+
+.page-title {
+    grid-area: top;
+}
+
+.bible-picker {
+    grid-area: center;
+}
+
+
+.bible-verses {
+    grid-area: bottom;
+}

@@ -2,6 +2,7 @@ import { render, html } from 'ube'
 import { goTo, Router } from './Core/Router'
 import { Authentication } from './Services/Authentication'
 
+let previousRoute = null
 export const renderApp = async () => {
     try {
         const route = await Router.resolve({ pathname: location.pathname })
@@ -9,7 +10,12 @@ export const renderApp = async () => {
             location.pathname = route.redirect()
         }
         else {
-            render(document.body, route.template())
+            if (previousRoute?.unload) previousRoute.unload()
+            if (previousRoute !== route && route.beforeTemplate) route.beforeTemplate()
+            await render(document.body, route.template())
+            if (previousRoute !== route && route.afterTemplate) route.afterTemplate()
+
+            previousRoute = route
         }
     }
     catch (exception) {

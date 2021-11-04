@@ -1,9 +1,17 @@
-import { html } from 'ube';
+import { html, render } from 'ube';
 
 const tags = {
     'para': (part) => html`<p class=${part?.attrs?.style}>${part.items.map(recurse)}</p>`,
     'verse-span': (part) => {
-        return html`<span class=${part?.attrs?.style}>${part.items.map(recurse)}</span>`
+        return html`<span verse=${part.attrs?.verseId} class=${part?.attrs?.style}>${part.items.map(recurse)}</span>`
+    },
+    'note': (part) => {
+        // console.log(part)
+        return html`<span class=${part?.attrs?.style}></span>`
+    },
+    'ref': (part) => {
+        // console.log(part)
+        return html`<span class=${part?.attrs?.style}></span>`
     },
     'verse': (part) => {
         return part.attrs?.number ?
@@ -24,9 +32,7 @@ const recurse = (part) => {
     }
 
     if (part.type === 'text') {
-        if (part.attrs?.verseId) return html`${part.text.split(' ').map((word, index) => html`
-            <span onclick=${() => console.log(part.attrs?.verseId, index + 1)}>${word} </span>
-        `)}`
+        if (part.attrs?.verseId) return html`<span verse=${part.attrs?.verseId}>${part.text}</span>`
 
         return part.text
     }

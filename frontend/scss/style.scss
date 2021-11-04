@@ -1,4 +1,6 @@
 @import './scripture-style/scripture-styles.scss';
+@import './layout';
+@import './components/selection-popup';
 
 body {
     padding: 0;
@@ -6,4 +8,8 @@ body {
 
 .bible-picker {
     height: 100px;
+}
+
+.v {
+    user-select: none;
 }

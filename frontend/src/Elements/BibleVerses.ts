@@ -9,6 +9,7 @@ export class BibleVerses extends HTML.Div {
     private debouncedDraw: any
     private versesMap: Map<string, any>
     private getAttribute: any
+    private classList: any
 
     public reference: BibleReference
     static get observedAttributes() { return ['bible', 'book', 'chapter'] }
@@ -20,7 +21,7 @@ export class BibleVerses extends HTML.Div {
     async upgradedCallback() {
         this.versesMap = new Map()
         this.debouncedDraw = debounce(this.draw.bind(this), 200)
-
+        this.classList.add('bible-verses')
         this.draw()
     }
 
