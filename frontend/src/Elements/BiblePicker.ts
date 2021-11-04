@@ -31,6 +31,7 @@ export type Language = {
 export class BiblePicker extends HTML.Div {
 
     private current: BibleReference
+    private classList: any
 
     private languages: Array<Language>
     private bibles: Array<Bible>
@@ -52,6 +53,7 @@ export class BiblePicker extends HTML.Div {
         this.current = { bible: '06125adad2d5898a-01', language: 'eng', book: 'GEN', chapter: 'intro' }
         this.isWorking = true
         this.select = selectMaker.bind(this)
+        this.classList.add('bible-picker')
         this.draw()
 
         this.languages = await ApiBible.getLanguages()

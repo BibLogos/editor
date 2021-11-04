@@ -9,7 +9,6 @@ export class BibleVerses extends HTML.Div {
     private debouncedDraw: any
     private versesMap: Map<string, any>
     private getAttribute: any
-    private classList: any
 
     public reference: BibleReference
     static get observedAttributes() { return ['bible', 'book', 'chapter'] }
@@ -36,7 +35,6 @@ export class BibleVerses extends HTML.Div {
         if (isComplete && !this.versesMap.get(cid)) {
             ApiBible.getVerses(bible, book, chapter).then(verses => {
                 this.versesMap.set(cid, verses.content)
-                console.log(verses)
                 this.draw()
             })
         }
