@@ -1,13 +1,17 @@
 @import './scripture-style/scripture-styles.scss';
 @import './layout';
 @import './components/selection-popup';
+@import './components/select';
+@import './components/bible-picker';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
 body {
     padding: 0;
-}
-
-.bible-picker {
-    height: 100px;
 }
 
 .v {

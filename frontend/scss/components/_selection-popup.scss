@@ -1,7 +1,7 @@
 .selection-popup {
     position: absolute;
     background-color: red;
-    left: var(--selection-popup-left);
-    top: var(--selection-popup-top);
-    transform: translateX(-50%);
+    left: var(--selection-popup-x);
+    top: var(--selection-popup-y);
+    transform: translate(-50%, -100%) translateY(-20px);
 }

@@ -1,9 +1,14 @@
+html {
+    height: 100%;
+}
+
 body {
+    min-height: 100%;
     padding: 0;
     margin: 0;
     display: grid;
-    grid-template-columns: 1fr 200px 200px 200px 1fr;
-    grid-template-rows: 100px 100px auto;
+    grid-template-columns: 1fr 300px 300px 300px 1fr;
+    grid-template-rows: auto auto 1fr;
     grid-template-areas: "left top top top right"
     "left center center center right"
     "left bottom bottom bottom right"
@@ -17,7 +22,6 @@ body {
 .bible-picker {
     grid-area: center;
 }
-
 
 .bible-verses {
     grid-area: bottom;

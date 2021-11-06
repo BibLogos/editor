@@ -1,31 +1,9 @@
 import { html } from 'ube'
-import { Route, BibleReference } from '../types'
+import { Route } from '../types'
 import { BiblePicker } from '../Elements/BiblePicker'
 import { BibleVerses } from '../Elements/BibleVerses'
 import { renderApp } from '../app'
-import { unique } from '../Helpers/unique'
-
-const getVersesFromSelection = (selection: Selection, root) => {
-    const contained = []
-    const nodeIterator = document.createNodeIterator(root, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT)
-    
-    while (nodeIterator.nextNode()) {
-        const node = nodeIterator.referenceNode
-        if (selection.containsNode(node)) contained.push(node)
-    }
-
-    const verses = []
-    for (const node of contained) {
-        const element = node.nodeName === '#text' ? node.parentElement : node
-        const reference = element.hasAttribute('verse') ? element.getAttribute('verse') : element.closest('[verse]')?.getAttribute('verse')
-        if (reference) {
-            const verse = parseInt(reference.split('.').pop())
-            verses.push(verse)
-        }
-    }
-
-    return verses.filter(Boolean).filter(unique)
-}
+import { getVersesFromSelection } from '../Helpers/getVersesFromSelection'
 
 export const Editor: Route = {
 
@@ -40,9 +18,10 @@ export const Editor: Route = {
             const verses = getVersesFromSelection(selection, this.bibleVersesElement)
             const startRange = selection.getRangeAt(0)
             const boundingRect = startRange.getBoundingClientRect()
+            
             document.body.setAttribute('style', `
-                --selection-popup-left: ${boundingRect.left + (boundingRect.width / 2)}px;
-                --selection-popup-top: ${boundingRect.bottom + 20}px;
+                --selection-popup-x: ${boundingRect.left + (boundingRect.width / 2)}px;
+                --selection-popup-y: ${boundingRect.top + document.documentElement.scrollTop}px;
             `)
 
             console.log(boundingRect)
@@ -63,7 +42,9 @@ export const Editor: Route = {
         return html`
             <h1 class="page-title">Editor</h1>
             <div class="selection-popup">
-                Hello!
+                <button>Subject</button>
+                <button>Predicate</button>
+                <button>Object</button>
             </div>
             <${BiblePicker} onupdate=${(event) => { 
                 this.reference = event.target.value
