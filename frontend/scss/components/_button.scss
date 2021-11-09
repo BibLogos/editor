@@ -1,0 +1,15 @@
+.button {
+    padding: 10px;
+    border-radius: var(--radius);
+    border: 1px solid var(--color-gray-dark);
+    background-color: var(--color-primary);
+    cursor: pointer;
+    font-size: 16px;
+    text-transform: uppercase;
+    font-family: "Noto Serif", serif;
+    transition: background-color .4s ease-in-out;
+
+    &:hover {
+        background-color: var(--color-secondary);
+    }
+}

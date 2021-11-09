@@ -1,32 +1,7 @@
 import { HTML, render, html } from 'ube';
 import { selectMaker } from '../Helpers/selectMaker'
 import { ApiBible } from '../Services/ApiBible';
-import { BibleReference } from '../types';
-
-export type Bible = {
-    abbreviation: string,
-    abbreviationLocal: string,
-    audioBibles: Array<any>,
-    countries: Array<any>,
-    dblId: string,
-    description: string,
-    descriptionLocal: string,
-    id: string,
-    language: Language,
-    name: string,
-    nameLocal: string,
-    relatedDbl: string,
-    type: string,
-    updatedAt: string
-}
-
-export type Language = {
-    id: string,
-    name: string,
-    nameLocal: string,
-    script: string,
-    scriptDirection: string
-}
+import { BibleReference, Language, Bible } from '../types';
 
 export class BiblePicker extends HTML.Div {
 
@@ -134,13 +109,14 @@ export class BiblePicker extends HTML.Div {
         })
 
         render(this, html`
-            ${this.isWorking ? html`loading...` : html`
-                ${this.languages ? this.select(this.languages, 'language', this.current) : null}
-                ${this.bibles ? this.select(this.bibles, 'bible', this.current) : null}
-                ${this.books ? this.select(this.books, 'book', this.current) : null}
-                ${this.chapters ? this.select(transformedChapters, 'chapter', this.current) : null}            
-            `}
-
+            <div class="inner">
+                ${this.isWorking ? html`loading...` : html`
+                    ${this.languages ? this.select('Language', this.languages, 'language', this.current) : null}
+                    ${this.bibles ? this.select('Bible', this.bibles, 'bible', this.current) : null}
+                    ${this.books ? this.select('Book', this.books, 'book', this.current) : null}
+                    ${this.chapters ? this.select('Chapter', transformedChapters, 'chapter', this.current) : null}            
+                `}
+            </div>
         `)
     }
 }

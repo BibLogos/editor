@@ -1,5 +1,17 @@
 .bible-picker {
+    background: var(--color-gray-light);
+    align-content: flex-start;
+    padding: 20px;
     display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
+    align-items: center;
+    position: sticky;
+    top: 0;
+
+    .inner {
+        width: 100%;
+        margin-inline: auto;
+        justify-content: center;
+        display: flex;
+        gap: 20px;    
+    }
 }

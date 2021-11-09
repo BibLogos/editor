@@ -11,10 +11,12 @@ export class LoginForm extends HTML.Div {
     private username: string
     private password: string
     private hasError = false
+    private classList: any
 
     upgradedCallback() {
         this.username = ''
         this.password = ''
+        this.classList.add('login-form')
         this.draw()
     }
 
@@ -32,10 +34,22 @@ export class LoginForm extends HTML.Div {
     draw () {
         render(this, html`
             <form class="login-form" onsubmit=${this.onsubmit.bind(this)}>
-                <input type="text" .value=${this.username ?? ''} onkeyup=${updateUsername.bind(this)} />
-                <input type="password" .value=${this.password ?? ''} onkeyup=${updatePassword.bind(this)} />
-                ${this.hasError ? html`<span>Woops something is off...</span>` : null}
-                <button>Login</button>
+                <div class="inner">
+
+                    <div class="field">
+                        <label class="field-label">Username</label>
+                        <input type="text" .value=${this.username ?? ''} onkeyup=${updateUsername.bind(this)} />
+                    </div>
+        
+                    <div class="field">
+                        <label class="field-label">Password</label>
+                        <input type="password" .value=${this.password ?? ''} onkeyup=${updatePassword.bind(this)} />
+                    </div>
+
+                    ${this.hasError ? html`<span>Woops something is off...</span>` : null}
+
+                    <button class="button">Login</button>
+                </div>
             </form>
         `)
     }

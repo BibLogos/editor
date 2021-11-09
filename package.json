@@ -9,20 +9,20 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC",
+  "license": "GPL-3.0-only",
   "dependencies": {
     "apicache": "^1.6.3",
     "cors-anywhere": "^0.4.4",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-http-proxy": "^1.6.3",
-    "nodemon": "^2.0.14",
-    "redis": "^3.1.2",
-    "snowpack": "^3.8.8",
-    "ube": "^0.2.1",
-    "universal-router": "^9.1.0"
+    "redis": "^3.1.2"
   },
   "devDependencies": {
-    "@snowpack/plugin-sass": "^1.4.0"
+    "@snowpack/plugin-sass": "^1.4.0",
+    "snowpack": "^3.8.8",
+    "nodemon": "^2.0.14",
+    "ube": "^0.2.1",
+    "universal-router": "^9.1.0"
   }
 }

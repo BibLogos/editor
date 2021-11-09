@@ -1,0 +1,13 @@
+.field {
+    display: flex;
+    flex-direction: column;
+}
+
+.field-label {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 1px;
+    margin-block-end: 8px;
+    color: var(--color-gray-dark)
+}

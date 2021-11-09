@@ -1,28 +1,18 @@
 html {
     height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-    min-height: 100%;
-    padding: 0;
     margin: 0;
-    display: grid;
-    grid-template-columns: 1fr 300px 300px 300px 1fr;
-    grid-template-rows: auto auto 1fr;
-    grid-template-areas: "left top top top right"
-    "left center center center right"
-    "left bottom bottom bottom right"
-    ;
+    padding: 0;
+    min-height: 100%;
+    font-family: "Noto Serif", serif;
 }
 
-.page-title {
-    grid-area: top;
-}
-
-.bible-picker {
-    grid-area: center;
-}
-
-.bible-verses {
-    grid-area: bottom;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }

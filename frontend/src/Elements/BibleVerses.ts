@@ -41,7 +41,9 @@ export class BibleVerses extends HTML.Div {
         }
 
         render(this, html`
-            ${isComplete && this.versesMap.has(cid) ? bibleScripture(this.versesMap.get(cid)) : html`loading...`}
+            <div class="inner">
+                ${isComplete && this.versesMap.has(cid) ? bibleScripture(this.versesMap.get(cid)) : html`loading...`}
+            </div>
         `)
     }
 }

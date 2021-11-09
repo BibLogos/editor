@@ -20,3 +20,28 @@ export type BibleReference = {
     book: string
     chapter: string
 }
+
+export type Bible = {
+    abbreviation: string,
+    abbreviationLocal: string,
+    audioBibles: Array<any>,
+    countries: Array<any>,
+    dblId: string,
+    description: string,
+    descriptionLocal: string,
+    id: string,
+    language: Language,
+    name: string,
+    nameLocal: string,
+    relatedDbl: string,
+    type: string,
+    updatedAt: string
+}
+
+export type Language = {
+    id: string,
+    name: string,
+    nameLocal: string,
+    script: string,
+    scriptDirection: string
+}

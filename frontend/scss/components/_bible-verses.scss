@@ -1,0 +1,13 @@
+.bible-verses {
+    padding: 60px;
+
+    .inner {
+        max-width: var(--max-width);
+        width: 100%;
+        margin-inline: auto;        
+    }
+
+    ::selection { 
+        background: var(--color-primary); 
+    }
+}

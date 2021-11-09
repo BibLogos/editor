@@ -1,0 +1,12 @@
+.login-form {
+    padding: 60px;
+
+    .inner {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        max-width: 600px;
+        width: 100%;
+        margin-inline: auto;
+    }
+}
