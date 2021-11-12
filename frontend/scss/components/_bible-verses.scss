@@ -1,5 +1,6 @@
 .bible-verses {
     padding: 60px;
+    user-select: none;
 
     .inner {
         max-width: var(--max-width);
@@ -7,7 +8,35 @@
         margin-inline: auto;        
     }
 
-    ::selection { 
-        background: var(--color-primary); 
+    .word.selected {
+        position: relative;
+
+        &:after {
+            border-radius: 5px;
+            position: absolute;
+            top: 0;
+            left: -6px;
+            right: 3px;
+            content: '';
+            display: block;
+            height: 100%;
+            background-color: var(--color-primary);
+            z-index: -10;
+        }
     }
+
+    .word.selected + .word.selected:after {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+
+    .v .word.selected:after {
+        display: none;
+    }
+}
+
+.selection-area {
+    background: rgba(46, 115, 252, 0.11);
+    border: 2px solid rgba(98, 155, 255, 0.81);
+    border-radius: 0.1em;
 }

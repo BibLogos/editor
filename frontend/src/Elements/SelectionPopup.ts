@@ -7,13 +7,13 @@ export class SelectionPopup extends HTML.Div {
 
     async upgradedCallback() {
         this.classList.add('selection-popup')
-        document.addEventListener('mouseup', this.onmouseup.bind(this))
+        // document.addEventListener('mouseup', this.onmouseup.bind(this))
         this.draw()
     }
 
-    async downgradedCallback () {
-        document.removeEventListener('mouseup', this.onmouseup.bind(this))
-    }
+    // async downgradedCallback () {
+    //     document.removeEventListener('mouseup', this.onmouseup.bind(this))
+    // }
 
     onmouseup () {
         const selection = document.getSelection()
@@ -28,6 +28,7 @@ export class SelectionPopup extends HTML.Div {
         const boundingRect = startRange.getBoundingClientRect()
         
         document.documentElement.style.setProperty('--selection-popup', '1')
+        document.documentElement.dataset.selectionPopup = true.toString()
         document.documentElement.style.setProperty('--selection-popup-x', `${boundingRect.left + (boundingRect.width / 2)}px`)
         document.documentElement.style.setProperty('--selection-popup-y', `${boundingRect.top + document.documentElement.scrollTop}px`)
 
@@ -36,6 +37,7 @@ export class SelectionPopup extends HTML.Div {
 
     clearPopup () {
         document.documentElement.style.setProperty('--selection-popup', '0')
+        document.documentElement.dataset.selectionPopup = false.toString()
     }
 
     draw () {

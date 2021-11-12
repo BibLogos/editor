@@ -1,25 +1,39 @@
 .selection-popup {
     position: absolute;
-    background-color: var(--color-gray-light);
-    padding: 20px;
+    background-color: var(--color-gray-dark);
+    padding: 5px;
     left: var(--selection-popup-x);
     top: var(--selection-popup-y);
     transform: translate(-50%, -100%) translateY(-20px);
     opacity: var(--selection-popup);
     border-radius: var(--radius);
     display: flex;
-    gap: 10px;
     z-index: 20;
 
     &:after {
         content: '';
         width: 12px;
         height: 8px;
-        background-color: var(--color-gray-light);
+        background-color: var(--color-gray-dark);
         clip-path: polygon(100% 0%, 0 0%, 50% 100%);
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
         top: 100%;
     }
+
+    .button + .button {
+        margin-left: -1px;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+
+    .button:not(:last-child) {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+}
+
+[data-selection-popup="false"] .selection-popup {
+    pointer-events: none;
 }
