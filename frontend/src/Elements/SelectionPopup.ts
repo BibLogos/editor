@@ -1,50 +1,57 @@
 import { HTML, render, html } from 'ube';
-import { getVersesFromSelection } from '../Helpers/getVersesFromSelection'
+import { elementsToRange } from '../Helpers/elementsToRange';
 
 export class SelectionPopup extends HTML.Div {
 
     private classList: any
+    private dispatchEvent: any
+    private selectedElements: Array<HTMLElement>
 
     async upgradedCallback() {
         this.classList.add('selection-popup')
-        // document.addEventListener('mouseup', this.onmouseup.bind(this))
         this.draw()
     }
 
-    // async downgradedCallback () {
-    //     document.removeEventListener('mouseup', this.onmouseup.bind(this))
-    // }
-
-    onmouseup () {
-        const selection = document.getSelection()
-
-        const text = selection.toString()
-        if (!text) return this.clearPopup()
-
-        const verses = getVersesFromSelection(selection, document.querySelector('.bible-verses'))
-        if (!verses.length) return this.clearPopup()
-
-        const startRange = selection.getRangeAt(0)
-        const boundingRect = startRange.getBoundingClientRect()
+    trigger (selectedElements: Array<HTMLElement> = []) {
+        this.selectedElements = selectedElements
+        if (selectedElements.length === 0) return this.clear()
+        const element = selectedElements.at(-1)
+        const boundingRect = element.getBoundingClientRect()
         
         document.documentElement.style.setProperty('--selection-popup', '1')
         document.documentElement.dataset.selectionPopup = true.toString()
         document.documentElement.style.setProperty('--selection-popup-x', `${boundingRect.left + (boundingRect.width / 2)}px`)
         document.documentElement.style.setProperty('--selection-popup-y', `${boundingRect.top + document.documentElement.scrollTop}px`)
-
-        console.log(selection)
     }
 
-    clearPopup () {
+    clear () {
         document.documentElement.style.setProperty('--selection-popup', '0')
         document.documentElement.dataset.selectionPopup = false.toString()
     }
 
+    action (type: string) {
+        return () => {
+            const text = this.selectedElements.map(word => word.innerText).join('').trim()
+            const regex = /[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g
+            const textTrimmed = text.replace(regex, '')
+
+            this.dispatchEvent(new CustomEvent('action', {
+                detail: {
+                    range: elementsToRange(this.selectedElements),
+                    clear: () => this.clear(),
+                    type,
+                    text: textTrimmed,
+                    elements: this.selectedElements
+                }
+            }))
+        }
+    }
+
     draw () {
         render(this, html`
-            <button class="button">Subject</button>
-            <button class="button">Predicate</button>
-            <button class="button">Object</button>
+            <button class="button" onclick=${this.action('subject').bind(this)}>Subject</button>
+            <button class="button" onclick=${this.action('predicate').bind(this)}>Predicate</button>
+            <button class="button" onclick=${this.action('object').bind(this)}>Object</button>
         `)
     }
 }

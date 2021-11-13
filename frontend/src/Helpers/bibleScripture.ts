@@ -1,16 +1,16 @@
 import { html, render } from 'ube';
 
+let counters = new Map()
+
 const tags = {
-    'para': (part) => html`<p class=${part?.attrs?.style}>${part.items.map(recurse)}</p>`,
+    'para': (part) => html`<p class=${`verse ${part?.attrs?.style ?? ''}`}>${part.items.map(recurse)}</p>`,
     'verse-span': (part) => {
-        return html`<span verse=${part.attrs?.verseId} class=${part?.attrs?.style}>${part.items.map(recurse)}</span>`
+        return html`<span verse=${part.attrs?.verseId} class=${`verse ${part?.attrs?.style ?? ''}`}>${part.items.map(recurse)}</span>`
     },
     'note': (part) => {
-        // console.log(part)
         return html`<note class=${part?.attrs?.style}></note>`
     },
     'ref': (part) => {
-        // console.log(part)
         return html`<span class=${part?.attrs?.style}></span>`
     },
     'verse': (part) => {
@@ -32,7 +32,19 @@ const recurse = (part) => {
     }
 
     if (part.type === 'text') {
-        return html`${part.text.split(' ').map((word, index) => html`<span verse=${part.attrs?.verseId} index=${index + 1} class="word">${word} </span>`)}`
+        const words = part.text.split(' ')
+        return html`${words.map((word, partIndex) => {
+            let index = counters.get(part.attrs?.verseId) ?? 1
+
+            const template = html`<span verse=${part.attrs?.verseId} index=${index} class="word">${word}${partIndex + 1 !== words.length ? ' ' : ''}</span>`
+
+            if (part.attrs?.verseId) {
+                index++
+                counters.set(part.attrs?.verseId, index)    
+            }
+
+            return template
+        })}`
     }
 
     console.error(part)
@@ -40,6 +52,7 @@ const recurse = (part) => {
 }
 
 export const bibleScripture = (parts) => {
+    counters.clear()
     const inner = parts.map(recurse)
     return html`<div class="scripture-styles">${inner}</div>`
 }

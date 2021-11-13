@@ -11,7 +11,7 @@ export const renderApp = async () => {
         }
         else {
             if (previousRoute?.unload) previousRoute.unload()
-            if (previousRoute !== route && route.beforeTemplate) route.beforeTemplate()
+            if (previousRoute !== route && route.load) route.load()
             await render(document.body, route.template())
             if (previousRoute !== route && route.afterTemplate) route.afterTemplate()
 

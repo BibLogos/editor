@@ -1,10 +1,9 @@
-.bible-picker {
+.fact-basket {
     background: var(--color-gray-light);
-    align-content: flex-start;
-    padding: 20px;
+    flex: 0 0 auto;
     display: flex;
     align-items: center;
-    flex: 0 0 auto;
+    padding: 20px;
 
     .inner {
         width: 100%;

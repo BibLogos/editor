@@ -45,3 +45,10 @@ export type Language = {
     script: string,
     scriptDirection: string
 }
+
+export type FactPart = {
+    text: string,
+    clear?: Function,
+    elements: Array<HTMLElement>,
+    type: 'subject' | 'predicate' | 'object'
+}

@@ -1,8 +1,8 @@
 :root {
-    --select-border: var(--color-gray-dark);
-    --select-focus: blue;
-    --select-arrow: var(--select-border);
-  }
+  --select-border: var(--color-gray-dark);
+  --select-focus: blue;
+  --select-arrow: var(--select-border);
+}
 
 select {
     // A reset of styles, including removing the default dropdown arrow
@@ -110,17 +110,11 @@ select[multiple] {
     }
 }
 
-.select--disabled {
-  cursor: not-allowed;
-  background-color: #eee;
-  background-image: linear-gradient(to top, #ddd, #eee 33%);
-}
-
-label {
-  font-size: 1.125rem;
-  font-weight: 500;
-}
-
-.select + label {
-  margin-top: 2rem;
+.select.mini {
+  font-size: .8rem;
+  
+  select {
+    line-height: 16px;
+    padding: 0;
+  }
 }

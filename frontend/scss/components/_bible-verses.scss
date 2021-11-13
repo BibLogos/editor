@@ -1,11 +1,18 @@
 .bible-verses {
     padding: 60px;
     user-select: none;
+    flex: 10 1 auto;
+    max-height: 100%;
+    overflow: auto;
 
     .inner {
         max-width: var(--max-width);
         width: 100%;
         margin-inline: auto;        
+    }
+
+    .word {
+        cursor: pointer;
     }
 
     .word.selected {

@@ -25,17 +25,18 @@ export class BiblePicker extends HTML.Div {
     private previousValue
 
     async upgradedCallback() {
-        let [ language, bible, book, chapter ] = location.hash.substr(1).split('/')
+        let [ language, bible, book, chapter, verse ] = location.hash.substr(1).split('/')
         if (!language) language = 'eng'
         if (!bible) bible = '06125adad2d5898a-01'
         if (!book) book = 'GEN'
         if (!chapter) chapter = 'intro'
+        if (!verse) verse = '1'
 
         this.current = { bible, language, book, chapter }
         this.isWorking = true
         this.select = selectMaker.bind(this)
         this.classList.add('bible-picker')
-        this.draw()
+        await this.draw()
 
         this.languages = await ApiBible.getLanguages()
         this.allBibles = await ApiBible.getBibles()
@@ -47,7 +48,7 @@ export class BiblePicker extends HTML.Div {
 
         this.isWorking = false
 
-        this.draw()
+        await this.draw()
     }
 
     get cid () {
@@ -96,7 +97,7 @@ export class BiblePicker extends HTML.Div {
         return this.current
     }
 
-    draw () {
+    async draw () {
         for (const [key, value] of Object.entries(this.current)) {
             this.isWorking ? this.removeAttribute(key, value) : this.setAttribute(key, value)
         }   
@@ -108,7 +109,7 @@ export class BiblePicker extends HTML.Div {
             }
         })
 
-        render(this, html`
+        await render(this, html`
             <div class="inner">
                 ${this.isWorking ? html`loading...` : html`
                     ${this.languages ? this.select('Language', this.languages, 'language', this.current) : null}
