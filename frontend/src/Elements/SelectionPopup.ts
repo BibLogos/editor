@@ -1,18 +1,31 @@
 import { HTML, render, html } from 'ube';
 import { elementsToRange } from '../Helpers/elementsToRange';
+import { Database } from '../Services/Database';
 
 export class SelectionPopup extends HTML.Div {
 
     private classList: any
     private dispatchEvent: any
     private selectedElements: Array<HTMLElement>
+    private clearSelection
+    private predicates: Array<{predicate: string, type: string, label: string}>
 
     async upgradedCallback() {
         this.classList.add('selection-popup')
+        this.predicates = await Database.query(`
+        SELECT * { 
+            ?predicate a ?type ;                
+                rdfs:label ?label .
+            { ?predicate a rdfs:Class } UNION { ?predicate a rdfs:Property } .
+        }`)
+
+        console.log(this.predicates)
+
         this.draw()
     }
 
-    trigger (selectedElements: Array<HTMLElement> = []) {
+    trigger (selectedElements: Array<HTMLElement> = [], clearSelection) {
+        this.clearSelection = clearSelection
         this.selectedElements = selectedElements
         if (selectedElements.length === 0) return this.clear()
         const element = selectedElements.at(-1)
@@ -38,7 +51,10 @@ export class SelectionPopup extends HTML.Div {
             this.dispatchEvent(new CustomEvent('action', {
                 detail: {
                     range: elementsToRange(this.selectedElements),
-                    clear: () => this.clear(),
+                    clear: () => {
+                        this.clear()
+                        if (this.clearSelection) this.clearSelection()
+                    },
                     type,
                     text: textTrimmed,
                     elements: this.selectedElements
@@ -49,9 +65,13 @@ export class SelectionPopup extends HTML.Div {
 
     draw () {
         render(this, html`
-            <button class="button" onclick=${this.action('subject').bind(this)}>Subject</button>
-            <button class="button" onclick=${this.action('predicate').bind(this)}>Predicate</button>
-            <button class="button" onclick=${this.action('object').bind(this)}>Object</button>
+            <div class="select">
+                <select>
+                    <option selected disabled>- Choose -</option>
+                    ${this.predicates.map(({ predicate, type, label }) => html`<option value=${`${type}:${predicate}`}>${label}</option>`)}
+                </select>
+                <div class="focus"></div>
+            </div>
         `)
     }
 }

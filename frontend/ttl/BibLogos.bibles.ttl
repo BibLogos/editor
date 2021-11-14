@@ -1,0 +1,8 @@
+@prefix biblogos: <https://biblogos/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+biblogos:KJV a rdfs:Class ;
+    rdfs:label "King James Version" ;
+    rdfs:comment "The King James Bible translation" ;
+    owl:sameAs <https://api.scripture.api.bible/v1/bibles/06125adad2d5898a-01> .

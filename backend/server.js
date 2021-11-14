@@ -19,6 +19,7 @@ const cors_proxy = createCorsServer({
 
 http.createServer(function(req, res) {
   req.headers['api-key'] = process.env.API_BIBLE
+  req.headers['Authorization'] = 'Basic ' + Buffer.from('admin:' + process.env.JENA_PASSWORD).toString('base64')
   cors_proxy.emit('request', req, res)
 }).listen(internalPort, host, function() {
   console.log('Running CORS Anywhere on ' + host + ':' + internalPort)

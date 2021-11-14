@@ -33,7 +33,6 @@ export const Editor: Route = {
                 const { bible, language, book, chapter } = this.reference
                 location.hash = `${language}/${bible}/${book}/${chapter}/${verse}`
             }
-
         }, options)
 
         const verses = [...document.querySelectorAll('.scripture-styles .verse')]
@@ -43,7 +42,7 @@ export const Editor: Route = {
 
         const selector = `.verse[verse="${book}.${chapter}.${verse}"]`
         const verseElement = document.querySelector(selector)
-        verseElement.scrollIntoView()
+        verseElement?.scrollIntoView()
     },
 
     unload: function () {
@@ -66,7 +65,7 @@ export const Editor: Route = {
              ${this.reference ? html`
                 <${BibleVerses} 
                 onloaded=${() => this.attachObserver()}
-                onselection=${(event) => popup.trigger(event.detail.elements)}
+                onselection=${(event) => popup.trigger(event.detail.elements, event.detail.clear)}
                 ref=${element => this.bibleVersesElement = element} 
                 language=${language} bible=${bible} book=${book} chapter=${chapter} verse=${verse} />
             ` : null}

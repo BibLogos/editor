@@ -1,15 +1,25 @@
 import {HTML, render, html} from 'ube';
 import { FactPart } from '../types'
+import { icon } from '../Helpers/icon';
+import { Database } from '../Services/Database';
 
 const factPartTypes = ['subject', 'predicate', 'object']
 
 export class FactBasket extends HTML.Div {
 
     private classList: any
-
     private selections: Array<FactPart>
+    private classes: Array<{type: string, label: string}>
 
-    upgradedCallback () {
+    async upgradedCallback () {
+        this.classes = await Database.query(`
+            SELECT * { 
+                ?type 
+                    a rdfs:Class ;
+                    rdfs:label ?label .
+            }
+        `)
+
         this.classList.add('fact-basket')
         this.selections = []
         this.draw()
@@ -43,7 +53,10 @@ export class FactBasket extends HTML.Div {
     factPart (factPart: FactPart, inner = null) {
         return html`
             <div class="fact-part">
-                ${this.selector(factPart.type)}
+                ${this.selector(factPart.type)} <button onclick=${() => {
+                    this.selections = this.selections.filter(item => item !== factPart)
+                    this.draw()
+                }} class="remove">${icon('close')}</button>
                 ${factPart.text ? html`<span class="text">${factPart.text}</span>` : null}
                 ${inner}
             </div>
@@ -63,8 +76,6 @@ export class FactBasket extends HTML.Div {
     }
 
     draw () {
-        console.log(this.selections)
-
         render(this, html`
             <div class="inner">
                 ${this.selections.length ? html`

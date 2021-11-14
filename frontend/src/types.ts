@@ -52,3 +52,11 @@ export type FactPart = {
     elements: Array<HTMLElement>,
     type: 'subject' | 'predicate' | 'object'
 }
+
+declare global {
+    var Comunica: any;
+}
+
+export type ComunicaExport = {
+    newEngine: Function
+}

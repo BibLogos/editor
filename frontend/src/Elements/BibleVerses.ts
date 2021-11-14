@@ -5,7 +5,6 @@ import { debounce } from '../Helpers/debounce'
 import { bibleScripture } from '../Helpers/bibleScripture'
 import SelectionArea from '@viselect/vanilla'
 import { elementsToRange } from '../Helpers/elementsToRange'
-import { orderBy } from 'natural-orderby'
 
 export class BibleVerses extends HTML.Div {
 
@@ -29,17 +28,17 @@ export class BibleVerses extends HTML.Div {
         this.versesMap = new Map()
         this.debouncedDraw = debounce(this.draw.bind(this), 200)
         this.classList.add('bible-verses')
-        document.body.addEventListener('mouseup', this.bodyClick.bind(this))
+        document.body.addEventListener('mouseup', this.clear.bind(this))
         this.draw()
     }
     
     async downgradedCallback () {
-      document.body.removeEventListener('mouseup', this.bodyClick.bind(this))
+      document.body.removeEventListener('mouseup', this.clear.bind(this))
     }
 
-    bodyClick (event) {
-      const popup = event.target.closest('.selection-popup')
-      if (!event.target.classList.contains('word') && !popup) {
+    clear (event = null) {
+      const popup = event?.target.closest('.selection-popup')
+      if (!event || !event.target.classList.contains('word') && !popup) {
         const selectedWords = this.querySelectorAll('.word.selected')
         for (const selectedWord of selectedWords) selectedWord.classList.remove('selected')
         this.dispatchEvent(new CustomEvent('selection', { detail: { 
@@ -91,7 +90,7 @@ export class BibleVerses extends HTML.Div {
           const range = elementsToRange(elements)
           if (range !== this.range) {
             this.range = range
-            this.dispatchEvent(new CustomEvent('selection', { detail: { range, elements }}))  
+            this.dispatchEvent(new CustomEvent('selection', { detail: { range, elements, clear: () => this.clear() }}))  
           }
         })
     }

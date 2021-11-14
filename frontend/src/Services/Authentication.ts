@@ -20,6 +20,10 @@ export const Authentication = {
         catch {}
         localStorage.auth = validCredentials ? `${username}:${password}` : false
         return validCredentials
+    },
+
+    get auth () {
+        return localStorage.auth
     }
     
 }

@@ -1,0 +1,30 @@
+@prefix biblogos: <https://biblogos/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+
+biblogos: rdf:type owl:Ontology ;
+    dcterms:title "BibLogos ontology" ;
+    dcterms:description """
+    The BibLogos ontology tries to describe some textual facts of the Bible.
+    """ ;
+    vann:preferredNamespacePrefix "biblogos" ;
+    vann:preferredNamespaceURI <https://biblogos.org/> .
+
+biblogos:Parable a rdfs:Class ;
+    rdfs:label "Parable" ;
+    rdfs:comment "A usually short fictitious story that illustrates a moral attitude or a religious principle." .
+
+biblogos:Locality a rdfs:Class ;
+    rdfs:label "Locality" ;
+    rdfs:comment "A town, village, city or any other size of a settlement." .
+
+biblogos:Person a rdfs:Class ;
+    rdfs:label "Person" ;
+    rdfs:comment "A human being mentioned in the Bible." .
+
+biblogos:AlternativeName a rdfs:Property ;
+    rdfs:label "Alternative name" ;
+    rdfs:comment "A secondairy name for a person, a locality etc." .

@@ -13,6 +13,7 @@ export default {
     'frontend/src': '/',
     'frontend/html': '/',
     "frontend/scss": "/",
+    "frontend/ttl": "/ttl",
   },
   plugins: [
     '@snowpack/plugin-sass'

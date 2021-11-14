@@ -8,10 +8,7 @@ export function selectMaker (title, objects: Array<{ id: string, name: string }>
         <div class="select">
             <select onchange=${async (event) => {
                 const value = event.target.value
-                this.isWorking = true
-                this.draw()
                 await this[property](value)
-                this.isWorking = false
                 this.draw()
             }}>
                 ${objects.map(object => html`<option ?selected=${values[property] === object[idField]} value=${object[idField]}>${object[labelField]}</option>`)}
