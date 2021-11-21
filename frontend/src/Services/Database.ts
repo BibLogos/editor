@@ -100,6 +100,21 @@ class DatabaseClass {
     async uriExists (uri) {
         return this.query(`ASK WHERE { <${uri}> ?p ?o }`, [ DATABASE ])
     }
+
+    async getHighlights (bible, book, chapter) {
+        return this.query(`
+        PREFIX biblogos: <https://biblogos.info/ttl/ontology#>
+
+        SELECT ?thing ?reference ?name (COALESCE(?class_predicate, ?property_predicate) as ?predicate) ?comment {
+            ?thing biblogos:reference ?reference .
+            OPTIONAL { ?thing biblogos:name ?name . }
+            OPTIONAL { ?thing biblogos:comment ?comment . }
+            OPTIONAL { ?thing a ?class_predicate . }
+            OPTIONAL { ?thing biblogos:predicate ?property_predicate . }
+            FILTER strstarts(?reference, """${`${book}.${chapter}"""`})
+        }
+    `, [ DATABASE ])
+    }
 }
 
 export const Database = new DatabaseClass()

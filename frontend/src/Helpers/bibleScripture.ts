@@ -1,6 +1,11 @@
-import { html, render } from 'ube';
+import { html as syncHtml } from 'ube';
+import { html } from 'uhtml/async';
+import { referenceProxy } from './referenceProxy'
+import { parseInts } from './parseInts'
+import { stringToColor } from './stringToColor'
 
 let counters = new Map()
+let references
 
 const tags = {
     'para': (part) => html`<p class=${`verse ${part?.attrs?.style ?? ''}`}>${part.items.map(recurse)}</p>`,
@@ -22,7 +27,7 @@ const tags = {
 
 }
 
-const recurse = (part) => {
+const recurse = async (part) => {
     if (part.type == 'tag') {
         if (!tags[part?.name]) {
             console.error(part)
@@ -33,10 +38,16 @@ const recurse = (part) => {
 
     if (part.type === 'text') {
         const words = part.text.split(' ')
-        return html`${words.map((word, partIndex) => {
+        return html`${words.map(async (word, partIndex) => {
+            if (!word) return html``
             let index = counters.get(part.attrs?.verseId) ?? 1
 
-            const template = html`<span verse=${part.attrs?.verseId} index=${index} class="word">${word}${partIndex + 1 !== words.length ? ' ' : ''}</span>`
+            const parts = part.attrs?.verseId ? [...parseInts([...part.attrs?.verseId.split('.'), index])] : []
+            const highlight = part.attrs?.verseId ? references.find(reference => reference.includes(...parts)) : false
+
+            const color = highlight ? highlight.color : null
+
+            const template = html`<span title=${highlight?.object?.comment} style=${color ? `--color: ${color};` : null} verse=${part.attrs?.verseId} index=${index} class=${`word ${highlight ? 'highlight' : ''}`}>${word}${partIndex + 1 !== words.length ? ' ' : ''}</span>`
 
             if (part.attrs?.verseId) {
                 index++
@@ -51,8 +62,9 @@ const recurse = (part) => {
     throw new Error(`Can not handle`)
 }
 
-export const bibleScripture = (parts) => {
+export const bibleScripture = async (parts, highlights: Array<any> = []) => {
+    references = await Promise.all(highlights.map(async highlight => await new referenceProxy(highlight).makeColor()))
     counters.clear()
-    const inner = parts.map(recurse)
-    return html`<div class="scripture-styles">${inner}</div>`
+    const inner = await Promise.all(parts.map(recurse))
+    return syncHtml`<div class="scripture-styles">${inner}</div>`
 }

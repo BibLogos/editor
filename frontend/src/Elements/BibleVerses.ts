@@ -5,11 +5,12 @@ import { debounce } from '../Helpers/debounce'
 import { bibleScripture } from '../Helpers/bibleScripture'
 import { elementsToRange } from '../Helpers/elementsToRange'
 import SelectionArea from '@viselect/vanilla'
+import { Database } from '../Services/Database'
 
 export class BibleVerses extends HTML.Div {
 
     private debouncedDraw: any
-    private versesMap: Map<string, any>
+    private versesMap: Map<string, [any, any]>
     private getAttribute: any
     private classList: any
     private dispatchEvent: any
@@ -52,7 +53,12 @@ export class BibleVerses extends HTML.Div {
       }
     }
 
-    draw () {
+    async redraw () {
+      this.versesMap.clear()
+      this.draw()
+    }
+
+    async draw () {
         const bible = this.getAttribute('bible')
         const book = this.getAttribute('book')
         const chapter = this.getAttribute('chapter')
@@ -60,9 +66,12 @@ export class BibleVerses extends HTML.Div {
         const cid = `${bible}-${book}-${chapter}`
         const isComplete = bible && book && chapter
 
-        if (isComplete && !this.versesMap.get(cid)) {
+        if (isComplete && !this.versesMap.has(cid)) {
             ApiBible.getVerses(bible, book, chapter).then(async verses => {
-                this.versesMap.set(cid, verses.content)
+                const bibleObject = (await ApiBible.getBibles().then(bibles => bibles.find(innerBible => innerBible.id === bible)))
+                const highlights = await Database.getHighlights(bibleObject.abbreviation, book, chapter)
+
+                this.versesMap.set(cid, [verses.content, highlights])
                 await this.draw()
                 this.dispatchEvent(new CustomEvent('loaded'))
             })
@@ -70,7 +79,7 @@ export class BibleVerses extends HTML.Div {
 
         render(this, html`
             <div class='inner'>
-                ${isComplete && this.versesMap.has(cid) ? bibleScripture(this.versesMap.get(cid)) : html`loading...`}
+                ${isComplete && this.versesMap.has(cid) ? await bibleScripture(...this.versesMap.get(cid)) : html`loading...`}
             </div>
         `)
 

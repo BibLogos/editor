@@ -12,6 +12,7 @@ export const Editor: Route = {
     observer: null,
 
     attachObserver: function () {
+        document.addEventListener('rerender-verses', this.rerender.bind(this))
         if (this.observer) this.observer.disconnect()
 
         let options = {
@@ -45,7 +46,12 @@ export const Editor: Route = {
     },
 
     unload: function () {
+        document.removeEventListener('rerender-verses', this.rerender.bind(this))
         this.observer?.disconnect()
+    },
+
+    rerender: function () {
+        this.bibleVersesElement.redraw()
     },
 
     template: function () {

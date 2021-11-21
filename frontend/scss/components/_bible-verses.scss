@@ -15,9 +15,6 @@
 
     .word {
         cursor: pointer;
-    }
-
-    .word.selected {
         position: relative;
 
         &:after {
@@ -29,14 +26,28 @@
             content: '';
             display: block;
             height: 100%;
+            opacity: 0;
             background-color: var(--color-primary);
             z-index: -10;
+        }
+    }
+
+    .word.selected {
+        &:after {
+            opacity: 1;
         }
     }
 
     .word.selected + .word.selected:after {
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
+    }
+
+    .word.highlight {
+        &:after {
+            background-color: var(--color);
+            opacity: 1;
+        }
     }
 
     .v .word.selected:after {

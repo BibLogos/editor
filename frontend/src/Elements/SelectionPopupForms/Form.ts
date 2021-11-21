@@ -59,6 +59,8 @@ export const Form = function (predicateObject) {
             clearState(this)
             document.querySelector('.bible-verses').clear()
 
+            document.dispatchEvent(new CustomEvent('rerender-verses'))
+
             this.remove()
         }}>
             <div class="field">
