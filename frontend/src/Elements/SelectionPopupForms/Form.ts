@@ -11,6 +11,7 @@ export const Form = function (predicateObject) {
         bible: null,
         showCreationForm: false,
         identifierField: null,
+        selectedExistingItem: null,
         form: null,
         newObject: {
             name: this.creatingEvent.text,
@@ -58,9 +59,7 @@ export const Form = function (predicateObject) {
 
             clearState(this)
             document.querySelector('.bible-verses').clear()
-
             document.dispatchEvent(new CustomEvent('rerender-verses'))
-
             this.remove()
         }}>
             <div class="field">
@@ -84,16 +83,33 @@ export const Form = function (predicateObject) {
         <div class="predicate-part">
             ${state.isSearching ? html`<label>Searching...</label>` : html``}
 
-            ${state.results?.length ? html`
+            ${state.results?.length && !state.selectedExistingItem ? html`
                 <label>Select from the list:</label>
                 <ul class="result-list">
-                    ${state.results.map(result => html`<li class="result-item">${result.name}</li>`)}
+                    ${state.results.map(result => html`<li class="result-item" onclick=${(event) => {
+                        state.selectedExistingItem = result
+                        this.draw()
+                    }}>${result.name} ${result.comment ? html` <em>(${result.comment})</em>` : null}</li>`)}
                 </ul>
 
                 <label>or:</label>
             ` : html``}
 
-            ${!state.isSearching? html`
+            ${state.selectedExistingItem ? html`
+            <div class="result-item">
+            ${state.selectedExistingItem.name} ${state.selectedExistingItem.comment ? html` <em>(${state.selectedExistingItem.comment})</em>` : null}
+            </div>
+
+            <button onclick=${() => { 
+                Database.appendFactReference(state.selectedExistingItem.predicate, this.creatingEvent.range)
+                clearState(this)
+                document.querySelector('.bible-verses').clear()
+                document.dispatchEvent(new CustomEvent('rerender-verses'))
+                this.remove()    
+            }} class="button primary">Save reference</button>
+            ` : html``}
+
+            ${!state.isSearching && !state.selectedExistingItem ? html`
                 <button onclick=${() => { 
                     state.showCreationForm = true; this.draw() 
                 }} class="button primary">Create a new ${predicateObject.label.toLowerCase()}</button>

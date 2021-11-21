@@ -51,6 +51,7 @@ class DatabaseClass {
         SELECT * { 
             ?predicate biblogos:name ?name .
             ?predicate a/a rdfs:Class .
+            OPTIONAL { ?predicate biblogos:comment ?comment . }
             FILTER regex(?name, """${searchTerm}""", "i")
         }
     `, [ DATABASE, ONTOLOGY ])
@@ -80,6 +81,30 @@ class DatabaseClass {
             ${object.comment ? `
                 <${object.uri}> biblogos:comment """${object.comment}""" .
             ` : ''}
+        } 
+        `
+
+        try {
+            const response = await fetch(JENA, {
+                method: 'POST',
+                body: query,
+                headers: { 'content-type': 'application/sparql-update' }
+            })    
+
+            return response.status === 204
+        }
+        catch (exception) {
+            console.error(exception)
+        }
+    }
+
+    async appendFactReference (predicate: string, range: string) {
+        const query = `
+        PREFIX biblogos: <https://biblogos.info/ttl/ontology#>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        
+        INSERT DATA { 
+            <${predicate}> biblogos:reference """${range}""" .
         } 
         `
 
