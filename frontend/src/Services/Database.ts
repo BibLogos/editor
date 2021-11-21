@@ -103,10 +103,7 @@ class DatabaseClass {
         PREFIX biblogos: <https://biblogos.info/ttl/ontology#>
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
         
-        INSERT DATA { 
-            <${predicate}> biblogos:reference """${range}""" .
-        } 
-        `
+        INSERT DATA { <${predicate}> biblogos:reference """${range}""" . }`
 
         try {
             const response = await fetch(JENA, {

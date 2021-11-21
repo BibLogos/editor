@@ -100,8 +100,8 @@ export const Form = function (predicateObject) {
             ${state.selectedExistingItem.name} ${state.selectedExistingItem.comment ? html` <em>(${state.selectedExistingItem.comment})</em>` : null}
             </div>
 
-            <button onclick=${() => { 
-                Database.appendFactReference(state.selectedExistingItem.predicate, this.creatingEvent.range)
+            <button onclick=${async () => { 
+                await Database.appendFactReference(state.selectedExistingItem.predicate, this.creatingEvent.range)
                 clearState(this)
                 document.querySelector('.bible-verses').clear()
                 document.dispatchEvent(new CustomEvent('rerender-verses'))
