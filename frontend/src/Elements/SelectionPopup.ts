@@ -50,7 +50,7 @@ export class SelectionPopup extends HTML.Div {
                 <div class="focus"></div>
             </div>
 
-            ${this.typeHelper?.template.apply(this, [this.selectedPredicate])}
+            ${this.typeHelper ? this.typeHelper.apply(this, [this.selectedPredicate]) : null}
         `)
     }
 }

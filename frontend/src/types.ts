@@ -60,3 +60,11 @@ declare global {
 export type ComunicaExport = {
     newEngine: Function
 }
+
+export type FactObject = {
+    uri: string
+    name: string
+    predicate: string
+    range: string
+    comment: string
+}

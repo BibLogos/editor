@@ -1,4 +1,4 @@
-@prefix biblogos: <https://biblogos/> .
+@prefix biblogos: <https://biblogos.info/ttl/ontology#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
@@ -11,7 +11,7 @@ biblogos: rdf:type owl:Ontology ;
     The BibLogos ontology tries to describe some textual facts of the Bible.
     """ ;
     vann:preferredNamespacePrefix "biblogos" ;
-    vann:preferredNamespaceURI <https://biblogos.org/> .
+    vann:preferredNamespaceURI <https://biblogos.info/ttl/ontology#> .
 
 biblogos:Parable a rdfs:Class ;
     rdfs:label "Parable" ;
@@ -21,13 +21,11 @@ biblogos:Parable a rdfs:Class ;
 biblogos:Locality a rdfs:Class ;
     rdfs:label "Locality" ;
     biblogos:predicateType "form" ;
-    biblogos:predicateForm "locality" ;
     rdfs:comment "A town, village, city or any other size of a settlement." .
 
 biblogos:Person a rdfs:Class ;
     rdfs:label "Person" ;
     biblogos:predicateType "form" ;
-    biblogos:predicateForm "person" ;
     rdfs:comment "A human being mentioned in the Bible." .
 
 biblogos:AlternativeName a rdfs:Property ;
@@ -39,6 +37,9 @@ biblogos:name a rdfs:Property ;
     rdfs:label "Name" ;
     rdfs:comment "A name for a person, a locality etc." .
 
+biblogos:predicateType a rdfs:Property ;
+    rdfs:label "Predicate type" ;
+    rdfs:comment "The type of predicate, which decides the reaction in the UI" .
 
 # KJV_JHN:John a biblogos:Person ;
 #     biblogos:name "John" ;

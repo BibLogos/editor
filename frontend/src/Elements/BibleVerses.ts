@@ -15,6 +15,7 @@ export class BibleVerses extends HTML.Div {
     private dispatchEvent: any
     private range: string
     private querySelectorAll: any
+    private selection: any
 
     public reference: BibleReference
     static get observedAttributes() { return ['bible', 'book', 'chapter'] }
@@ -39,8 +40,11 @@ export class BibleVerses extends HTML.Div {
     clear (event = null) {
       const popup = event?.target.closest('.selection-popup')
       if (!event || !event.target.classList.contains('word') && !popup) {
+        this.range = ''
         const selectedWords = this.querySelectorAll('.word.selected')
         for (const selectedWord of selectedWords) selectedWord.classList.remove('selected')
+        this.selection.clearSelection()
+
         this.dispatchEvent(new CustomEvent('selection', { detail: { 
           range: null,
           elements: []
@@ -70,7 +74,7 @@ export class BibleVerses extends HTML.Div {
             </div>
         `)
 
-        const selection = new SelectionArea({
+        this.selection = new SelectionArea({
           selectables: ['.scripture-styles .word'],
           boundaries: ['.scripture-styles']
         })
@@ -78,7 +82,7 @@ export class BibleVerses extends HTML.Div {
         .on('start', ({ store, event }) => {
           if (!(event as MouseEvent).ctrlKey && !(event as MouseEvent).metaKey) {
             for (const el of store.stored) el.classList.remove('selected')
-            selection.clearSelection()
+            this.selection.clearSelection()
           }
         })
         .on('move', ({ store: { changed: { added, removed } } }) => {
@@ -87,6 +91,7 @@ export class BibleVerses extends HTML.Div {
         })
         .on('stop', (event) => {
           const elements = [...this.querySelectorAll('.word.selected')]
+          
           const text = elements.map(word => word.innerText).join(' ').replace(/[\p{P}$+<=>^`|~]/gu, '').trim()
           const range = elementsToRange(elements)
           if (range !== this.range) {

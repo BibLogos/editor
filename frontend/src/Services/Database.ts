@@ -1,20 +1,19 @@
 import { env } from '../Core/Env'
 import { importGlobalScript } from '../Helpers/importGlobalScript'
-import { ComunicaExport } from '../types'
-import { cache } from '../Decorators/cache'
+import { ComunicaExport, FactObject } from '../types'
 
-const { newEngine } = await importGlobalScript('http://rdf.js.org/comunica-browser/versions/1/packages/actor-init-sparql/comunica-browser.js', 'Comunica') as ComunicaExport
+const { newEngine } = await importGlobalScript('http://rdf.js.org/comunica-browser/versions/latest/packages/actor-init-sparql/comunica-browser.js', 'Comunica') as ComunicaExport
 const comunica = newEngine()
 
-class DatabaseClass {
-    async query (query) {
-        const response = await comunica.query(query, {
-            sources: [
-                `${location.protocol}//${location.hostname}:${location.port}/ttl/BibLogos.ttl`,
-                { type: 'sparql', value: `${env.PROXY}/${env.JENA}/facts` }
-            ]
-        })
+const ONTOLOGY = `${location.protocol}//${location.hostname}:${location.port}/ttl/ontology.ttl`
+const JENA = `${env.PROXY}/${env.JENA}/facts`
+const DATABASE = { type: 'sparql', value: JENA }
 
+class DatabaseClass {
+    async query (query, sources: any) {
+        comunica.invalidateHttpCache()
+        const response = await comunica.query(query, { sources })
+        if (response.type === 'boolean') return response.booleanResult
         const bindings = await response.bindings()
 
         const result = []
@@ -32,32 +31,74 @@ class DatabaseClass {
         return result
     }
     
-    @cache()
     async getFactPredicates () {
         return this.query(`
-            PREFIX biblogos: <https://biblogos/>
-
-            SELECT * { 
-                ?predicate rdfs:label ?label ;
-                biblogos:predicateType ?type .
-                OPTIONAL { ?predicate biblogos:predicateForm ?form }
-                { ?predicate a rdfs:Class } UNION { ?predicate a rdfs:Property } .
-            }
-        `)
-    }
-
-    @cache()
-    async searchSubject (searchTerm) {
-        return this.query(`
-        PREFIX biblogos: <https://biblogos/>
+        PREFIX biblogos: <https://biblogos.info/ttl/ontology#>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
         SELECT * { 
-            ?predicate rdfs:label ?label ;
-            biblogos:predicateType ?type .
-            OPTIONAL { ?predicate biblogos:predicateForm ?form }
             { ?predicate a rdfs:Class } UNION { ?predicate a rdfs:Property } .
+            ?predicate rdfs:label ?label .
+            ?predicate biblogos:predicateType ?type .
         }
-    `)
+        `, [ ONTOLOGY ])
+    }
+
+    async searchSubject (searchTerm) {
+        return this.query(`
+        PREFIX biblogos: <https://biblogos.info/ttl/ontology#>
+
+        SELECT * { 
+            ?predicate biblogos:name ?name .
+            ?predicate a/a rdfs:Class .
+            FILTER regex(?name, """${searchTerm}""", "i")
+        }
+    `, [ DATABASE, ONTOLOGY ])
+    }
+
+    async insertFact (object: FactObject) {
+        const query = `
+        PREFIX biblogos: <https://biblogos.info/ttl/ontology#>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+        DELETE { 
+            <${object.uri}> a ?type .
+            <${object.uri}> biblogos:name ?name .
+            <${object.uri}> biblogos:reference ?reference .
+            <${object.uri}> biblogos:comment ?comment . 
+        } WHERE { 
+            <${object.uri}> a ?type .
+            <${object.uri}> biblogos:name ?name .
+            <${object.uri}> biblogos:reference ?reference .
+            OPTIONAL { <${object.uri}> biblogos:comment ?comment . }
+        };
+        
+        INSERT DATA { 
+            <${object.uri}> a <${object.predicate}> .
+            <${object.uri}> biblogos:name """${object.name}""" .
+            <${object.uri}> biblogos:reference """${object.range}""" .
+            ${object.comment ? `
+                <${object.uri}> biblogos:comment """${object.comment}""" .
+            ` : ''}
+        } 
+        `
+
+        try {
+            const response = await fetch(JENA, {
+                method: 'POST',
+                body: query,
+                headers: { 'content-type': 'application/sparql-update' }
+            })    
+
+            return response.status === 204
+        }
+        catch (exception) {
+            console.error(exception)
+        }
+    }
+
+    async uriExists (uri) {
+        return this.query(`ASK WHERE { <${uri}> ?p ?o }`, [ DATABASE ])
     }
 }
 
