@@ -1,77 +1,56 @@
 import { HTML, render, html } from 'ube';
-import { elementsToRange } from '../Helpers/elementsToRange';
 import { Database } from '../Services/Database';
+import { Form } from './SelectionPopupForms/Form';
+
+const canceler = (event) => event.stopImmediatePropagation()
+
+const helpers = {
+    form: Form,
+}
 
 export class SelectionPopup extends HTML.Div {
 
+    public creatingEvent: any
+    private selectedPredicate: any
+    private typeHelper: any
     private classList: any
-    private dispatchEvent: any
-    private selectedElements: Array<HTMLElement>
-    private clearSelection
+    private addEventListener
+    private setAttribute: any
     private predicates: Array<{predicate: string, type: string, label: string}>
 
     async upgradedCallback() {
-        this.classList.add('selection-popup')
-        this.predicates = await Database.query(`
-        SELECT * { 
-            ?predicate a ?type ;                
-                rdfs:label ?label .
-            { ?predicate a rdfs:Class } UNION { ?predicate a rdfs:Property } .
-        }`)
+        this.addEventListener('mousedown', canceler)
+        this.addEventListener('mouseup', canceler)
+        this.addEventListener('click', canceler)
 
-        console.log(this.predicates)
+        this.classList.add('selection-popup')
+        this.predicates = await Database.getFactPredicates()
 
         this.draw()
     }
 
-    trigger (selectedElements: Array<HTMLElement> = [], clearSelection) {
-        this.clearSelection = clearSelection
-        this.selectedElements = selectedElements
-        if (selectedElements.length === 0) return this.clear()
-        const element = selectedElements.at(-1)
-        const boundingRect = element.getBoundingClientRect()
-        
-        document.documentElement.style.setProperty('--selection-popup', '1')
-        document.documentElement.dataset.selectionPopup = true.toString()
-        document.documentElement.style.setProperty('--selection-popup-x', `${boundingRect.left + (boundingRect.width / 2)}px`)
-        document.documentElement.style.setProperty('--selection-popup-y', `${boundingRect.top + document.documentElement.scrollTop}px`)
-    }
+    predicateSelect (event) {
+        const [type, ...rest] = event.target.value.split(':')
+        this.selectedPredicate = this.predicates.find(item => item.predicate === rest.join(':'))
+        this.typeHelper = helpers[type]
+        this.setAttribute('type', type)
 
-    clear () {
-        document.documentElement.style.setProperty('--selection-popup', '0')
-        document.documentElement.dataset.selectionPopup = false.toString()
-    }
-
-    action (type: string) {
-        return () => {
-            const text = this.selectedElements.map(word => word.innerText).join('').trim()
-            const regex = /[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g
-            const textTrimmed = text.replace(regex, '')
-
-            this.dispatchEvent(new CustomEvent('action', {
-                detail: {
-                    range: elementsToRange(this.selectedElements),
-                    clear: () => {
-                        this.clear()
-                        if (this.clearSelection) this.clearSelection()
-                    },
-                    type,
-                    text: textTrimmed,
-                    elements: this.selectedElements
-                }
-            }))
-        }
+        this.draw()
     }
 
     draw () {
         render(this, html`
             <div class="select">
-                <select>
+                <select onchange=${this.predicateSelect.bind(this)}>
                     <option selected disabled>- Choose -</option>
-                    ${this.predicates.map(({ predicate, type, label }) => html`<option value=${`${type}:${predicate}`}>${label}</option>`)}
+                    ${this.predicates.map(({ predicate, type, label }) => html`
+                        <option value=${`${type}:${predicate}`}>${label}</option>
+                    `)}
                 </select>
                 <div class="focus"></div>
             </div>
+
+            ${this.typeHelper?.template.apply(this, [this.selectedPredicate])}
         `)
     }
 }

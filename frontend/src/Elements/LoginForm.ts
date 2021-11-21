@@ -38,12 +38,12 @@ export class LoginForm extends HTML.Div {
 
                     <div class="field">
                         <label class="field-label">Username</label>
-                        <input type="text" .value=${this.username ?? ''} onkeyup=${updateUsername.bind(this)} />
+                        <input type="text" .value=${this.username ?? ''} onchange=${updateUsername.bind(this)} />
                     </div>
         
                     <div class="field">
                         <label class="field-label">Password</label>
-                        <input type="password" .value=${this.password ?? ''} onkeyup=${updatePassword.bind(this)} />
+                        <input type="password" .value=${this.password ?? ''} onchange=${updatePassword.bind(this)} />
                     </div>
 
                     ${this.hasError ? html`<span>Woops something is off...</span>` : null}

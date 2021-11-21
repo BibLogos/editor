@@ -1,0 +1,18 @@
+.result-list {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.result-item {
+    font-size: 16px;
+    line-height: 32px;
+    background: white;
+    padding: 5px;
+    line-height: 16px;
+    border-radius: var(--radius);
+}
+
+.result-item + .result-item {
+    margin-top: 5px;
+}

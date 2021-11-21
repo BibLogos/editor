@@ -3,8 +3,8 @@ import { ApiBible } from '../Services/ApiBible'
 import { BibleReference } from '../types'
 import { debounce } from '../Helpers/debounce'
 import { bibleScripture } from '../Helpers/bibleScripture'
-import SelectionArea from '@viselect/vanilla'
 import { elementsToRange } from '../Helpers/elementsToRange'
+import SelectionArea from '@viselect/vanilla'
 
 export class BibleVerses extends HTML.Div {
 
@@ -85,12 +85,17 @@ export class BibleVerses extends HTML.Div {
             for (const el of added) el.classList.add('selected')
             for (const el of removed) el.classList.remove('selected')
         })
-        .on('stop', () => {
+        .on('stop', (event) => {
           const elements = [...this.querySelectorAll('.word.selected')]
+          const text = elements.map(word => word.innerText).join(' ').replace(/[\p{P}$+<=>^`|~]/gu, '').trim()
           const range = elementsToRange(elements)
           if (range !== this.range) {
             this.range = range
-            this.dispatchEvent(new CustomEvent('selection', { detail: { range, elements, clear: () => this.clear() }}))  
+            this.dispatchEvent(new CustomEvent('selection', { detail: { 
+              text, elements, range,
+              book: this.getAttribute('book'),
+              bible: this.getAttribute('bible')
+            } }))
           }
         })
     }

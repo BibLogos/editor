@@ -15,16 +15,34 @@ biblogos: rdf:type owl:Ontology ;
 
 biblogos:Parable a rdfs:Class ;
     rdfs:label "Parable" ;
+    biblogos:predicateType "text" ;
     rdfs:comment "A usually short fictitious story that illustrates a moral attitude or a religious principle." .
 
 biblogos:Locality a rdfs:Class ;
     rdfs:label "Locality" ;
+    biblogos:predicateType "form" ;
+    biblogos:predicateForm "locality" ;
     rdfs:comment "A town, village, city or any other size of a settlement." .
 
 biblogos:Person a rdfs:Class ;
     rdfs:label "Person" ;
+    biblogos:predicateType "form" ;
+    biblogos:predicateForm "person" ;
     rdfs:comment "A human being mentioned in the Bible." .
 
 biblogos:AlternativeName a rdfs:Property ;
     rdfs:label "Alternative name" ;
+    biblogos:predicateType "relation" ;
     rdfs:comment "A secondairy name for a person, a locality etc." .
+
+biblogos:name a rdfs:Property ;
+    rdfs:label "Name" ;
+    rdfs:comment "A name for a person, a locality etc." .
+
+
+# KJV_JHN:John a biblogos:Person ;
+#     biblogos:name "John" ;
+#     biblogos:reference "JHN.1.6.11", "JHN.1.6.18" ;
+#     biblogos:comment "The man who prepared the way for Jesus" .
+
+

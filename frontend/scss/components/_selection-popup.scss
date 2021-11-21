@@ -2,24 +2,30 @@
     position: absolute;
     background-color: var(--color-gray-dark);
     padding: 5px;
-    left: var(--selection-popup-x);
-    top: var(--selection-popup-y);
-    transform: translate(-50%, -100%) translateY(-20px);
+    left: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    top: calc(100% + 10px);
+    transform: translateX(-50%);
     opacity: var(--selection-popup);
     border-radius: var(--radius);
-    display: flex;
+    min-height: 52px;
+    min-width: 80px;
     z-index: 20;
+    font-size: 16px;
+    line-height: 1;
 
     &:after {
         content: '';
         width: 12px;
         height: 8px;
         background-color: var(--color-gray-dark);
-        clip-path: polygon(100% 0%, 0 0%, 50% 100%);
+        clip-path: polygon(50% 0%, 0 100%, 100% 100%);
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
-        top: 100%;
+        bottom: 100%;
     }
 
     .button + .button {
@@ -31,6 +37,32 @@
     .button:not(:last-child) {
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
+    }
+
+    label {
+        color: var(--color-gray);
+        padding-top: 10px;
+        padding-bottom: 5px;
+        font-style: italic;
+    }
+
+    .predicate-part {
+        text-indent: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    &[type="form"] {
+        min-width: 600px;
+
+        input, textarea {
+            min-width: 600px;
+        }
+
+        textarea {
+            min-height: 60px;
+        }
     }
 }
 

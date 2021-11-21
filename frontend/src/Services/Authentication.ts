@@ -18,7 +18,7 @@ export const Authentication = {
             validCredentials = response.status === 200
         }
         catch {}
-        localStorage.auth = validCredentials ? `${username}:${password}` : false
+        if (validCredentials) localStorage.auth = `${username}:${password}`
         return validCredentials
     },
 

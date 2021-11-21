@@ -2,9 +2,8 @@ import { html } from 'ube'
 import { Route } from '../types'
 import { BiblePicker } from '../Elements/BiblePicker'
 import { BibleVerses } from '../Elements/BibleVerses'
-import { SelectionPopup } from '../Elements/SelectionPopup'
-import { FactBasket } from '../Elements/FactBasket'
 import { renderApp } from '../app'
+import { SelectionPopup } from '../Elements/SelectionPopup'
 
 export const Editor: Route = {
 
@@ -51,12 +50,8 @@ export const Editor: Route = {
 
     template: function () {
         const { bible, language, book, chapter, verse } = this.reference
-        let popup
-        let basket
 
         return html`
-            <${SelectionPopup} ref=${element => popup = element} onaction=${event => basket.add(event.detail)} />
-
             <${BiblePicker} onupdate=${(event) => { 
                 this.reference = event.target.value
                 renderApp()
@@ -65,12 +60,20 @@ export const Editor: Route = {
              ${this.reference ? html`
                 <${BibleVerses} 
                 onloaded=${() => this.attachObserver()}
-                onselection=${(event) => popup.trigger(event.detail.elements, event.detail.clear)}
                 ref=${element => this.bibleVersesElement = element} 
+                onselection=${event => {
+                    const oldPopups = document.querySelectorAll('.selection-popup')
+                    for (const oldPopup of oldPopups) oldPopup.remove()
+                    const firstWord = event.detail.elements.at(0)
+
+                    if (firstWord) {
+                        const newSelectionPopup = new SelectionPopup()
+                        newSelectionPopup.creatingEvent = event.detail
+                        firstWord.appendChild(newSelectionPopup)    
+                    }
+                }}
                 language=${language} bible=${bible} book=${book} chapter=${chapter} verse=${verse} />
             ` : null}
-
-            <${FactBasket} ref=${element => basket = element} />
         `
     }
 

@@ -13,20 +13,11 @@ export default {
     'frontend/src': '/',
     'frontend/html': '/',
     "frontend/scss": "/",
-    "frontend/ttl": "/ttl",
+    "ttl": "/ttl",
   },
   plugins: [
     '@snowpack/plugin-sass'
   ],
-  packageOptions: {
-    /* ... */
-  },
-  devOptions: {
-    /* ... */
-  },
-  buildOptions: {
-    /* ... */
-  },
   routes: [
     { 
       "match": "routes", 
