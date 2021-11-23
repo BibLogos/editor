@@ -95,8 +95,6 @@ export class BibleVerses extends HTML.Div {
         })
         .on('beforedrag', ({ event }) => false)
         .on('start', ({ store, event }) => {
-          console.log(event)
-
           if (!(event as MouseEvent).ctrlKey && !(event as MouseEvent).metaKey) {
             for (const el of store.stored) el.classList.remove('selected')
             this.selection.clearSelection()

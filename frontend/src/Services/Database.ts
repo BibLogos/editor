@@ -65,6 +65,7 @@ class DatabaseClass {
         DELETE { 
             <${object.uri}> a ?type .
             <${object.uri}> biblogos:name ?name .
+            <${object.uri}> biblogos:subject ?subject .
             <${object.uri}> biblogos:reference ?reference .
             <${object.uri}> biblogos:comment ?comment . 
         } WHERE { 
@@ -72,12 +73,16 @@ class DatabaseClass {
             <${object.uri}> biblogos:name ?name .
             <${object.uri}> biblogos:reference ?reference .
             OPTIONAL { <${object.uri}> biblogos:comment ?comment . }
+            OPTIONAL { <${object.uri}> biblogos:subject ?subject . }
         };
         
         INSERT DATA { 
             <${object.uri}> a <${object.predicate}> .
             <${object.uri}> biblogos:name """${object.name}""" .
             <${object.uri}> biblogos:reference """${object.range}""" .
+            ${object.subject ? `
+                <${object.uri}> biblogos:subject <${object.subject}> .
+            ` : ''}
             ${object.comment ? `
                 <${object.uri}> biblogos:comment """${object.comment}""" .
             ` : ''}
@@ -120,7 +125,7 @@ class DatabaseClass {
     }
 
     async uriExists (uri) {
-        return this.query(`ASK WHERE { <${uri}> ?p ?o }`, [ DATABASE ])
+        return this.query(`ASK WHERE { <${uri.replaceAll(' ', '')}> ?p ?o }`, [ DATABASE ])
     }
 
     async getHighlights (bible, book, chapter) {

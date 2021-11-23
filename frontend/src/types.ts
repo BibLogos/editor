@@ -65,6 +65,7 @@ export type FactObject = {
     uri: string
     name: string
     predicate: string
+    subject?: string
     range: string
     comment: string
 }

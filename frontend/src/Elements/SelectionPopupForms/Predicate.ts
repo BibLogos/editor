@@ -4,15 +4,9 @@ import { getState, clearState } from '../../Helpers/getState';
 import { cleanString } from '../../Helpers/cleanString';
 import { ApiBible } from '../../Services/ApiBible'
 import { toCamelCase } from '../../Helpers/toCamelCase';
+import { lastPart } from '../../Helpers/lastPart';
 
 export const Predicate = {
-    personClick: function (event: Event) {
-        event.stopImmediatePropagation()
-        const personUri = event.target.getAttribute('person')
-        this.state.newObject.subject = personUri
-        this.draw()
-    },
-
     template: function (predicateObject) {
         const state = getState(this, {
             isSearching: false,
@@ -70,6 +64,7 @@ export const Predicate = {
                 uri: createUri(),
                 name: state.newObject.name,
                 predicate: predicateObject.predicate,
+                subject: state.newObject.subject,
                 range: this.creatingEvent.range,
                 comment: state.newObject.comment
             })    
@@ -79,18 +74,23 @@ export const Predicate = {
             document.dispatchEvent(new CustomEvent('rerender-verses'))
             this.remove()
         }
-    
-        const addReference = async () => { 
-            await Database.appendFactReference(state.selectedExistingItem.predicate, this.creatingEvent.range)
-            clearState(this)
-            document.querySelector('.bible-verses').clear()
-            document.dispatchEvent(new CustomEvent('rerender-verses'))
-            this.remove()    
-        }
-    
-        if (state.showCreationForm) {
-            const bibleVerses = document.querySelector('.bible-verses')
-            bibleVerses.addEventListener('mouseup', Predicate.personClick.bind(this), true)
+
+        const bibleVerses = document.querySelector('.bible-verses')
+
+        const personClick = (event: Event) => {
+            if (!event.target.classList?.contains('word')) return
+            event.stopImmediatePropagation()
+            const personUri = event.target.getAttribute('person')
+            event.target.classList.add('selected')
+            this.state.newObject.subject = personUri
+            this.state.newObject.identifier = toCamelCase(lastPart(personUri) +  this.creatingEvent.text)
+            bibleVerses.removeEventListener('mouseup', personClick, true)
+            this.draw()
+        }    
+        
+        if (!state.newObject.subject) {
+            bibleVerses.addEventListener('mouseup', personClick, true)
+            return html`<label>Please click on the person</label>`
         }
 
         /**
@@ -114,13 +114,6 @@ export const Predicate = {
                     <input ref=${element => state.identifierField = element} required type="text" 
                     .value=${state.newObject.identifier} onkeyup=${(event) => { 
                     state.newObject.identifier = event.target.value; validate() }} />
-                </div>
-    
-                <div class="field">
-                    <label>Person</label>
-                    <input placeholder="Please click on the person" ref=${element => state.identifierField = element} required type="text" 
-                    .value=${state.newObject.subject} onkeyup=${(event) => { 
-                    state.newObject.subject = event.target.value }} />
                 </div>
     
                 <div class="field">
