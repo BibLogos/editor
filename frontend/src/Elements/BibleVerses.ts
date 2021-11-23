@@ -54,8 +54,12 @@ export class BibleVerses extends HTML.Div {
     }
 
     async redraw () {
+      const oldScroll = this.scrollTop
       this.versesMap.clear()
-      this.draw()
+      await this.draw()
+      setTimeout(() => {
+        this.scrollTop = oldScroll
+      }, 300)
     }
 
     async draw () {
@@ -83,12 +87,16 @@ export class BibleVerses extends HTML.Div {
             </div>
         `)
 
+        if (this.selection) return
+
         this.selection = new SelectionArea({
           selectables: ['.scripture-styles .word'],
           boundaries: ['.scripture-styles']
         })
         .on('beforedrag', ({ event }) => false)
         .on('start', ({ store, event }) => {
+          console.log(event)
+
           if (!(event as MouseEvent).ctrlKey && !(event as MouseEvent).metaKey) {
             for (const el of store.stored) el.classList.remove('selected')
             this.selection.clearSelection()
@@ -100,8 +108,11 @@ export class BibleVerses extends HTML.Div {
         })
         .on('stop', (event) => {
           const elements = [...this.querySelectorAll('.word.selected')]
-          
-          const text = elements.map(word => word.innerText).join(' ').replace(/[\p{P}$+<=>^`|~]/gu, '').trim()
+          const text = elements.map(word => {
+            const popup = word.querySelector('.selection-popup')
+            if (popup) popup.remove()
+            return word.innerText.trim()
+          }).join(' ').replace(/[\p{P}$+<=>^`|~]/gu, '').trim()
           const range = elementsToRange(elements)
           if (range !== this.range) {
             this.range = range

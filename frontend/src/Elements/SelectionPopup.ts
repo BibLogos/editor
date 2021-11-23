@@ -1,11 +1,15 @@
 import { HTML, render, html } from 'ube';
 import { Database } from '../Services/Database';
-import { Form } from './SelectionPopupForms/Form';
+import { Mention } from './SelectionPopupForms/Mention';
+import { Textual } from './SelectionPopupForms/Textual';
+import { Predicate } from './SelectionPopupForms/Predicate';
 
 const canceler = (event) => event.stopImmediatePropagation()
 
 const helpers = {
-    form: Form,
+    mention: Mention,
+    textual: Textual,
+    predicate: Predicate,
 }
 
 export class SelectionPopup extends HTML.Div {
@@ -50,7 +54,7 @@ export class SelectionPopup extends HTML.Div {
                 <div class="focus"></div>
             </div>
 
-            ${this.typeHelper ? this.typeHelper.apply(this, [this.selectedPredicate]) : null}
+            ${this.typeHelper ? this.typeHelper.template.apply(this, [this.selectedPredicate]) : null}
         `)
     }
 }

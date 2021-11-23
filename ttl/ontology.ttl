@@ -15,23 +15,33 @@ biblogos: rdf:type owl:Ontology ;
 
 biblogos:Parable a rdfs:Class ;
     rdfs:label "Parable" ;
-    biblogos:predicateType "text" ;
+    biblogos:predicateType "textual" ;
     rdfs:comment "A usually short fictitious story that illustrates a moral attitude or a religious principle." .
+
+biblogos:Miracle a rdfs:Class ;
+    rdfs:label "Miracle" ;
+    biblogos:predicateType "textual" ;
+    rdfs:comment "A piece of text where there was divine interference." .
 
 biblogos:Locality a rdfs:Class ;
     rdfs:label "Locality" ;
-    biblogos:predicateType "form" ;
+    biblogos:predicateType "mention" ;
     rdfs:comment "A town, village, city or any other size of a settlement." .
 
 biblogos:Person a rdfs:Class ;
     rdfs:label "Person" ;
-    biblogos:predicateType "form" ;
+    biblogos:predicateType "mention" ;
     rdfs:comment "A human being mentioned in the Bible." .
 
 biblogos:AlternativeName a rdfs:Property ;
     rdfs:label "Alternative name" ;
-    biblogos:predicateType "relation" ;
+    biblogos:predicateType "predicate" ;
     rdfs:comment "A secondairy name for a person, a locality etc." .
+
+
+
+
+
 
 biblogos:name a rdfs:Property ;
     rdfs:label "Name" ;
@@ -40,10 +50,4 @@ biblogos:name a rdfs:Property ;
 biblogos:predicateType a rdfs:Property ;
     rdfs:label "Predicate type" ;
     rdfs:comment "The type of predicate, which decides the reaction in the UI" .
-
-# KJV_JHN:John a biblogos:Person ;
-#     biblogos:name "John" ;
-#     biblogos:reference "JHN.1.6.11", "JHN.1.6.18" ;
-#     biblogos:comment "The man who prepared the way for Jesus" .
-
 

@@ -2,7 +2,7 @@ import { html as syncHtml } from 'ube';
 import { html } from 'uhtml/async';
 import { referenceProxy } from './referenceProxy'
 import { parseInts } from './parseInts'
-import { stringToColor } from './stringToColor'
+import { lastPart } from './lastPart'
 
 let counters = new Map()
 let references
@@ -39,15 +39,19 @@ const recurse = async (part) => {
     if (part.type === 'text') {
         const words = part.text.split(' ')
         return html`${words.map(async (word, partIndex) => {
-            if (!word) return html``
             let index = counters.get(part.attrs?.verseId) ?? 1
 
             const parts = part.attrs?.verseId ? [...parseInts([...part.attrs?.verseId.split('.'), index])] : []
-            const highlight = part.attrs?.verseId ? references.find(reference => reference.includes(...parts)) : false
+            const wordHighlights = part.attrs?.verseId ? references.filter(reference => reference.includes(...parts)) : []
 
-            const color = highlight ? highlight.color : null
+            const personMarking = wordHighlights.find(wordHighlight => wordHighlight.object.predicate === 'https://biblogos.info/ttl/ontology#Person')
 
-            const template = html`<span title=${highlight?.object?.comment} style=${color ? `--color: ${color};` : null} verse=${part.attrs?.verseId} index=${index} class=${`word ${highlight ? 'highlight' : ''}`}>${word}${partIndex + 1 !== words.length ? ' ' : ''}</span>`
+            const wordMarkings = wordHighlights.length ? html`<span class="markings">${
+            wordHighlights.map(wordHighlight => html`
+                <span class=${`marking ${lastPart(wordHighlight.object.predicate).toLowerCase()}`} style=${`--color: ${wordHighlight.color};`} title=${wordHighlight?.object?.comment}></span>`)
+            }</span>` : html``
+
+            const template = html`<span person=${personMarking?.object?.thing} verse=${part.attrs?.verseId} index=${index} class="word">${wordMarkings}${word}${partIndex + 1 !== words.length ? ' ' : ''}</span>`
 
             if (part.attrs?.verseId) {
                 index++

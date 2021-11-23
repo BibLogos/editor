@@ -43,10 +43,23 @@
         border-bottom-left-radius: 0;
     }
 
-    .word.highlight {
-        &:after {
-            background-color: var(--color);
-            opacity: 1;
+    .markings {
+        position: absolute;
+        width: 100%;
+        top: 100%;
+        left: -5px;
+        border-radius: 3px;
+    }
+
+    .marking {
+        display: block;
+        height: 4px;
+        background-color: var(--color);
+        margin-bottom: 2px;
+        width: 100%;        
+
+        &.miracle {
+            background-color: rgb(187, 215, 233);
         }
     }
 

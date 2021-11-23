@@ -4,6 +4,7 @@ import { BiblePicker } from '../Elements/BiblePicker'
 import { BibleVerses } from '../Elements/BibleVerses'
 import { renderApp } from '../app'
 import { SelectionPopup } from '../Elements/SelectionPopup'
+import { debounce } from '../Helpers/debounce'
 
 export const Editor: Route = {
 
@@ -12,7 +13,6 @@ export const Editor: Route = {
     observer: null,
 
     attachObserver: function () {
-        document.addEventListener('rerender-verses', this.rerender.bind(this))
         if (this.observer) this.observer.disconnect()
 
         let options = {
@@ -31,7 +31,8 @@ export const Editor: Route = {
                 const verseSplit = verseString.split('.')
                 const verse = verseSplit[2]
                 const { bible, language, book, chapter } = this.reference
-                location.hash = `${language}/${bible}/${book}/${chapter}/${verse}`
+                // location.hash = `${language}/${bible}/${book}/${chapter}/${verse}`
+                location.hash = `${language}/${bible}/${book}/${chapter}`
             }
         }, options)
 
@@ -41,8 +42,8 @@ export const Editor: Route = {
         let [ _language, _bible, book, chapter, verse ] = location.hash.substr(1).split('/')
 
         const selector = `.verse[verse="${book}.${chapter}.${verse}"]`
-        const verseElement = document.querySelector(selector)
-        verseElement?.scrollIntoView()
+        // const verseElement = document.querySelector(selector)
+        // verseElement?.scrollIntoView()
     },
 
     unload: function () {
@@ -65,7 +66,10 @@ export const Editor: Route = {
 
              ${this.reference ? html`
                 <${BibleVerses} 
-                onloaded=${() => this.attachObserver()}
+                onloaded=${() => {
+                    document.addEventListener('rerender-verses', this.rerender.bind(this))
+                    this.attachObserver()
+                }}
                 ref=${element => this.bibleVersesElement = element} 
                 onselection=${event => {
                     const oldPopups = document.querySelectorAll('.selection-popup')
