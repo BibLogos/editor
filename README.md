@@ -21,3 +21,7 @@ This editor helps with creating a dataset that may present those facts. It is ma
 ## Screenshot
 
 ![screenshot](https://raw.githubusercontent.com/BibLogos/editor/main/screenshots/BibLogos-editor.png?token=AAFHBNZXKK5AASB2TX3PQRDBTZCR2)
+
+## A small demonstration of the product progress
+
+[<img src="https://i.ytimg.com/vi_webp/XYsRmsiwMNY/maxresdefault.webp">](https://www.youtube.com/watch?v=XYsRmsiwMNY)
