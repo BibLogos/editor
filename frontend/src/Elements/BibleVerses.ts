@@ -57,9 +57,8 @@ export class BibleVerses extends HTML.Div {
       const oldScroll = this.scrollTop
       this.versesMap.clear()
       await this.draw()
-      setTimeout(() => {
-        this.scrollTop = oldScroll
-      }, 300)
+      setTimeout(() => this.scrollTop = oldScroll, 200)
+      setTimeout(() => this.scrollTop = oldScroll, 500)
     }
 
     async draw () {
@@ -81,10 +80,10 @@ export class BibleVerses extends HTML.Div {
             })
         }
 
-        render(this, html`
-            <div class='inner'>
-                ${isComplete && this.versesMap.has(cid) ? await bibleScripture(...this.versesMap.get(cid)) : html`loading...`}
-            </div>
+        await render(this, html`
+          <div class='inner'>
+              ${isComplete && this.versesMap.has(cid) ? await bibleScripture(...this.versesMap.get(cid)) : html`loading...`}
+          </div>
         `)
 
         if (this.selection) return

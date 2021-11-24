@@ -7,16 +7,34 @@ import { lastPart } from './lastPart'
 let counters = new Map()
 let references
 
+const addVerses = (part) => {
+    for (const innerPart of part.items) {
+        if (!innerPart.attrs?.verseId) {
+            if (!innerPart.attrs) innerPart.attrs = {}
+            innerPart.attrs.verseId = part.attrs.verseId
+        }
+    }
+}
+
 const tags = {
     'para': (part) => html`<p class=${`verse ${part?.attrs?.style ?? ''}`}>${part.items.map(recurse)}</p>`,
     'verse-span': (part) => {
         return html`<span verse=${part.attrs?.verseId} class=${`verse ${part?.attrs?.style ?? ''}`}>${part.items.map(recurse)}</span>`
     },
     'note': (part) => {
-        return html`<note class=${part?.attrs?.style}></note>`
+        const filtered = part.items.filter(item => item.attrs.style === 'fqa')
+        .flatMap(item => item.items)
+        if (part?.attrs?.style === 'f') part.attrs.style = 'verse'
+
+        for (const filteredPart of filtered) {
+            if (!filteredPart.attrs) filteredPart.attrs = {}
+            filteredPart.attrs.verseId = part.attrs.verseId
+        }
+
+        return html`<span verse=${part.attrs?.verseId} class=${part?.attrs?.style}>${filtered.map(recurse)}</span>`
     },
     'ref': (part) => {
-        return html`<span class=${part?.attrs?.style}></span>`
+        return html`<span verse=${part.attrs?.verseId} class=${part?.attrs?.style}></span>`
     },
     'verse': (part) => {
         return part.attrs?.number ?
@@ -40,6 +58,8 @@ const recurse = async (part) => {
         const words = part.text.split(' ')
         return html`${words.map(async (word, partIndex) => {
             let index = counters.get(part.attrs?.verseId) ?? 1
+
+            if (!word.trim()) return html`<span class="word">&nbsp;</span>`
 
             const parts = part.attrs?.verseId ? [...parseInts([...part.attrs?.verseId.split('.'), index])] : []
             const wordHighlights = part.attrs?.verseId ? references.filter(reference => reference.includes(...parts)) : []

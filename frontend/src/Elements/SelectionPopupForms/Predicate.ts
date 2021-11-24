@@ -74,7 +74,15 @@ export const Predicate = {
             document.dispatchEvent(new CustomEvent('rerender-verses'))
             this.remove()
         }
-
+    
+        const addReference = async () => { 
+            await Database.appendFactReference(state.selectedExistingItem.predicate, this.creatingEvent.range)
+            clearState(this)
+            document.querySelector('.bible-verses').clear()
+            document.dispatchEvent(new CustomEvent('rerender-verses'))
+            this.remove()    
+        }
+    
         const bibleVerses = document.querySelector('.bible-verses')
 
         const personClick = (event: Event) => {

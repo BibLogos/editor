@@ -10,6 +10,7 @@ const JENA = `${env.PROXY}/${env.JENA}/facts`
 const DATABASE = { type: 'sparql', value: JENA }
 
 class DatabaseClass {
+
     async query (query, sources: any) {
         comunica.invalidateHttpCache()
         const response = await comunica.query(query, { sources })
@@ -142,6 +143,7 @@ class DatabaseClass {
         }
     `, [ DATABASE ])
     }
+    
 }
 
 export const Database = new DatabaseClass()
