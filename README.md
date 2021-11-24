@@ -17,3 +17,7 @@ This editor helps with creating a dataset that may present those facts. It is ma
 - Snowpack
 - Docker Compose for launching Apache Jena
 - https://scripture.api.bible/
+
+## Screenshot
+
+![screenshot](https://raw.githubusercontent.com/BibLogos/editor/main/screenshots/BibLogos-editor.png?token=AAFHBNZXKK5AASB2TX3PQRDBTZCR2)
