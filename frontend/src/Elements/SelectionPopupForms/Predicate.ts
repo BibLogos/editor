@@ -34,7 +34,7 @@ export const Predicate = {
         if (state.results === null) {
             state.isSearching = true
     
-            Database.searchSubject(this.creatingEvent.text).then(results => {
+            Database.searchSubject(this.creatingEvent.text, predicateObject.predicate).then(results => {
                 state.results = results
                 state.isSearching = false
                 this.draw()

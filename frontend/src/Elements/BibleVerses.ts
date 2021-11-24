@@ -6,6 +6,7 @@ import { bibleScripture } from '../Helpers/bibleScripture'
 import { elementsToRange } from '../Helpers/elementsToRange'
 import SelectionArea from '@viselect/vanilla'
 import { Database } from '../Services/Database'
+import { forceScrollTop } from '../Helpers/forceScrollTop'
 
 export class BibleVerses extends HTML.Div {
 
@@ -17,6 +18,7 @@ export class BibleVerses extends HTML.Div {
     private range: string
     private querySelectorAll: any
     private selection: any
+    private scrollTop: number
 
     public reference: BibleReference
     static get observedAttributes() { return ['bible', 'book', 'chapter'] }
@@ -57,8 +59,7 @@ export class BibleVerses extends HTML.Div {
       const oldScroll = this.scrollTop
       this.versesMap.clear()
       await this.draw()
-      setTimeout(() => this.scrollTop = oldScroll, 200)
-      setTimeout(() => this.scrollTop = oldScroll, 500)
+      forceScrollTop(this, oldScroll)
     }
 
     async draw () {

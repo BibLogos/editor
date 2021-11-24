@@ -7,15 +7,6 @@ import { lastPart } from './lastPart'
 let counters = new Map()
 let references
 
-const addVerses = (part) => {
-    for (const innerPart of part.items) {
-        if (!innerPart.attrs?.verseId) {
-            if (!innerPart.attrs) innerPart.attrs = {}
-            innerPart.attrs.verseId = part.attrs.verseId
-        }
-    }
-}
-
 const tags = {
     'para': (part) => html`<p class=${`verse ${part?.attrs?.style ?? ''}`}>${part.items.map(recurse)}</p>`,
     'verse-span': (part) => {
@@ -66,12 +57,18 @@ const recurse = async (part) => {
 
             const personMarking = wordHighlights.find(wordHighlight => wordHighlight.object.predicate === 'https://biblogos.info/ttl/ontology#Person')
 
+            const title = wordHighlights.map(wordHighlights => {
+                const comment = wordHighlights.object.comment
+                const type = lastPart(wordHighlights.object.predicate)
+                return comment ? comment + ', ' + type : type
+            }).join('\n')
+
             const wordMarkings = wordHighlights.length ? html`<span class="markings">${
             wordHighlights.map(wordHighlight => html`
                 <span class=${`marking ${lastPart(wordHighlight.object.predicate).toLowerCase()}`} style=${`--color: ${wordHighlight.color};`} title=${wordHighlight?.object?.comment}></span>`)
             }</span>` : html``
 
-            const template = html`<span person=${personMarking?.object?.thing} verse=${part.attrs?.verseId} index=${index} class="word">${wordMarkings}${word}${partIndex + 1 !== words.length ? ' ' : ''}</span>`
+            const template = html`<span title=${title} person=${personMarking?.object?.thing} verse=${part.attrs?.verseId} index=${index} class="word">${wordMarkings}${word}${partIndex + 1 !== words.length ? ' ' : ''}</span>`
 
             if (part.attrs?.verseId) {
                 index++

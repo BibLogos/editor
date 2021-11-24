@@ -45,11 +45,12 @@ class DatabaseClass {
         `, [ ONTOLOGY ])
     }
 
-    async searchSubject (searchTerm) {
+    async searchSubject (searchTerm, predicate) {
         return this.query(`
         PREFIX biblogos: <https://biblogos.info/ttl/ontology#>
 
         SELECT * { 
+            ?predicate a <${predicate}> .
             ?predicate biblogos:name ?name .
             ?predicate a/a rdfs:Class .
             OPTIONAL { ?predicate biblogos:comment ?comment . }

@@ -23,6 +23,11 @@ biblogos:Miracle a rdfs:Class ;
     biblogos:predicateType "textual" ;
     rdfs:comment "A piece of text where there was divine interference." .
 
+biblogos:Confrontation a rdfs:Class ;
+    rdfs:label "Confrontation" ;
+    biblogos:predicateType "textual" ;
+    rdfs:comment "A piece of text where there was a confrontation between multiple parties" .
+
 biblogos:Locality a rdfs:Class ;
     rdfs:label "Locality" ;
     biblogos:predicateType "mention" ;
@@ -38,6 +43,10 @@ biblogos:AlternativeName a rdfs:Class ;
     biblogos:predicateType "predicate" ;
     rdfs:comment "A secondairy name for a person, a locality etc." .
 
+biblogos:Concept a rdfs:Class ;
+    rdfs:label "Concept" ;
+    biblogos:predicateType "mention" ;
+    rdfs:comment "A specific concept." .
 
 
 

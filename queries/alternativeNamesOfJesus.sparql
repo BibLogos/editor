@@ -1,0 +1,8 @@
+PREFIX ASV_JHN: <https://biblogos.info/facts/ASV/JHN/> 
+PREFIX biblogos: <https://biblogos.info/ttl/ontology#>
+
+SELECT ?name ?reference {
+  ASV_JHN:Jesus ^biblogos:subject ?link .
+  ?link biblogos:reference ?reference .
+  ?link biblogos:name ?name .
+}
