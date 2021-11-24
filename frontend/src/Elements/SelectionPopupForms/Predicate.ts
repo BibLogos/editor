@@ -78,13 +78,13 @@ export const Predicate = {
         const bibleVerses = document.querySelector('.bible-verses')
 
         const personClick = (event: Event) => {
+            bibleVerses.removeEventListener('mouseup', personClick, true)
             if (!event.target.classList?.contains('word')) return
             event.stopImmediatePropagation()
             const personUri = event.target.getAttribute('person')
             event.target.classList.add('selected')
             this.state.newObject.subject = personUri
             this.state.newObject.identifier = toCamelCase(lastPart(personUri) +  this.creatingEvent.text)
-            bibleVerses.removeEventListener('mouseup', personClick, true)
             this.draw()
         }    
         

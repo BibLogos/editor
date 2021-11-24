@@ -33,7 +33,7 @@ biblogos:Person a rdfs:Class ;
     biblogos:predicateType "mention" ;
     rdfs:comment "A human being mentioned in the Bible." .
 
-biblogos:AlternativeName a rdfs:Property ;
+biblogos:AlternativeName a rdfs:Class ;
     rdfs:label "Alternative name" ;
     biblogos:predicateType "predicate" ;
     rdfs:comment "A secondairy name for a person, a locality etc." .
