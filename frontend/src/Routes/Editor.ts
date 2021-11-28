@@ -4,7 +4,6 @@ import { BiblePicker } from '../Elements/BiblePicker'
 import { BibleVerses } from '../Elements/BibleVerses'
 import { renderApp } from '../app'
 import { SelectionPopup } from '../Elements/SelectionPopup'
-import { debounce } from '../Helpers/debounce'
 
 export const Editor: Route = {
 
@@ -32,10 +31,7 @@ export const Editor: Route = {
 
              ${this.reference ? html`
                 <${BibleVerses} 
-                onloaded=${() => {
-                    document.addEventListener('rerender-verses', this.rerender.bind(this))
-                    // this.attachObserver()
-                }}
+                onloaded=${() => document.addEventListener('rerender-verses', this.rerender.bind(this))}
                 ref=${element => this.bibleVersesElement = element} 
                 onselection=${event => {
                     const oldPopups = document.querySelectorAll('.selection-popup')

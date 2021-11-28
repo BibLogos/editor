@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "name": "login",
+  "version": "1.0.0",
+  "description": "The service on CloudFlare for login into Github oAuth app",
+  "main": "index.js",
+  "author": "Daniel Beeke <mail@danielbeeke.nl>",
+  "license": "MIT"
+}

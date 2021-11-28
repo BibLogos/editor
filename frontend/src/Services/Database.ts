@@ -31,6 +31,21 @@ class DatabaseClass {
 
         return result
     }
+
+    async update (query) {
+        try {
+            const response = await fetch(JENA, {
+                method: 'POST',
+                body: query,
+                headers: { 'content-type': 'application/sparql-update' }
+            })    
+
+            return response.status === 204
+        }
+        catch (exception) {
+            console.error(exception)
+        }
+    }
     
     async getFactPredicates () {
         return this.query(`
@@ -60,7 +75,7 @@ class DatabaseClass {
     }
 
     async insertFact (object: FactObject) {
-        const query = `
+        return this.update(`
         PREFIX biblogos: <https://biblogos.info/ttl/ontology#>
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
@@ -89,41 +104,15 @@ class DatabaseClass {
                 <${object.uri}> biblogos:comment """${object.comment}""" .
             ` : ''}
         } 
-        `
-
-        try {
-            const response = await fetch(JENA, {
-                method: 'POST',
-                body: query,
-                headers: { 'content-type': 'application/sparql-update' }
-            })    
-
-            return response.status === 204
-        }
-        catch (exception) {
-            console.error(exception)
-        }
+        `)
     }
 
     async appendFactReference (predicate: string, range: string) {
-        const query = `
+        return this.update(`
         PREFIX biblogos: <https://biblogos.info/ttl/ontology#>
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
         
-        INSERT DATA { <${predicate}> biblogos:reference """${range}""" . }`
-
-        try {
-            const response = await fetch(JENA, {
-                method: 'POST',
-                body: query,
-                headers: { 'content-type': 'application/sparql-update' }
-            })    
-
-            return response.status === 204
-        }
-        catch (exception) {
-            console.error(exception)
-        }
+        INSERT DATA { <${predicate}> biblogos:reference """${range}""" . }`)
     }
 
     async uriExists (uri) {

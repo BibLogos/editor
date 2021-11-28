@@ -1,0 +1,12 @@
+name = "login"
+type = "javascript"
+
+account_id = ""
+workers_dev = false
+route = "biblogos.info/login"
+zone_id = "0f8623c6ffe77a4717fd14da7be9d4ed"
+compatibility_date = "2021-11-28"
+
+kv_namespaces = [ 
+  { binding = "Environment", id = "cce6e97ca36249f5a91efc040bb5a43f" }
+]
