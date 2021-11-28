@@ -1,0 +1,12 @@
+name = "login"
+type = "javascript"
+
+account_id = ""
+workers_dev = false
+route = "YourDomain.YourTld/login"
+zone_id = "YourZoneId"
+compatibility_date = "2021-11-28"
+
+kv_namespaces = [ 
+  { binding = "Environment", id = "YourNamespaceID" }
+]
