@@ -5,12 +5,14 @@ type RouteWithTemplate = {
     template: () => typeof html,
     redirect?: () => string
     [key: string]: any
+    params?: Array<string>
 }
 
 type RouteWithRedirect = {
     template?: () => typeof html,
     redirect: () => string
     [key: string]: any
+    params?: Array<string>
 }
 
 export type Route = RouteWithTemplate | RouteWithRedirect

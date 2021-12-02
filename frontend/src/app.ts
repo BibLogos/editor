@@ -1,5 +1,5 @@
 import { render, html } from 'ube'
-import { Router } from './Core/Router'
+import { Router, context, params } from './Core/Router'
 
 let previousRoute = null
 
@@ -23,6 +23,7 @@ class App {
             }
             else {
                 if (previousRoute?.unload) previousRoute.unload()
+                route.params = params
                 if (previousRoute !== route && route.load) route.load()
                 await render(document.body, route.template())
                 if (previousRoute !== route && route.afterTemplate) route.afterTemplate()

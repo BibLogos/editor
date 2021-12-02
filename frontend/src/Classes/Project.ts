@@ -1,4 +1,5 @@
 import { ProjectData } from '../types'
+import { github } from '../Services/Github'
 
 export class Project {
 
@@ -16,5 +17,13 @@ export class Project {
 
     get slug () {
         return this.#data.full_name
+    }
+
+    get books () {
+        return (async () => {
+            const books = await github.getBooks(this.#data.owner.login, this.#data.name, this.#data.default_branch)
+
+            console.log(books)
+        })()
     }
 }

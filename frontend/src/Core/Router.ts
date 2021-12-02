@@ -6,12 +6,22 @@ import { OauthCallback } from '../Routes/OauthCallback'
 import { Login } from '../Routes/Login'
 import { NotFound } from '../Routes/NotFound'
 
+export let context, params
+
+const wrapAction = (route) => {
+  return (givenContext, givenParams) => {
+    context = givenContext
+    params = givenParams
+    return route
+  }
+}
+
 const routes = [
-  { path: '/', action: () => Home },
-  { path: '/:organisation/:repo', action: () => Editor },
-  { path: '/login', action: () => Login },
-  { path: '/oauth-callback', action: () => OauthCallback },
-  { path: '(.*)', action: () => NotFound }
+  { path: '/', action: wrapAction(Home) },
+  { path: '/:organisation/:repo', action: wrapAction(Editor) },
+  { path: '/login', action: wrapAction(Login) },
+  { path: '/oauth-callback', action: wrapAction(OauthCallback) },
+  { path: '(.*)', action: wrapAction(NotFound) }
 ]
 
 export const Router = new UniversalRouter(routes)
