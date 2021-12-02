@@ -2,7 +2,7 @@ import { html } from 'ube'
 import { Route } from '../types'
 import { BiblePicker } from '../Elements/BiblePicker'
 import { BibleVerses } from '../Elements/BibleVerses'
-import { renderApp } from '../app'
+import { app } from '../app'
 import { SelectionPopup } from '../Elements/SelectionPopup'
 
 export const Editor: Route = {
@@ -26,7 +26,7 @@ export const Editor: Route = {
                 const { bible, language, book, chapter } = this.reference
                 location.hash = `${language}/${bible}/${book}/${chapter}`
 
-                renderApp()
+                app.render()
              }} />
 
              ${this.reference ? html`

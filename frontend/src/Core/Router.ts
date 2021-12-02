@@ -1,14 +1,16 @@
 import UniversalRouter from 'universal-router'
 
 import { Home } from '../Routes/Home'
-import { Login } from '../Routes/Login'
 import { Editor } from '../Routes/Editor'
+import { OauthCallback } from '../Routes/OauthCallback'
+import { Login } from '../Routes/Login'
 import { NotFound } from '../Routes/NotFound'
 
 const routes = [
   { path: '/', action: () => Home },
-  { path: '/login', action: () => Login },
   { path: '/editor', action: () => Editor },
+  { path: '/login', action: () => Login },
+  { path: '/oauth-callback', action: () => OauthCallback },
   { path: '(.*)', action: () => NotFound }
 ]
 

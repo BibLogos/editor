@@ -1,9 +1,11 @@
 import { Route } from '../types'
-import { Authentication } from '../Services/Authentication'
+import { html } from 'ube'
+import { ProjectsOverview } from '../Elements/ProjectsOverview'
 
 export const Home: Route = {
-    redirect: () => {
-        const isLoggedIn = Authentication.isLoggedIn()
-        return isLoggedIn ? '/editor' : '/login'
+    template: () => {
+        return html`
+            <${ProjectsOverview} />
+        `
     }
 }
