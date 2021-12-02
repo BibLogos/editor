@@ -8,7 +8,7 @@ import { NotFound } from '../Routes/NotFound'
 
 const routes = [
   { path: '/', action: () => Home },
-  { path: '/editor', action: () => Editor },
+  { path: '/:organisation/:repo', action: () => Editor },
   { path: '/login', action: () => Login },
   { path: '/oauth-callback', action: () => OauthCallback },
   { path: '(.*)', action: () => NotFound }

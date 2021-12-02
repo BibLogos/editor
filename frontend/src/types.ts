@@ -1,4 +1,5 @@
 import { html } from 'ube'
+import type { components } from '@octokit/openapi-types'
 
 type RouteWithTemplate = {
     template: () => typeof html,
@@ -69,3 +70,5 @@ export type FactObject = {
     range: string
     comment: string
 }
+
+export type ProjectData = components["schemas"]["repo-search-result-item"]

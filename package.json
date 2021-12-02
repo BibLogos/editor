@@ -5,9 +5,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "predev": "docker-compose up -d",
-    "dev": "concurrently --kill-others \"snowpack dev\" \"nodemon backend/server.js\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "snowpack dev"
   },
   "author": "",
   "license": "GPL-3.0-only",
@@ -21,14 +19,14 @@
     "express": "^4.17.1",
     "express-http-proxy": "^1.6.3",
     "octokit": "^1.7.1",
+    "ube": "^0.2.1",
+    "universal-router": "^9.1.0",
     "redis": "^3.1.2"
   },
   "devDependencies": {
     "@snowpack/plugin-sass": "^1.4.0",
     "concurrently": "^6.4.0",
     "nodemon": "^2.0.14",
-    "snowpack": "^3.8.8",
-    "ube": "^0.2.1",
-    "universal-router": "^9.1.0"
+    "snowpack": "^3.8.8"
   }
 }

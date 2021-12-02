@@ -1,14 +1,28 @@
 import { HTML, render, html } from 'ube';
+import { github } from '../Services/Github';
+import { Project } from '../Classes/Project';
 
 export class ProjectsOverview extends HTML.Div {
 
+    private projects: Array<Project> = []
+
     async upgradedCallback() {
+        this.draw()
+        this.projects = await github.getProjects()
         this.draw()
     }
 
     draw () {
         render(this, html`
-            projects
+        ${!this.projects ? html`Loading...` : html`
+        <ul>
+        ${this.projects.map(project => html`
+            <li>
+            <a href=${`/${project.slug}`}>${project.name}</a>
+            </li>
+        `)}
+        </ul>
+        `}
         `)
     }
 }

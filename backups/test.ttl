@@ -1,0 +1,208 @@
+PREFIX ASV_JHN: <https://biblogos.info/facts/ASV/JHN/>
+PREFIX biblogos: <https://biblogos.info/ttl/ontology#>
+
+ASV_JHN:John
+        a       biblogos:Person , biblogos:Male ;
+        biblogos:comment
+                "John the Baptist" ;
+        biblogos:name
+                "John" ;
+        biblogos:reference
+                "JHN.1.6.11:JHN.1.6.11" , "JHN.1.28.11:JHN.1.28.11" , "JHN.1.32.2:JHN.1.32.2" , "JHN.1.35.5:JHN.1.35.5" , "JHN.1.40.7:JHN.1.40.7" , "JHN.1.19.7:JHN.1.19.7" , "JHN.1.26.1:JHN.1.26.1" , "JHN.1.15.1:JHN.1.15.1" , "JHN.3.24.2:JHN.3.24.2" , "JHN.3.23.2:JHN.3.23.2" , "JHN.3.27.1:JHN.3.27.1" , "JHN.3.26.5:JHN.3.26.5" , "JHN.4.1.20:JHN.4.1.20" .
+
+ASV_JHN:Elijah
+        a       biblogos:Person ;
+        biblogos:comment
+                "The Prophet" ;
+        biblogos:name
+                "Elijah" ;
+        biblogos:reference
+                "JHN.1.21.9:JHN.1.21.9" , "JHN.1.25.20:JHN.1.25.20" .
+
+ASV_JHN:Nathanael
+        a       biblogos:Person ;
+        biblogos:comment
+                "One of the disciples" ;
+        biblogos:name
+                "Nathanael" ;
+        biblogos:reference
+                "JHN.1.49.1:JHN.1.49.1" , "JHN.1.46.2:JHN.1.46.2" , "JHN.1.45.3:JHN.1.45.3" , "JHN.1.47.3:JHN.1.47.3" .
+
+ASV_JHN:Philip
+        a       biblogos:Person ;
+        biblogos:comment
+                "One of the disciples" ;
+        biblogos:name
+                "Philip" ;
+        biblogos:reference
+                "JHN.1.48.16:JHN.1.48.16" , "JHN.1.45.1:JHN.1.45.1" , "JHN.1.44.2:JHN.1.44.2" , "JHN.1.43.15:JHN.1.43.15" , "JHN.1.46.14:JHN.1.46.14" .
+
+ASV_JHN:Andrew
+        a       biblogos:Person ;
+        biblogos:comment
+                "One of the disciples" ;
+        biblogos:name
+                "Andrew" ;
+        biblogos:reference
+                "JHN.1.40.14:JHN.1.40.14" , "JHN.1.44.10:JHN.1.44.10" .
+
+ASV_JHN:JohnFatherOfSimon
+        a       biblogos:Person ;
+        biblogos:comment
+                "Father of Simon and Andrew" ;
+        biblogos:name
+                "John" ;
+        biblogos:reference
+                "JHN.1.42.18:JHN.1.42.18" .
+
+ASV_JHN:Simon
+        a       biblogos:Person ;
+        biblogos:comment
+                "Simon Peter" ;
+        biblogos:name
+                "Simon" ;
+        biblogos:reference
+                "JHN.1.42.14:JHN.1.42.14" , "JHN.1.41.7:JHN.1.41.7" .
+
+ASV_JHN:JosephManOfMaryEarthlyFatherOfJesus
+        a       biblogos:Person ;
+        biblogos:comment
+                "Jesus earthly father" ;
+        biblogos:name
+                "Joseph" ;
+        biblogos:reference
+                "JHN.1.45.28:JHN.1.45.28" .
+
+ASV_JHN:Moses
+        a       biblogos:Person ;
+        biblogos:comment
+                "From the old testament" ;
+        biblogos:name
+                "Moses" ;
+        biblogos:reference
+                "JHN.1.17.7:JHN.1.17.7" , "JHN.3.14.3:JHN.3.14.3" .
+
+ASV_JHN:Bethsaida
+        a       biblogos:Locality ;
+        biblogos:name
+                "Bethsaida" ;
+        biblogos:reference
+                "JHN.1.44.5:JHN.1.44.5" .
+
+ASV_JHN:Nazareth
+        a       biblogos:Locality ;
+        biblogos:name
+                "Nazareth" ;
+        biblogos:reference
+                "JHN.1.45.24:JHN.1.45.24" .
+
+ASV_JHN:Jerusalem
+        a       biblogos:Locality ;
+        biblogos:name
+                "Jerusalem" ;
+        biblogos:reference
+                "JHN.1.19.15:JHN.1.19.15" , "JHN.2.13.15:JHN.2.13.15" , "JHN.2.23.6:JHN.2.23.6" .
+
+ASV_JHN:Isaiah
+        a       biblogos:Person ;
+        biblogos:name
+                "Isaiah" ;
+        biblogos:reference
+                "JHN.1.23.22:JHN.1.23.22" .
+
+ASV_JHN:Bethany
+        a       biblogos:Locality ;
+        biblogos:comment
+                "Bethany beyond the Jordan" ;
+        biblogos:name
+                "Bethany" ;
+        biblogos:reference
+                "JHN.1.28.6:JHN.1.28.6" .
+
+ASV_JHN:WaterIntoWine
+        a       biblogos:Miracle ;
+        biblogos:name
+                "Turning water into wine" ;
+        biblogos:reference
+                "JHN.2.1.1:JHN.2.11.21" .
+
+ASV_JHN:Cana
+        a       biblogos:Locality ;
+        biblogos:name
+                "Cana" ;
+        biblogos:reference
+                "JHN.2.1.10:JHN.2.1.10" , "JHN.2.11.9:JHN.2.11.9" , "JHN.4.46.6:JHN.4.46.6" .
+
+ASV_JHN:Capernaum
+        a       biblogos:Locality ;
+        biblogos:name
+                "Capernaum" ;
+        biblogos:reference
+                "JHN.2.12.7:JHN.2.12.7" .
+
+ASV_JHN:Nicodemus
+        a       biblogos:Person ;
+        biblogos:name
+                "Nicodemus" ;
+        biblogos:reference
+                "JHN.3.1.10:JHN.3.1.10" , "JHN.3.4.1:JHN.3.4.1" , "JHN.3.9.1:JHN.3.9.1" .
+
+ASV_JHN:Juda
+        a       biblogos:Locality ;
+        biblogos:name
+                "Judæa" ;
+        biblogos:reference
+                "JHN.3.22.13:JHN.3.22.13" , "JHN.4.3.3:JHN.4.3.3" .
+
+ASV_JHN:non
+        a       biblogos:Locality ;
+        biblogos:comment
+                "Near Salim" ;
+        biblogos:name
+                "Ænon" ;
+        biblogos:reference
+                "JHN.3.23.7:JHN.3.23.7" .
+
+ASV_JHN:Salim
+        a biblogos:Locality ;
+        biblogos:name "Salim" ;
+        biblogos:reference "JHN.3.23.10:JHN.3.23.10" .
+
+ASV_JHN:Galilee
+        a       biblogos:Locality ;
+        biblogos:name
+                "Galilee" ;
+        biblogos:reference
+                "JHN.4.3.8:JHN.4.3.8" .
+
+ASV_JHN:Samaria
+        a       biblogos:Locality ;
+        biblogos:name
+                "Samaria" ;
+        biblogos:reference
+                "JHN.4.4.7:JHN.4.4.7" , "JHN.4.5.8:JHN.4.5.8" .
+
+ASV_JHN:Sychar
+        a       biblogos:Locality ;
+        biblogos:name
+                "Sychar" ;
+        biblogos:reference
+                "JHN.4.5.10:JHN.4.5.10" .
+
+ASV_JHN:Jacob
+        a       biblogos:Person ;
+        biblogos:comment
+                "Probably from the old testament" ;
+        biblogos:name
+                "Jacob" ;
+        biblogos:reference
+                "JHN.4.5.18:JHN.4.5.18" .
+
+ASV_JHN:JosephSonOfJacob
+        a       biblogos:Person ;
+        biblogos:comment
+                "Probably from the old testament" ;
+        biblogos:name
+                "Joseph" ;
+        biblogos:reference
+                "JHN.4.5.23:JHN.4.5.23" .
