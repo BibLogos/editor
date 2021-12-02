@@ -1,6 +1,6 @@
 import { HTML, render, html } from 'ube';
 import { selectMaker } from '../Helpers/selectMaker'
-import { ApiBible } from '../Services/ApiBible';
+import { ApiBible } from '../Plugins/TextSources/ApiBible';
 import { BibleReference, Language, Bible } from '../types';
 
 export class BiblePicker extends HTML.Div {

@@ -1,6 +1,6 @@
-import { env } from '../Core/Env'
-import { cache } from '../Decorators/cache'
-import { uniqueObject } from '../Helpers/uniqueObject'
+import { env } from '../../Core/Env'
+import { cache } from '../../Decorators/cache'
+import { uniqueObject } from '../../Helpers/uniqueObject'
 
 export class ApiBibleClass {
     
@@ -16,7 +16,7 @@ export class ApiBibleClass {
     @cache()
     async getBibles () {
         try {
-            const response = await fetch(`${env.PROXY}/https://api.scripture.api.bible/v1/bibles`)
+            const response = await fetch(`${env.API}/plugins/api.bible/bibles`)
             const { data } = await response.json()
             return data.sort((a, b) => a.name.localeCompare(b.name))
         }
@@ -28,7 +28,7 @@ export class ApiBibleClass {
     @cache()
     async getBooks (bibleId: string) {
         try {
-            const response = await fetch(`${env.PROXY}/https://api.scripture.api.bible/v1/bibles/${bibleId}/books`)
+            const response = await fetch(`${env.API}/plugins/api.bible/bibles/${bibleId}/books`)
             const { data } = await response.json()
             return data
         }
@@ -40,7 +40,7 @@ export class ApiBibleClass {
     @cache()
     async getChapters (bibleId: string, bookId: string) {
         try {
-            const response = await fetch(`${env.PROXY}/https://api.scripture.api.bible/v1/bibles/${bibleId}/books/${bookId}/chapters`)
+            const response = await fetch(`${env.API}/plugins/api.bible/bibles/${bibleId}/books/${bookId}/chapters`)
             const { data } = await response.json()
             return data
         }
@@ -52,7 +52,7 @@ export class ApiBibleClass {
     @cache()
     async getVerses (bibleId: string, bookId: string, chapterId: string) {
         try {
-            const response = await fetch(`${env.PROXY}/https://api.scripture.api.bible/v1/bibles/${bibleId}/chapters/${`${bookId}.${chapterId}?content-type=json&include-verse-spans=true&include-notes=true`}`)
+            const response = await fetch(`${env.API}/plugins/api.bible/bibles/${bibleId}/chapters/${`${bookId}.${chapterId}?content-type=json&include-verse-spans=true&include-notes=true`}`)
             const { data } = await response.json()
             return data
         }
@@ -63,3 +63,6 @@ export class ApiBibleClass {
 }
 
 export const ApiBible = new ApiBibleClass()
+
+// https://api.scripture.api.bible/v1
+// plugins/api.bible/

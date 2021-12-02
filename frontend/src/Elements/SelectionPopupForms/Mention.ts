@@ -2,7 +2,7 @@ import { html } from 'ube';
 import { Database } from '../../Services/Database';
 import { getState, clearState } from '../../Helpers/getState';
 import { cleanString } from '../../Helpers/cleanString';
-import { ApiBible } from '../../Services/ApiBible'
+import { ApiBible } from '../.././Plugins/TextSources/ApiBible'
 import { toCamelCase } from '../../Helpers/toCamelCase';
 
 export const Mention = {

@@ -18,10 +18,11 @@ This editor helps with creating a dataset that may present those facts. It is ma
 - Docker Compose for launching Apache Jena
 - https://scripture.api.bible/
 
-## Screenshot
-
-![screenshot](https://raw.githubusercontent.com/BibLogos/editor/main/screenshots/BibLogos-editor.png?token=AAFHBNZXKK5AASB2TX3PQRDBTZCR2)
-
 ## A small demonstration of the product progress (links to YouTube)
 
 [<img src="https://i.ytimg.com/vi_webp/XYsRmsiwMNY/maxresdefault.webp">](https://www.youtube.com/watch?v=XYsRmsiwMNY)
+
+## Running the worker locally
+
+- Navigate into /api
+- `npx miniflare dist/api.mjs --watch --debug --modules --env ../.env`

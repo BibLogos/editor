@@ -5,7 +5,10 @@ let env = {}
 if (fs.existsSync('.env')) {
   const data = fs.readFileSync('.env', 'utf8')
   const buf = Buffer.from(data)
-  env = dotenv.parse(buf)  
+  const allEnv = dotenv.parse(buf)
+  for (const [key, value] of Object.entries(allEnv)) {
+    if (key.startsWith('FRONTEND_')) env[key.substr(9)] = value
+  }
 }
 
 export default {
@@ -24,13 +27,8 @@ export default {
       "src": ".*", 
       dest: (req, res) => {
         let indexText = fs.readFileSync('frontend/html/index.html', 'utf8')
-
-        indexText = indexText.replace('<script type="application/json" id="env-json"></script>', `
-        <script type="application/json" id="env-json">
-          ${JSON.stringify(env, null, 2)}
-        </script>
-        `)
-
+        indexText = indexText.replace('<script type="application/json" id="env-json"></script>', 
+        `<script type="application/json" id="env-json">${JSON.stringify(env)}</script>`)
         res.writeHead(200)
         res.end(indexText)
       },

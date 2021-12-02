@@ -1,5 +1,5 @@
 import { HTML, render, html } from 'ube'
-import { ApiBible } from '../Services/ApiBible'
+import { ApiBible } from '../Plugins/TextSources/ApiBible'
 import { BibleReference } from '../types'
 import { debounce } from '../Helpers/debounce'
 import { bibleScripture } from '../Helpers/bibleScripture'

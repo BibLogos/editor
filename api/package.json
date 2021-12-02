@@ -1,9 +1,19 @@
 {
   "private": true,
-  "name": "login",
+  "name": "api",
   "version": "1.0.0",
-  "description": "The service on CloudFlare for login into Github oAuth app",
-  "main": "index.js",
+  "description": "The api on CloudFlare for login into Github oAuth app",
+  "main": "api.mjs",
+  "type": "module",
+  "scripts": {
+    "build": "rollup -c"
+  },
   "author": "Daniel Beeke <mail@danielbeeke.nl>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "rollup": "^2.60.2"
+  },
+  "devDependencies": {
+    "miniflare": "^1.4.1"
+  }
 }
