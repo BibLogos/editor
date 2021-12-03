@@ -1,12 +1,22 @@
 import { ProjectData } from '../types'
 import { github } from '../Services/Github'
 
+import { ApiBible } from '../Plugins/TextSources/ApiBible'
+
+const plugins = {
+    ApiBible
+}
+
 export class Project {
 
-    readonly #data: ProjectData
+    #data: ProjectData
+    books
 
-    constructor (data: ProjectData) {
+    async init (data: ProjectData) {
         this.#data = data
+        const books = await github.getBooks(this.#data.owner.login, this.#data.name, this.#data.default_branch)
+        this.books = books.map(book => new plugins[book.type](this, book))
+        return this
     }
 
     get name () {
@@ -19,11 +29,7 @@ export class Project {
         return this.#data.full_name
     }
 
-    get books () {
-        return (async () => {
-            const books = await github.getBooks(this.#data.owner.login, this.#data.name, this.#data.default_branch)
-
-            console.log(books)
-        })()
+    get branch () {
+        return this.#data.default_branch
     }
 }

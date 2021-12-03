@@ -18,7 +18,7 @@ const wrapAction = (route) => {
 
 const routes = [
   { path: '/', action: wrapAction(Home) },
-  { path: '/:organisation/:repo', action: wrapAction(Editor) },
+  { path: '/:ownerId/:repoId/:bookId?/:chapterId?', action: wrapAction(Editor) },
   { path: '/login', action: wrapAction(Login) },
   { path: '/oauth-callback', action: wrapAction(OauthCallback) },
   { path: '(.*)', action: wrapAction(NotFound) }
@@ -27,5 +27,5 @@ const routes = [
 export const Router = new UniversalRouter(routes)
 
 export const goTo = (path) => {
-  if (location.pathname !== path) location.pathname = path
+  if (location.pathname !== path) history.pushState({}, '', path)
 }

@@ -1,7 +1,7 @@
-import { parseInts } from "./parseInts"
-import { stringToColor } from "./stringToColor"
+import { parseInts } from "../Helpers/parseInts"
+import { stringToColor } from "../Helpers/stringToColor"
 
-export class referenceProxy {
+export class ReferenceProxy {
 
     private startBook: string
     private startChapter: number
@@ -16,9 +16,8 @@ export class referenceProxy {
 
     private object
 
-    constructor (object) {
-        this.object = object
-        const [start, end] = object.reference.split(':')
+    constructor (reference) {
+        const [start, end] = reference.split(':')
 
         const [startBook, startChapter, startVerse, startWord] = parseInts(start.split('.'))
         const startObject = {startBook, startChapter, startVerse, startWord}
@@ -35,9 +34,9 @@ export class referenceProxy {
         if (chapter < this.startChapter || chapter > this.endChapter) return
         if (verse < this.startVerse || verse > this.endVerse) return
 
-        if (verse > this.startVerse && verse < this.endVerse) return this.object
-        if (verse === this.startVerse && word >= this.startWord && word <= this.endWord) return this.object
-        if (verse === this.endVerse && word >= this.startWord && word <= this.endWord) return this.object
+        if (verse > this.startVerse && verse < this.endVerse) return true
+        if (verse === this.startVerse && word >= this.startWord && word <= this.endWord) return true
+        if (verse === this.endVerse && word >= this.startWord && word <= this.endWord) return true
     }
 
     get color () {

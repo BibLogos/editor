@@ -1,6 +1,8 @@
 export default {
     'api.bible': async (request, env, ...pathParts) => {
-        const proxyRequest = new Request(`https://api.scripture.api.bible/v1/${pathParts.join('/')}`, {
+        const parsedURL = new URL(request.url)
+
+        const proxyRequest = new Request(`https://api.scripture.api.bible/v1/${pathParts.join('/')}${parsedURL.search}`, {
             headers: { 'api-key': env.API_BIBLE_KEY }
         })
 

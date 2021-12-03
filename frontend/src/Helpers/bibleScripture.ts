@@ -1,6 +1,6 @@
 import { html as syncHtml } from 'ube';
 import { html } from 'uhtml/async';
-import { referenceProxy } from './referenceProxy'
+import { ReferenceProxy } from '../Classes/ReferenceProxy'
 import { parseInts } from './parseInts'
 import { lastPart } from './lastPart'
 
@@ -84,7 +84,7 @@ const recurse = async (part) => {
 }
 
 export const bibleScripture = async (parts, highlights: Array<any> = []) => {
-    references = await Promise.all(highlights.map(async highlight => await new referenceProxy(highlight).makeColor()))
+    references = await Promise.all(highlights.map(async highlight => await new ReferenceProxy(highlight).makeColor()))
     counters.clear()
     const inner = await Promise.all(parts.map(recurse))
     return syncHtml`<div class="scripture-styles">${inner}</div>`
