@@ -32,6 +32,12 @@ export default {
         if (pluginName in plugins) { return plugins[pluginName](request, env, ...pluginArguments) }
       }
 
+      if (parsedURL.pathname === '/token') {
+        return new Response(env.GITHUB_TOKEN, { status: 200, headers: {
+          "Access-Control-Allow-Origin": "*",
+        }})
+      }
+
       if (parsedURL.pathname === '/login') {
         // redirect GET requests to the OAuth login page on github.com
         return Response.redirect(`https://github.com/login/oauth/authorize?client_id=${client_id}`, 302)

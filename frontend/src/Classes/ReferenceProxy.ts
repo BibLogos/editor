@@ -12,9 +12,6 @@ export class ReferenceProxy {
     private endChapter: number
     private endVerse: number
     private endWord: number
-    private _color: any
-
-    private object
 
     constructor (reference) {
         const [start, end] = reference.split(':')
@@ -39,12 +36,4 @@ export class ReferenceProxy {
         if (verse === this.endVerse && word >= this.startWord && word <= this.endWord) return true
     }
 
-    get color () {
-        return this._color
-    }
-
-    async makeColor () {
-        this._color = await stringToColor(this.object.predicate)
-        return this
-    }
 }

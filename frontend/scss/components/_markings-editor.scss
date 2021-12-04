@@ -1,17 +1,9 @@
-.bible-verses {
-    padding: 60px;
+.markings-editor {
     user-select: none;
-    flex: 10 1 auto;
-    max-height: 100%;
-    overflow: auto;
-    overflow-x: hidden;
-
-    .inner {
-        max-width: var(--max-width);
-        width: 100%;
-        margin-inline: auto;       
-        position: relative; 
-    }
+    font-size: 26px;
+    line-height: 50px;
+    max-width: 800px;
+    margin: 0 auto;
 
     .word {
         cursor: pointer;
@@ -21,8 +13,8 @@
             border-radius: 5px;
             position: absolute;
             top: 0;
-            left: -6px;
-            right: 3px;
+            left: -4px;
+            right: -3px;
             content: '';
             display: block;
             height: 100%;
@@ -30,6 +22,10 @@
             background-color: var(--color-primary);
             z-index: -10;
         }
+    }
+
+    .space {
+        pointer-events: none;
     }
 
     .word.selected {
@@ -45,31 +41,29 @@
 
     .markings {
         position: absolute;
-        width: 100%;
+        width: calc(100% + 2px);
         top: 100%;
-        left: -5px;
-        border-radius: 3px;
+        left: -2px;
     }
 
     .marking {
         display: block;
-        height: 4px;
+        height: 3px;
         background-color: var(--color);
+        border-radius: 3px;
         margin-bottom: 2px;
         width: 100%;        
+    }
 
-        &.miracle {
-            background-color: rgb(187, 215, 233);
+    .verse-number {
+        pointer-events: none;
+        font-size-adjust: .4;
+        color: var(--color-gray-dark);
+
+        &:after {
+            height: 100%;
+            height: 133%;
+            top: -7px;
         }
     }
-
-    .v .word.selected:after {
-        display: none;
-    }
-}
-
-.selection-area {
-    background: rgba(46, 115, 252, 0.11);
-    border: 2px solid rgba(98, 155, 255, 0.81);
-    border-radius: 0.1em;
 }

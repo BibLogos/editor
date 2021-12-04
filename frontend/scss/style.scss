@@ -1,14 +1,8 @@
-@import './scripture-style/scripture-styles.scss';
-
 @import './layout';
 @import './variables';
 
 @import './components/select';
 @import './components/button';
-@import './components/bible-picker';
-@import './components/field';
 @import './components/input';
-@import './components/login-form';
-@import './components/bible-verses';
+@import './components/markings-editor';
 @import './components/selection-popup';
-@import './components/result-list';

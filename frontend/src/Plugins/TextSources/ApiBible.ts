@@ -31,7 +31,7 @@ export class ApiBible extends TextSourceBase implements TextSource {
             .map(match => {
                 const verse = parseInt(match[1])
                 const text = match[2].trim() 
-                const prefix = html`<span class="ignore">${verse} </span>`
+                const prefix = html`<span class="verse-number word">${verse} </span>`
                 return [verse, text, prefix]
             })
         }
