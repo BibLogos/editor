@@ -308,3 +308,10 @@ Sha1.prototype.arrayBuffer = function () {
     dataView.setUint32(16, this.h4);
     return buffer;
 };
+
+
+export const hash = (string) => {
+    const stringHash = new Sha1()
+    stringHash.update(string)
+    return stringHash.hex()
+}

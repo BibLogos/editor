@@ -12,8 +12,8 @@ class githubClass {
     async init () {
         if (!this.#app) {
             const tokenResponse = await fetch(`${env.API}/token`)
-            const auth = await tokenResponse.text()
-            this.#app = new Octokit({ auth })    
+            const { token } = await tokenResponse.json()    
+            this.#app = new Octokit({ auth: token })    
         }
     }
 

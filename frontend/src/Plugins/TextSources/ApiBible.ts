@@ -7,11 +7,17 @@ import { html } from 'ube'
 export class ApiBible extends TextSourceBase implements TextSource {
 
     @cache()
-    async getChapters (bibleId: string, bookId: string) {
+    async getChapters () {
+        const { bible, book } = this.settings
+
         try {
-            const response = await fetch(`${env.API}/plugins/api.bible/bibles/${bibleId}/books/${bookId}/chapters`)
+            const response = await fetch(`${env.API}/plugins/api.bible/bibles/${bible}/books/${book}/chapters`)
             const { data } = await response.json()
-            return data
+
+            return data.map(({ number }) => {
+                const label = number === 'intro' ? 'Introduction' : number
+                return [number, label]
+            })
         }
         catch (exception) {
             throw new Error('Could not fetch chapters from api.bible')
@@ -25,17 +31,22 @@ export class ApiBible extends TextSourceBase implements TextSource {
         try {
             const response = await fetch(`${env.API}/plugins/api.bible/bibles/${bible}/chapters/${`${book}.${chapter}?content-type=text`}`)
             const { data } = await response.json()
-
             const regex = /\[(\d+)\]([^[]*)/g
-            return [...data.content.matchAll(regex)]
+            const matches = [...data.content.matchAll(regex)]
+
+            // Introductions dont have verses.
+            if (matches.length === 0) return [[1, data.content]]
+
+            return matches
             .map(match => {
                 const verse = parseInt(match[1])
                 const text = match[2].trim() 
-                const prefix = html`<span class="verse-number word">${verse} </span>`
+                const prefix = (markings) => html`<span class="verse-number word">${verse}${markings} </span>`
                 return [verse, text, prefix]
             })
         }
         catch (exception) {
+            console.error(exception)
             throw new Error('Could not fetch verses from api.bible')
         }
     }

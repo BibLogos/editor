@@ -33,8 +33,9 @@ export default {
       }
 
       if (parsedURL.pathname === '/token') {
-        return new Response(env.GITHUB_TOKEN, { status: 200, headers: {
+        return new Response(JSON.stringify({ token: env.GITHUB_TOKEN }), { status: 200, headers: {
           "Access-Control-Allow-Origin": "*",
+          "content-type": "application/json",
         }})
       }
 

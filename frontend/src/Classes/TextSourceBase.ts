@@ -6,6 +6,7 @@ export class TextSourceBase {
     
     #project: Project
     settings
+    #fileCache = new Map()
 
     constructor (project: Project, settings) {
         this.#project = project
@@ -21,8 +22,12 @@ export class TextSourceBase {
         const parser = new Parser()
         const { slug, branch } = this.#project
         const sources: Array<string> = await Promise.all(this.settings.files.map(async fileMeta => {
-            const response = await fetch(`https://raw.githubusercontent.com/${slug}/${branch}/${fileMeta.file}`)
-            return await response.text()
+            const url = `https://raw.githubusercontent.com/${slug}/${branch}/${fileMeta.file}`
+            if (this.#fileCache.has(url)) return this.#fileCache.get(url)
+            const response = await fetch(url)
+            const text = await response.text()
+            this.#fileCache.set(url, text)
+            return text
         }))
 
         const allPrefixes = {}

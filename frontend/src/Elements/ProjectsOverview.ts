@@ -2,7 +2,9 @@ import { HTML, render, html } from 'ube';
 import { github } from '../Services/Github';
 import { Project } from '../Classes/Project';
 
-export class ProjectsOverview extends HTML.Div {
+const HTMLDiv = HTML.Div as typeof HTMLElement
+
+export class ProjectsOverview extends HTMLDiv {
 
     private projects: Array<Project> = []
 
@@ -18,7 +20,7 @@ export class ProjectsOverview extends HTML.Div {
         <ul>
         ${this.projects.map(project => html`
             <li>
-            <a href=${`/${project.slug}`}>${project.name}</a>
+            <a href=${`/editor/${project.slug}`}>${project.name}</a>
             </li>
         `)}
         </ul>

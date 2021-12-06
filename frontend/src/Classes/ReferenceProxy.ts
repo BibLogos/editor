@@ -36,4 +36,12 @@ export class ReferenceProxy {
         if (verse === this.endVerse && word >= this.startWord && word <= this.endWord) return true
     }
 
+    isEnd (book, chapter, verse, word) {
+        // For now we only support references that span over one book.
+        if (book !== this.startBook && book !== this.endBook) return
+        if (chapter < this.startChapter || chapter > this.endChapter) return
+        if (verse < this.startVerse || verse > this.endVerse) return
+
+        if (verse === this.endVerse && word === this.endWord) return true
+    }
 }

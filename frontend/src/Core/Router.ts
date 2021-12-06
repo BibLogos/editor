@@ -6,6 +6,8 @@ import { OauthCallback } from '../Routes/OauthCallback'
 import { Login } from '../Routes/Login'
 import { NotFound } from '../Routes/NotFound'
 
+import { app } from '../app'
+
 export let context, params
 
 const wrapAction = (route) => {
@@ -18,7 +20,7 @@ const wrapAction = (route) => {
 
 const routes = [
   { path: '/', action: wrapAction(Home) },
-  { path: '/:ownerId/:repoId/:bookId?/:chapterId?', action: wrapAction(Editor) },
+  { path: '/editor/:ownerId/:repoId/:bookId?/:chapterId?', action: wrapAction(Editor) },
   { path: '/login', action: wrapAction(Login) },
   { path: '/oauth-callback', action: wrapAction(OauthCallback) },
   { path: '(.*)', action: wrapAction(NotFound) }
@@ -28,4 +30,5 @@ export const Router = new UniversalRouter(routes)
 
 export const goTo = (path) => {
   if (location.pathname !== path) history.pushState({}, '', path)
+  return app.render()
 }

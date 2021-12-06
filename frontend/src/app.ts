@@ -3,9 +3,10 @@ import { Router, context, params } from './Core/Router'
 
 let previousRoute = null
 
-class App {
+class App extends EventTarget {
 
     constructor () {
+        super()
         this.render()
     }
 
@@ -23,9 +24,19 @@ class App {
             }
             else {
                 if (previousRoute?.unload) previousRoute.unload()
+                const oldParams = route.params
                 route.params = params
-                if (previousRoute !== route && route.load) route.load()
+
+                const paramsWereSame = oldParams === params
+
+                if ((previousRoute !== route || !paramsWereSame) && route.load) {
+                    route.load()
+                }
                 await render(document.body, route.template())
+
+                if (previousRoute !== route) this.dispatchEvent(new CustomEvent('route-change'))
+                if (previousRoute === route && !paramsWereSame) this.dispatchEvent(new CustomEvent('params-change'))
+
                 if (previousRoute !== route && route.afterTemplate) route.afterTemplate()
     
                 previousRoute = route
