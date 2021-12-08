@@ -3,6 +3,7 @@ import { PopupPartInterface } from "../../types";
 import { PopupPartbase } from '../../Classes/PopupPartBase';
 import { icon } from '../../Helpers/icon';
 import { select } from '../../Helpers/select';
+import { t } from '../../Helpers/t';
 
 export class Create extends PopupPartbase implements PopupPartInterface {
 
@@ -20,7 +21,7 @@ export class Create extends PopupPartbase implements PopupPartInterface {
     button () {
         return html`
         <button onclick=${() => { this.selectionPopup.form = 'create-search'; this.selectionPopup.draw() }} class="button nowrap">
-            ${icon('add')} Create marking
+            ${icon('add')} ${t`Create marking`}
         </button>`
     }
 
@@ -44,10 +45,10 @@ export class Create extends PopupPartbase implements PopupPartInterface {
 
         return html`
             <!--uhtml crashes without this-->
-            ${!this.factPredicates ? html`<span>Loading...</span>` : html``}
+            ${!this.factPredicates ? html`<span>${t`Loading...`}</span>` : html``}
 
             ${this.factPredicates ? select({
-                title: 'Relation type',
+                title: t`Relation type`,
                 values: [
                     ['', '- Select -'],
                     ...this.factPredicates.map(factPredicate => [factPredicate.predicate, factPredicate.label])
@@ -58,7 +59,7 @@ export class Create extends PopupPartbase implements PopupPartInterface {
                 }
             }) : html``}
 
-            ${this.selectionPopup.predicate && this.searchResults === null ? html`<span>Searching...</span>` : html``}
+            ${this.selectionPopup.predicate && this.searchResults === null ? html`<span>${t`Searching...`}</span>` : html``}
 
             ${this.searchResults !== null ? (this.searchResults.length ? html`${this.searchResults.map(searchResult => html`
             <span class="existing-item">
@@ -68,7 +69,7 @@ export class Create extends PopupPartbase implements PopupPartInterface {
                 }} class="label">${searchResult.name}${searchResult.comment ? html`, ${searchResult.comment}` : html``}</span>
             </span>
             `)}` : html`
-            <span class="label existing-item">No results</span>
+            <span class="label existing-item">${t`No results`}</span>
             `) : html``}
 
             ${this.selectionPopup.predicate ? html`
@@ -76,7 +77,7 @@ export class Create extends PopupPartbase implements PopupPartInterface {
                 this.selectionPopup.form = 'create'; 
                 this.selectionPopup.draw() 
             }} class="button nowrap">
-                ${icon('add')} New marking
+                ${icon('add')} ${t`New marking`}
             </button>
             ` : html``}
         `

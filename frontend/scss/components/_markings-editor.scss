@@ -4,6 +4,8 @@
     line-height: 50px;
     max-width: 800px;
     margin: var(--padding) auto;
+    padding-inline-start: 60px;
+    position: relative;
 
     .word {
         cursor: pointer;
@@ -68,6 +70,60 @@
 
         .markings {
             top: calc(100% + 2px);
+        }
+    }
+
+    .big-marking {
+        height: calc(var(--y2) - var(--y1));
+        width: 50px;
+        top: var(--y1);
+        position: absolute;
+        left: 0;
+
+
+        &:before {
+            border-radius: 2px;
+            content: '';
+            display: block;
+            position: absolute;
+            top: 0;
+            width: 300px;
+            left: calc(50% - 8px);
+            z-index: -1;
+            opacity: .1;
+            height: 100%;
+            background: linear-gradient(0.25turn, var(--color), white);
+        }
+
+        &:after {
+            border-radius: 2px;
+            content: '';
+            display: block;
+            position: absolute;
+            top: 0;
+            width: 3px;
+            left: calc(50% - 8px);
+            z-index: -1;
+            height: 100%;
+            background-color: var(--color);
+        }
+
+        .text {
+            line-height: 32px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 14px;
+            border-radius: 10px;
+            background-color: white;
+            writing-mode: sideways-lr;
+            position: sticky;
+            max-height: 100%;
+            white-space: nowrap;
+            left: 0;
+            top: 40px;
+            margin-bottom: 13px;
+            transform-origin: left;
+            padding-inline: 10px;
         }
     }
 }

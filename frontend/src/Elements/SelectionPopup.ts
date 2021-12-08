@@ -11,9 +11,11 @@ const canceler = (event) => event.stopImmediatePropagation()
 
 export class SelectionPopup extends HTMLDiv {
 
-    private subject
-    private predicate
-    private object
+    private subject = ''
+    private predicate = ''
+    private object = ''
+    private name = ''
+    private comment = ''
     private selections
     private markings
     private form

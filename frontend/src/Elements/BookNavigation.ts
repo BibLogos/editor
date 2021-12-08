@@ -3,6 +3,7 @@ import { params } from '../Core/Router';
 import { github } from '../Services/Github'
 import { select } from '../Helpers/select';
 import { goTo } from '../Core/Router';
+import { t } from '../Helpers/t';
 
 const HTMLDiv = HTML.Div as typeof HTMLElement
 
@@ -22,7 +23,7 @@ export class BookNavigation extends HTMLDiv {
 
     draw () {
         render(this, select({
-            title: 'Chapter',
+            title: t`Chapter`,
             values: this.chapters, 
             onchange: (event) => {
                 const pathParts = location.pathname.split('/')

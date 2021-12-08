@@ -44,4 +44,8 @@ export class ReferenceProxy {
 
         if (verse === this.endVerse && word === this.endWord) return true
     }
+
+    get isShort () {
+        return this.startVerse + 2 > this.endVerse
+    }
 }

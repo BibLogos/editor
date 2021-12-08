@@ -6,6 +6,7 @@ import SelectionArea from '@viselect/vanilla'
 import { goTo, params } from '../Core/Router';
 import { BookNavigation } from '../Elements/BookNavigation'
 import { app } from '../app';
+import { t } from '../Helpers/t';
 
 const HTMLDiv = HTML.Div as typeof HTMLElement
 
@@ -14,6 +15,7 @@ export class MarkingsEditor extends HTMLDiv {
     private text
     private selection
     private markings
+    private bigMarkings
     private book
     private markingsStore
     private element
@@ -42,6 +44,7 @@ export class MarkingsEditor extends HTMLDiv {
         this.text = await this.book.getText(chapterId)
         this.markingsStore = await this.book.getMarkingsStore()
         this.markings = await this.markingsStore.getMarkings(chapterId)
+        this.bigMarkings = this.markings.filter(marking => !marking.reference.isShort)
 
         await this.draw()
         this.createSelectionArea()
@@ -135,6 +138,8 @@ export class MarkingsEditor extends HTMLDiv {
     }
 
     wordMarkings (wordHighlights, isSpace = false, nextWordHighlights = []) {
+        wordHighlights = wordHighlights.filter(wordHighlight => wordHighlight.reference.isShort)
+
         return html`<span class="markings">${
             wordHighlights.map(wordHighlight => {
                 const highlightExistsInNextWord = nextWordHighlights.find(nextHighlight => nextHighlight.predicate === wordHighlight.predicate)
@@ -166,7 +171,7 @@ export class MarkingsEditor extends HTMLDiv {
 
         return html`<span 
             title=${title} 
-            person=${personMarking?.thing} 
+            person=${personMarking?.subject} 
             chapter-id=${chapterId}
             class="word" 
             word-number=${wordNumber} 
@@ -180,6 +185,7 @@ export class MarkingsEditor extends HTMLDiv {
 
         return render(this, this.text ? html`
         <div params=${JSON.stringify(params)} ref=${element => this.element = element} class="markings-editor">
+
             ${this.text.map(([lineNumber, line, prefix]) => {
 
                 // TODO LOWPRIO can we prevent the case where a bible verse is marked and then the first word of the sentence and then nothing?
@@ -192,10 +198,27 @@ export class MarkingsEditor extends HTMLDiv {
                 .map((word, index) => this.wordTemplate(chapterId, lineNumber, index + 1, word))
                 return html.for(words)`${prefix ? prefix(prefixMarkings) : null}${words}`
             })}
+
+            ${this.bigMarkings.map(marking => {
+                const type = lastPart(marking.predicate)
+                return html`<div ref=${(element) => {
+                    setTimeout(() => {
+                        const startWord: HTMLElement = this.querySelector(`[chapter-id="${chapterId}"][line-number="${marking.reference.startVerse}"][word-number="${marking.reference.startWord}"]`)
+                        const endWord: HTMLElement = this.querySelector(`[chapter-id="${chapterId}"][line-number="${marking.reference.endVerse}"][word-number="${marking.reference.endWord}"]`)
+
+                        element.style.setProperty('--y1', (startWord.offsetTop - 6) + 'px')
+                        element.style.setProperty('--y2', (endWord.offsetTop + 50) + 'px')
+                        element.style.setProperty('--color', stringToColor(type.toLowerCase()))
+                    })
+                }} class="big-marking">
+                    <span class="text">${marking.name}</span>
+                </div>`
+            })}
+
         </div>
 
         <${BookNavigation} />
-        ` : html`<span>Loading...</span>`)
+        ` : html`<span>${t`Loading...`}</span>`)
     }
 }
  
