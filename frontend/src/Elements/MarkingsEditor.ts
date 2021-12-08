@@ -21,10 +21,7 @@ export class MarkingsEditor extends HTMLDiv {
     async upgradedCallback() {
         await this.draw()
         await this.loadData()
-
-        app.addEventListener('params-change', async () => {
-            await this.loadData()
-        })
+        app.addEventListener('params-change', () => this.loadData())
     }
 
     async loadData () {
@@ -47,10 +44,15 @@ export class MarkingsEditor extends HTMLDiv {
         this.markings = await this.markingsStore.getMarkings(chapterId)
 
         await this.draw()
-        if (!this.selection) this.createSelectionArea()
+        this.createSelectionArea()
     }
 
     createSelectionArea () {
+        const bookAbbreviation = this.book.settings.book
+        let { chapterId } = params
+
+        if (this.selection) this.selection.destroy()
+
         this.selection = new SelectionArea({
             selectables: ['.word'],
             boundaries: ['.markings-editor']
@@ -89,12 +91,26 @@ export class MarkingsEditor extends HTMLDiv {
             // Create an array containing selections from the selected elements.
             const selections = [...this.element.querySelectorAll('.word.selected')]
             .filter(word => word.hasAttribute('line-number'))
-            .map(word => [
-                parseInt(word.getAttribute('line-number')),
-                parseInt(word.getAttribute('word-number')),
-                word.innerText,
-                word
-            ])
+            .map(word => {
+                const lineNumber = parseInt(word.getAttribute('line-number'))
+                const wordNumber = parseInt(word.getAttribute('word-number'))
+
+                const markings = this.markings
+                .filter(({ reference }) => reference.includes(bookAbbreviation, parseInt(chapterId), lineNumber, wordNumber))
+       
+                const popup = word.querySelector('.selection-popup')
+                if (popup) popup.remove()
+                const text = word.innerText.replace(/[\p{P}$+<=>^`|~]/gu, '').trim()
+                if (popup) word.appendChild(popup)
+
+                return {
+                    lineNumber,
+                    wordNumber,
+                    text,
+                    markings,
+                    element: word
+                }
+            })
 
             const selectionGroups = new Set()
             let currentSelectionGroup = []
@@ -105,7 +121,7 @@ export class MarkingsEditor extends HTMLDiv {
                 }
 
                 const previousSelection = currentSelectionGroup.at(-1)
-                if (selection[3].previousElementSibling.previousElementSibling !== previousSelection[3]) {
+                if (selection.element.previousElementSibling.previousElementSibling !== previousSelection.element) {
                     if (currentSelectionGroup.length) selectionGroups.add(currentSelectionGroup)
                     currentSelectionGroup = []
                 }
@@ -154,7 +170,8 @@ export class MarkingsEditor extends HTMLDiv {
             chapter-id=${chapterId}
             class="word" 
             word-number=${wordNumber} 
-            line-number=${lineNumber}>${this.wordMarkings(wordHighlights, false, nextWordHighlights)}${word}</span><span class="word space">${this.wordMarkings(wordHighlights, true, nextWordHighlights)} </span>`
+            line-number=${lineNumber}>${this.wordMarkings(wordHighlights, false, nextWordHighlights)}${word}</span><span 
+            class="word space">${this.wordMarkings(wordHighlights, true, nextWordHighlights)} </span>`
     }
 
     async draw () {
@@ -165,11 +182,11 @@ export class MarkingsEditor extends HTMLDiv {
         <div params=${JSON.stringify(params)} ref=${element => this.element = element} class="markings-editor">
             ${this.text.map(([lineNumber, line, prefix]) => {
 
-                // TODO can we prevent the case where a bible verse is marked and then the first word of the sentence and then nothing?
+                // TODO LOWPRIO can we prevent the case where a bible verse is marked and then the first word of the sentence and then nothing?
                 const prefixHighlights = this.markings
                 .filter(({ reference }) => reference.includes(bookAbbreviation, parseInt(chapterId), lineNumber, 1))
 
-                const prefixMarkings = this.wordMarkings(prefixHighlights, true)
+                const prefixMarkings = this.wordMarkings(prefixHighlights)
 
                 const words = line.split(' ')
                 .map((word, index) => this.wordTemplate(chapterId, lineNumber, index + 1, word))

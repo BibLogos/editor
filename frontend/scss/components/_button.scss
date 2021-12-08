@@ -5,11 +5,32 @@
     background-color: var(--color-primary);
     cursor: pointer;
     font-size: 16px;
-    text-transform: uppercase;
-    font-family: "Noto Serif", serif;
     transition: background-color .4s ease-in-out;
+    display: inline-flex;
+    gap: 5px;
 
     &:hover {
         background-color: var(--color-secondary);
+    }
+    
+    &.nowrap {
+        white-space: nowrap;
+    }
+
+    &.mini {
+        font-size: 12px;
+        padding: 2px;
+    }
+
+    &:not(.mini) {
+        svg {
+            width: 1.5em;
+            height: 1.5em;
+            margin-block: -.25em;
+        }    
+    }
+
+    path:not([fill="none"]) {
+        fill: var(--color-gray-dark);
     }
 }

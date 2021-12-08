@@ -26,3 +26,8 @@ export type ComunicaExport = {
 }
 
 export type ProjectData = components["schemas"]["repo-search-result-item"]
+
+export interface PopupPartInterface {
+    applies: () => boolean
+    template: () => typeof html
+}

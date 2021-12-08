@@ -6,24 +6,17 @@ import { SelectionPopup } from '../Elements/SelectionPopup'
 export const Editor: Route = {
 
     template: function () {
+        let markingsEditor
+
         return html`
-            <${MarkingsEditor} params=${this.params} class="editor" onselection=${(event) => {
+            <${MarkingsEditor} ref=${element => markingsEditor = element} class="editor" onselection=${(event) => {
                 const selections = event.detail
-                const firstWord = selections[0][0]?.[3]
-                let currentPopup
-
+                const firstWord = selections[0][0]?.element
+                document.querySelector('.selection-popup')?.remove()
+                
                 if (firstWord) {
-                    currentPopup = firstWord.querySelector('.selection-popup')
-                    if (!currentPopup) {
-                        currentPopup = new SelectionPopup()
-                        firstWord.appendChild(currentPopup)  
-                    }
-                }
-
-                const popups = document.querySelectorAll('.selection-popup')
-
-                for (const popup of popups) {
-                    if (currentPopup !== popup) popup.remove()
+                    const popup = new SelectionPopup(selections, markingsEditor.markingsStore)
+                    firstWord.appendChild(popup)  
                 }
                 
             }} />
