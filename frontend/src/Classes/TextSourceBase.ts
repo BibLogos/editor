@@ -7,6 +7,7 @@ export class TextSourceBase {
     #project: Project
     settings
     #fileCache = new Map()
+    #markingsStore: MarkingsStore
 
     constructor (project: Project, settings) {
         this.#project = project
@@ -18,6 +19,8 @@ export class TextSourceBase {
     }
 
     async getMarkingsStore () {
+        if (this.#markingsStore) return this.#markingsStore
+
         const store = new Store()
         const parser = new Parser()
         const { slug, branch } = this.#project
@@ -40,7 +43,8 @@ export class TextSourceBase {
             })
         }
 
-        return new MarkingsStore(store, this.settings.book)
+        this.#markingsStore = new MarkingsStore(store, this.settings.book)
+        return this.#markingsStore
     }
 
 }

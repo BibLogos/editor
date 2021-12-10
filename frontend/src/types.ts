@@ -31,3 +31,12 @@ export interface PopupPartInterface {
     applies: () => boolean
     template: () => typeof html
 }
+
+export type FactObject = {
+    uri: string
+    name: string
+    predicate: string
+    subject?: string
+    references: Array<string>
+    comment: string
+}

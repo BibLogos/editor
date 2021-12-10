@@ -3,6 +3,7 @@ import { PopupPartInterface } from "../../types";
 import { PopupPartbase } from '../../Classes/PopupPartBase';
 import { lastPart } from '../../Helpers/lastPart';
 import { icon } from '../../Helpers/icon';
+import { uniqueObject } from '../../Helpers/uniqueObjects';
 
 export class Actions extends PopupPartbase implements PopupPartInterface {
     applies () {
@@ -10,7 +11,11 @@ export class Actions extends PopupPartbase implements PopupPartInterface {
     }
 
     template () {
-        return html`${this.selectionPopup.markings.map(marking => {
+        return html`
+        <!--uhtml crashes without this-->
+        ${this.selectionPopup.markings
+            .filter(uniqueObject('subject'))
+            .map(marking => {
             const type = lastPart(marking.predicate).toLowerCase()
             return html`
             <span class="existing-item">
@@ -22,7 +27,6 @@ export class Actions extends PopupPartbase implements PopupPartInterface {
                 }}>${icon('remove')}</button>
                 <button class="button mini" onclick=${() => { 
                     this.selectionPopup.form = 'edit'
-                    console.log(marking)
                     this.selectionPopup.subject = marking.subject
                     this.selectionPopup.name = marking.name
                     this.selectionPopup.comment = marking.comment

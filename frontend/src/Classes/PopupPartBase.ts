@@ -1,6 +1,9 @@
+import { SelectionPopup } from "../Elements/SelectionPopup"
+
 export class PopupPartbase {
     
-    public selectionPopup
+    public selectionPopup: SelectionPopup
+    
     constructor (selectionPopup) {
         this.selectionPopup = selectionPopup
     }

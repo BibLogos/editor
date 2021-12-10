@@ -1,6 +1,6 @@
 import { importGlobalScript } from '../Helpers/importGlobalScript'
 import { ReferenceProxy } from './ReferenceProxy'
-import { ComunicaExport } from '../types'
+import { ComunicaExport, FactObject } from '../types'
 const { newEngine } = await importGlobalScript('http://rdf.js.org/comunica-browser/versions/latest/packages/actor-init-sparql/comunica-browser.js', 'Comunica') as ComunicaExport
 
 const ONTOLOGY = `${location.protocol}//${location.hostname}:${location.port}/ttl/ontology.ttl`
@@ -17,9 +17,17 @@ export class MarkingsStore {
         this.#bookAbbreviation = bookAbbreviation
     }
 
+    get bookAbbreviation () {
+        return this.#bookAbbreviation
+    }
+
     async query (query, sources: any, debug = false) {
         if (debug) console.log(query)
         const response = await this.#comunica.query(query, { sources })
+
+        if (response.type === 'update') {
+            return response.updateResult
+        }
         if (response.type === 'boolean') return response.booleanResult
         const bindings = await response.bindings()
 
@@ -80,5 +88,41 @@ export class MarkingsStore {
             ?predicate biblogos:predicateType ?type .
         }
         `, [ ONTOLOGY ])
+    }
+
+    async insertFact (object: FactObject) {
+        return this.query(`
+        PREFIX biblogos: <https://biblogos.info/ttl/ontology#>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        DELETE { 
+            <${object.uri}> a ?type .
+            <${object.uri}> biblogos:name ?name .
+            <${object.uri}> biblogos:subject ?subject .
+            <${object.uri}> biblogos:reference ?reference .
+            <${object.uri}> biblogos:comment ?comment . 
+        } WHERE { 
+            <${object.uri}> a ?type .
+            <${object.uri}> biblogos:name ?name .
+            <${object.uri}> biblogos:reference ?reference .
+            OPTIONAL { <${object.uri}> biblogos:comment ?comment . }
+            OPTIONAL { <${object.uri}> biblogos:subject ?subject . }
+        };
+        
+        INSERT DATA { 
+            <${object.uri}> a <${object.predicate}> .
+            <${object.uri}> biblogos:name """${object.name}""" .
+
+            ${object.references.map(reference => `
+                <${object.uri}> biblogos:reference """${reference}""" .
+            `)}
+            
+            ${object.subject ? `
+                <${object.uri}> biblogos:subject <${object.subject}> .
+            ` : ''}
+            ${object.comment ? `
+                <${object.uri}> biblogos:comment """${object.comment}""" .
+            ` : ''}
+        } 
+        `, [this.#store], true)
     }
 }

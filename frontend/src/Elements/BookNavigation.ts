@@ -5,9 +5,7 @@ import { select } from '../Helpers/select';
 import { goTo } from '../Core/Router';
 import { t } from '../Helpers/t';
 
-const HTMLDiv = HTML.Div as typeof HTMLElement
-
-export class BookNavigation extends HTMLDiv {
+export class BookNavigation extends (HTML.Div as typeof HTMLElement) {
 
     private book
     private chapters

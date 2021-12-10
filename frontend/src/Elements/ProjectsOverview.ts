@@ -2,9 +2,7 @@ import { HTML, render, html } from 'ube';
 import { github } from '../Services/Github';
 import { Project } from '../Classes/Project';
 
-const HTMLDiv = HTML.Div as typeof HTMLElement
-
-export class ProjectsOverview extends HTMLDiv {
+export class ProjectsOverview extends (HTML.Div as typeof HTMLElement) {
 
     private projects: Array<Project> = []
 

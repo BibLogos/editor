@@ -1,25 +1,28 @@
 import { HTML, render, html } from 'ube';
-import { Create } from '../Plugins/PopupParts/Create';
+import { CreateMarking } from '../Plugins/PopupParts/CreateMarking';
 import { Search } from '../Plugins/PopupParts/Search';
 import { Actions } from '../Plugins/PopupParts/Actions';
 import { DeleteForm } from '../Plugins/PopupParts/DeleteForm';
 import { ObjectForm } from '../Plugins/PopupParts/ObjectForm';
-
-const HTMLDiv = HTML.Div as typeof HTMLElement
+import { Predicates } from '../Plugins/PopupParts/Predicates';
+import { NewMarking } from '../Plugins/PopupParts/NewMarking';
+import { MarkingsStore } from '../Classes/MarkingsStore';
 
 const canceler = (event) => event.stopImmediatePropagation()
 
-export class SelectionPopup extends HTMLDiv {
+export class SelectionPopup extends (HTML.Div as typeof HTMLElement) {
 
-    private subject = ''
-    private predicate = ''
-    private object = ''
-    private name = ''
-    private comment = ''
-    private selections
-    private markings
-    private form
-    private markingsStore
+    public objectUri: ''
+    public subject = ''
+    public identifier = ''
+    public predicate = ''
+    public object = ''
+    public name = ''
+    public comment = ''
+    public selections
+    public markings
+    public form
+    public markingsStore: MarkingsStore
 
     private popupParts
 
@@ -35,7 +38,15 @@ export class SelectionPopup extends HTMLDiv {
     }
 
     async upgradedCallback() {
-        this.popupParts = [new Create(this), new Search(this), new Actions(this), new DeleteForm(this), new ObjectForm(this)]
+        this.popupParts = [
+            new Predicates(this),
+            new Search(this), 
+            new Actions(this), 
+            new DeleteForm(this), 
+            new ObjectForm(this),
+            new NewMarking(this),
+            new CreateMarking(this), 
+        ]
         this.classList.add('selection-popup')
     }
 

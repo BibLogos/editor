@@ -7,17 +7,16 @@ import { goTo, params } from '../Core/Router';
 import { BookNavigation } from '../Elements/BookNavigation'
 import { app } from '../app';
 import { t } from '../Helpers/t';
+import { MarkingsStore } from '../Classes/MarkingsStore';
 
-const HTMLDiv = HTML.Div as typeof HTMLElement
-
-export class MarkingsEditor extends HTMLDiv {
+export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
 
     private text
     private selection
     private markings
     private bigMarkings
     private book
-    private markingsStore
+    private markingsStore: MarkingsStore
     private element
 
     async upgradedCallback() {
