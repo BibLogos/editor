@@ -13,7 +13,10 @@ export class ReferenceProxy {
     private endVerse: number
     private endWord: number
 
+    #reference: string
+
     constructor (reference) {
+        this.#reference = reference
         const [start, end] = reference.split(':')
 
         const [startBook, startChapter, startVerse, startWord] = parseInts(start.split('.'))
@@ -47,5 +50,9 @@ export class ReferenceProxy {
 
     get isShort () {
         return this.startVerse + 2 > this.endVerse
+    }
+
+    toString () {
+        return this.#reference
     }
 }

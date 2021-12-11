@@ -3,6 +3,8 @@ import { PopupPartInterface } from "../../types";
 import { PopupPartbase } from '../../Classes/PopupPartBase';
 import { t } from '../../Helpers/t';
 import { unique } from '../../Helpers/unique';
+import { params } from '../../Core/Router';
+import { app } from '../../app';
 
 export class Search extends PopupPartbase implements PopupPartInterface {
 
@@ -30,9 +32,22 @@ export class Search extends PopupPartbase implements PopupPartInterface {
 
             ${this.searchResults !== null ? (this.searchResults.length ? html`${this.searchResults.map(searchResult => html`
             <span class="existing-item">
-                <span onclick=${() => {
-                    this.selectionPopup.predicate = searchResult.predicate
-                    throw new Error('Implement adding to store.')
+                <span onclick=${async () => {
+                    const { chapterId } = params
+
+                    const book = this.selectionPopup.markingsStore.bookAbbreviation
+        
+                    const references = this.selectionPopup.selections.map(words => {
+                        const firstWord = words.at(0)
+                        const lastWord = words.at(-1)
+                        const startReference = `${book}.${chapterId}.${firstWord.lineNumber}.${firstWord.wordNumber}`
+                        const endReference = `${book}.${chapterId}.${lastWord.lineNumber}.${lastWord.wordNumber}`
+                        return startReference + ':' + endReference 
+                    })
+
+                    await this.selectionPopup.markingsStore.appendFactReferences(searchResult.predicate, references)
+                    this.selectionPopup.remove()
+                    app.render()
                 }} class="label">${searchResult.name}${searchResult.comment ? html`, ${searchResult.comment}` : html``}</span>
             </span>
             `)}` : html`

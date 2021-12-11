@@ -91,23 +91,10 @@ export class MarkingsStore {
     }
 
     async insertFact (object: FactObject) {
-        return this.query(`
+        await this.deleteFact(object.uri)
+        return await this.query(`
         PREFIX biblogos: <https://biblogos.info/ttl/ontology#>
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-        DELETE { 
-            <${object.uri}> a ?type .
-            <${object.uri}> biblogos:name ?name .
-            <${object.uri}> biblogos:subject ?subject .
-            <${object.uri}> biblogos:reference ?reference .
-            <${object.uri}> biblogos:comment ?comment . 
-        } WHERE { 
-            <${object.uri}> a ?type .
-            <${object.uri}> biblogos:name ?name .
-            <${object.uri}> biblogos:reference ?reference .
-            OPTIONAL { <${object.uri}> biblogos:comment ?comment . }
-            OPTIONAL { <${object.uri}> biblogos:subject ?subject . }
-        };
-        
         INSERT DATA { 
             <${object.uri}> a <${object.predicate}> .
             <${object.uri}> biblogos:name """${object.name}""" .
@@ -123,6 +110,54 @@ export class MarkingsStore {
                 <${object.uri}> biblogos:comment """${object.comment}""" .
             ` : ''}
         } 
-        `, [this.#store], true)
+        `, [ this.#store ])
     }
+
+    async appendFactReferences (predicate: string, references: Array<string>) {
+        return this.query(`
+        PREFIX biblogos: <https://biblogos.info/ttl/ontology#>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        
+        INSERT DATA { 
+            ${references.map(reference => `
+                <${predicate}> biblogos:reference """${reference}""" .
+            `)}
+        }
+        `, [ this.#store ])
+    }
+
+    async removeFactReferences (predicate: string, references: Array<string>) {
+        return this.query(`
+        PREFIX biblogos: <https://biblogos.info/ttl/ontology#>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        
+        DELETE DATA { 
+            ${references.map(reference => `
+                <${predicate}> biblogos:reference """${reference}""" .
+            `)}
+        }
+        `, [ this.#store ])
+    }
+
+
+    async deleteFact (factUri: string) {
+        return this.query(`
+        PREFIX biblogos: <https://biblogos.info/ttl/ontology#>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        DELETE { 
+            <${factUri}> a ?type .
+            <${factUri}> biblogos:name ?name .
+            <${factUri}> biblogos:subject ?subject .
+            <${factUri}> biblogos:reference ?reference .
+            <${factUri}> biblogos:comment ?comment . 
+        } WHERE { 
+            <${factUri}> a ?type .
+            <${factUri}> biblogos:name ?name .
+            <${factUri}> biblogos:reference ?reference .
+            OPTIONAL { <${factUri}> biblogos:comment ?comment . }
+            OPTIONAL { <${factUri}> biblogos:subject ?subject . }
+        }        
+        `, [ this.#store ])
+    }
+
 }
