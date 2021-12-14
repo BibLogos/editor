@@ -9,7 +9,7 @@ export class Predicates extends PopupPartbase implements PopupPartInterface {
     private factPredicates
 
     applies () {
-        return this.selectionPopup.form === 'search'
+        return this.selectionPopup.form === 'search' && !this.selectionPopup.predicateType
     }
 
     template () {
@@ -24,10 +24,12 @@ export class Predicates extends PopupPartbase implements PopupPartInterface {
             title: t`Relation type`,
             values: [
                 ['', '- Select -'],
-                ...this.factPredicates.map(factPredicate => [factPredicate.predicate, factPredicate.label])
+                ...this.factPredicates.map(factPredicate => [factPredicate.predicate + '|' + factPredicate.type, factPredicate.label])
             ].filter(([value]) => !this.selectionPopup.markings.find(marking => marking.predicate === value)), 
             onchange: (event) => {
-                this.selectionPopup.predicate = event.target.value
+                const [predicate, type] = event.target.value.split('|')
+                this.selectionPopup.predicate = predicate
+                this.selectionPopup.predicateType = type
                 this.selectionPopup.draw()
             }
         }) : html`

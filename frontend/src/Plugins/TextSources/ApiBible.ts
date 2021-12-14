@@ -25,7 +25,7 @@ export class ApiBible extends TextSourceBase implements TextSource {
     }
 
     @cache()
-    async getText(chapter: string): Promise<Array<[paragraphId: string | number, text: string, prefix?: any]>> {
+    async getText(chapter: string): Promise<Array<[paragraphId: string | number, text: string, prefix?: any, newlines?: number]>> {
         const { bible, book } = this.settings
 
         try {
@@ -39,10 +39,12 @@ export class ApiBible extends TextSourceBase implements TextSource {
 
             return matches
             .map(match => {
+                const newlinesMatches = /\r|\n/.exec(match[2])
+                
                 const verse = parseInt(match[1])
                 const text = match[2].trim() 
                 const prefix = (markings) => html`<span class="verse-number word">${verse}${markings} </span>`
-                return [verse, text, prefix]
+                return [verse, text, prefix, newlinesMatches?.length ?? 0]
             })
         }
         catch (exception) {

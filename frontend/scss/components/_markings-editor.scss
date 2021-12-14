@@ -4,7 +4,8 @@
     line-height: 50px;
     max-width: 800px;
     margin: var(--padding) auto;
-    padding-inline-start: 60px;
+    padding-inline-start: 40px;
+    padding-inline-end: 40px;
     position: relative;
 
     .word {
@@ -88,7 +89,7 @@
             position: absolute;
             top: 0;
             width: 300px;
-            left: calc(50% - 8px);
+            left: calc(50% - 12px);
             z-index: -1;
             opacity: .1;
             height: 100%;
@@ -102,14 +103,14 @@
             position: absolute;
             top: 0;
             width: 3px;
-            left: calc(50% - 8px);
+            left: calc(50% - 12px);
             z-index: -1;
             height: 100%;
             background-color: var(--color);
         }
 
         .text {
-            line-height: 32px;
+            line-height: 24px;
             overflow: hidden;
             text-overflow: ellipsis;
             font-size: 14px;
@@ -121,7 +122,7 @@
             white-space: nowrap;
             left: 0;
             top: 40px;
-            margin-bottom: 13px;
+            margin-inline: 13px;
             transform-origin: left;
             padding-inline: 10px;
         }

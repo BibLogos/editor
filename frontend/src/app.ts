@@ -1,5 +1,6 @@
 import { render, html } from 'ube'
-import { Router, context, params } from './Core/Router'
+import { Router, params } from './Core/Router'
+import '../scss/style.scss'
 
 let previousRoute = null
 

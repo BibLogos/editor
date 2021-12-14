@@ -8,4 +8,8 @@ export class PopupPartbase {
         this.selectionPopup = selectionPopup
     }
 
+    toString () {
+        return this.constructor.name
+    }
+
 }

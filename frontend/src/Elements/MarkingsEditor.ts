@@ -12,7 +12,7 @@ import { MarkingsStore } from '../Classes/MarkingsStore';
 export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
 
     private text
-    private selection
+    public selection
     private markings
     private bigMarkings
     private book
@@ -47,6 +47,13 @@ export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
 
         await this.draw()
         this.createSelectionArea()
+    }
+
+    clear () {
+        for (const selectedItem of [...this.querySelectorAll('.selected')]) {
+            selectedItem.classList.remove('selected')
+        }
+        this.selection.clearSelection()
     }
 
     createSelectionArea () {
@@ -183,9 +190,12 @@ export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
         const bookAbbreviation = this.book?.settings.book
 
         return render(this, this.text ? html`
+
+        <${BookNavigation} />
+
         <div params=${JSON.stringify(params)} ref=${element => this.element = element} class="markings-editor">
 
-            ${this.text.map(([lineNumber, line, prefix]) => {
+            ${this.text.map(([lineNumber, line, prefix, newLines]) => {
 
                 // TODO LOWPRIO can we prevent the case where a bible verse is marked and then the first word of the sentence and then nothing?
                 const prefixHighlights = this.markings
@@ -193,9 +203,13 @@ export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
 
                 const prefixMarkings = this.wordMarkings(prefixHighlights)
 
+                let newlinesOutput = []
+                const newlinesArray = new Array(newLines)
+                for (const br of newlinesArray) newlinesOutput.push(html`<br><br>`)
+                
                 const words = line.split(' ')
                 .map((word, index) => this.wordTemplate(chapterId, lineNumber, index + 1, word))
-                return html.for(words)`${prefix ? prefix(prefixMarkings) : null}${words}`
+                return html.for(words)`${prefix ? prefix(prefixMarkings) : null}${words}${newlinesOutput}`
             })}
 
             ${this.bigMarkings.map(marking => {
@@ -216,7 +230,8 @@ export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
 
         </div>
 
-        <${BookNavigation} />
+        <div class="right-spacer"></div>
+
         ` : html`<span>${t`Loading...`}</span>`)
     }
 }

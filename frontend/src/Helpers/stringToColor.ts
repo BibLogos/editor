@@ -2,7 +2,7 @@ import { Sha1 } from "./sha1";
 
 const cache = new Map()
 
-export function stringToColor(text, minLightness = 20, maxLightness = 60, minSaturation = 30, maxSaturation = 100) {
+export function stringToColor(text, minLightness = 20, maxLightness = 80, minSaturation = 20, maxSaturation = 90) {
     const cid = JSON.stringify(arguments)
     if (cache.has(cid)) return cache.get(cid)
     const hash = new Sha1()

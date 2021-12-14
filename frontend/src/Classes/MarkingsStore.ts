@@ -65,7 +65,9 @@ export class MarkingsStore {
         return markings
     }
 
-    async searchSubject (searchTerms, predicate) {
+    async searchSubject (searchTerms, predicate, linkedSubject = null) {
+        if (searchTerms.length === 0 || searchTerms.length === 1 && searchTerms[0].trim() === '') return []
+
         return this.query(`
         PREFIX biblogos: <https://biblogos.info/ttl/ontology#>
         SELECT * { 
@@ -73,8 +75,9 @@ export class MarkingsStore {
             ?predicate biblogos:name ?name .
             ?predicate a/a rdfs:Class .
             OPTIONAL { ?predicate biblogos:comment ?comment . }
-            FILTER contains(?name, """${searchTerms[0]}""")
+            FILTER regex(?name, """${searchTerms.join('|')}""", "i")
         }
+        LIMIT 10
     `, [ this.#store, ONTOLOGY ])
     }
 
@@ -139,7 +142,6 @@ export class MarkingsStore {
         `, [ this.#store ])
     }
 
-
     async deleteFact (factUri: string) {
         return this.query(`
         PREFIX biblogos: <https://biblogos.info/ttl/ontology#>
@@ -158,6 +160,19 @@ export class MarkingsStore {
             OPTIONAL { <${factUri}> biblogos:subject ?subject . }
         }        
         `, [ this.#store ])
+    }
+
+    async getReferencesCountForFact (factUri: string) {
+        const results = await this.query(`
+        PREFIX biblogos: <https://biblogos.info/ttl/ontology#>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        
+        SELECT (count(?reference) as ?count) {
+            <${factUri}> biblogos:reference ?reference .
+        }
+        `, [ this.#store ])
+
+        return parseInt(results[0])
     }
 
 }

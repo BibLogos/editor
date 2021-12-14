@@ -5,17 +5,28 @@ import { t } from '../../Helpers/t';
 import { unique } from '../../Helpers/unique';
 import { params } from '../../Core/Router';
 import { app } from '../../app';
+import { debounce } from '../../Helpers/debounce';
 
 export class Search extends PopupPartbase implements PopupPartInterface {
 
-    private searchResults = null
+    public searchResults = null
 
     applies () {
-        return this.selectionPopup.form === 'search'
+        return this.selectionPopup.predicate && this.selectionPopup.form === 'search'
     }
 
     template () {
-        if (this.selectionPopup.predicate && this.searchResults === null) {
+        const doSearch = this.selectionPopup.predicate && 
+        this.searchResults === null
+
+        const noSubjectNeeded = this.selectionPopup.predicateType !== 'predicate'
+
+        const subjectNeeded = this.selectionPopup.predicate && 
+        this.searchResults === null && 
+        this.selectionPopup.predicateType === 'predicate' &&
+        this.selectionPopup.subject
+
+        if (doSearch && (noSubjectNeeded || subjectNeeded)) {
             const searchTerms = this.selectionPopup.selections
             .flatMap(words => words.map(word => word.text.replace(/[\p{P}$+<=>^`|~]/gu, '').trim()).join(' '))
             .filter(unique)
@@ -27,9 +38,14 @@ export class Search extends PopupPartbase implements PopupPartInterface {
         }
 
         return html`
-            <!--uhtml crashes without this-->
-            ${this.selectionPopup.predicate && this.searchResults === null ? html`<span>${t`Searching...`}</span>` : html``}
+            <input type="search" onkeyup=${debounce((event) => {
+                this.selectionPopup.markingsStore.searchSubject(event.target.value.split(' '), this.selectionPopup.predicate).then(searchResults => {
+                    this.searchResults = searchResults
+                    this.selectionPopup.draw()
+                })
+            }, 100)} placeholder=${t`Search by text`}>
 
+            <!--uhtml crashes without this-->
             ${this.searchResults !== null ? (this.searchResults.length ? html`${this.searchResults.map(searchResult => html`
             <span class="existing-item">
                 <span onclick=${async () => {
@@ -50,9 +66,7 @@ export class Search extends PopupPartbase implements PopupPartInterface {
                     app.render()
                 }} class="label">${searchResult.name}${searchResult.comment ? html`, ${searchResult.comment}` : html``}</span>
             </span>
-            `)}` : html`
-            <span class="label existing-item">${t`No results`}</span>
-            `) : html``}
+            `)}` : html``) : html``}
         `
     }
 }

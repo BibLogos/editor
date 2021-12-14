@@ -1,6 +1,11 @@
 .book-navigation {
-    position: fixed;
-    right: var(--padding);
-    top: var(--padding);
-    width: 200px;
+    min-width: 200px;
+    padding: var(--padding);
+    transition: all var(--speed) var(--easing);
+}
+
+@media screen and (min-width: $tablet) {
+    .book-navigation {
+        max-width: 300px;
+    }
 }

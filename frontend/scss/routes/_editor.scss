@@ -1,0 +1,43 @@
+.route-editor {
+    display: flex;
+    flex-direction: column;
+
+    .book-navigation {
+        position: fixed;
+        background: white;
+        bottom: 0;
+        width: 100%;
+        z-index: 10;
+        border-top: 1px solid var(--color-gray);
+    }
+}
+
+@media screen and (max-width: $tablet - 1px) {
+    .has-selection-popup .route-editor {
+        .book-navigation {
+            transform: translateY(100%);
+        }
+    }
+
+    .markings-editor {
+        padding-bottom: 100px;
+    }
+}
+
+@media screen and (min-width: $tablet) {
+    .route-editor {
+        flex-direction: row;
+        align-items: flex-start;
+
+        .book-navigation {
+            position: sticky;
+            top: 0;
+            bottom: auto;
+            border-top: none;
+        }
+
+        .right-spacer {
+            width: 300px;
+        }
+    }
+}

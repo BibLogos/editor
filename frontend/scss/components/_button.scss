@@ -17,9 +17,11 @@
         white-space: nowrap;
     }
 
-    &.mini {
-        font-size: 12px;
-        padding: 2px;
+    @media screen and (min-width: $tablet) {
+        &.mini {
+            font-size: 12px;
+            padding: 2px;
+        }
     }
 
     &:not(.mini) {
@@ -32,5 +34,13 @@
 
     path:not([fill="none"]) {
         fill: var(--color-gray-dark);
+    }
+
+    &.secondary {
+        background-color: var(--color-secondary);
+
+        &:hover {
+            background-color: var(--color-gray-light);
+        }
     }
 }

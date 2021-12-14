@@ -8,4 +8,8 @@
   --color-gray-dark: rgb(83, 83, 83);
   --color-primary: rgb(245, 212, 23);
   --color-secondary: rgb(245, 112, 23);
+  --speed: .3s;
+  --easing: ease-in-out;
 }
+
+$tablet: 720px;
