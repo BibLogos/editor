@@ -1,5 +1,6 @@
 import { html } from 'ube'
 import type { components } from '@octokit/openapi-types'
+import { Quad } from 'n3'
 
 type RouteWithTemplate = {
     template: () => typeof html,
@@ -40,3 +41,5 @@ export type FactObject = {
     references: Array<string>
     comment: string
 }
+
+export type MarkingsEditorChange = ['added' | 'removed', Quad, Date]

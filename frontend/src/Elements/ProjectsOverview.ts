@@ -1,6 +1,7 @@
 import { HTML, render, html } from 'ube';
 import { github } from '../Services/Github';
 import { Project } from '../Classes/Project';
+import { ProjectTeaser } from './ProjectTeaser';
 
 export class ProjectsOverview extends (HTML.Div as typeof HTMLElement) {
 
@@ -15,13 +16,7 @@ export class ProjectsOverview extends (HTML.Div as typeof HTMLElement) {
     draw () {
         render(this, html`
         ${!this.projects ? html`Loading...` : html`
-        <ul>
-        ${this.projects.map(project => html`
-            <li>
-            <a href=${`/editor/${project.slug}`}>${project.name}</a>
-            </li>
-        `)}
-        </ul>
+            <ul>${this.projects.map(project => html`<${ProjectTeaser} .project=${project} />`)}</ul>
         `}
         `)
     }

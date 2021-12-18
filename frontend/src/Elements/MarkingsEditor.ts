@@ -8,6 +8,7 @@ import { BookNavigation } from '../Elements/BookNavigation'
 import { app } from '../app';
 import { t } from '../Helpers/t';
 import { MarkingsStore } from '../Classes/MarkingsStore';
+import { MarkingsEditorChanges } from './MarkingsEditorChanges';
 
 export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
 
@@ -179,6 +180,8 @@ export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
         return render(this, this.text ? html`
 
         <${BookNavigation} />
+
+        <${MarkingsEditorChanges} .changes=${this.markingsStore.changes} />
 
         <div params=${JSON.stringify(params)} ref=${element => this.element = element} class="markings-editor">
             ${this.text.map(([lineNumber, line, prefix, newLines], index) => {

@@ -1,0 +1,15 @@
+.project.teaser {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .avatar {
+        width: 60px;
+        height: 60px;
+    }
+
+    .description,
+    .title {
+        margin: 0;
+    }
+}

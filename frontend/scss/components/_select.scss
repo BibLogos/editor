@@ -10,6 +10,7 @@ select {
     cursor: inherit;
     line-height: inherit;
     overflow: hidden;
+    font-family: var(--font-sans);
     text-overflow: ellipsis;
     flex: 1 1 auto;
     line-height: 30px;
@@ -40,9 +41,7 @@ select {
   flex: 1 0 auto;
   border: 1px solid var(--color-gray-dark);
   border-radius: var(--radius);
-  font-size: 1.25rem;
   cursor: pointer;
-  line-height: 1.1;
 
   // Custom arrow
   &:not(.select--multiple)::after {

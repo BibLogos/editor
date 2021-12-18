@@ -1,20 +1,33 @@
 import { importGlobalScript } from '../Helpers/importGlobalScript'
 import { ReferenceProxy } from './ReferenceProxy'
-import { ComunicaExport, FactObject } from '../types'
+import { ComunicaExport, FactObject, MarkingsEditorChange } from '../types'
 const { newEngine } = await importGlobalScript('http://rdf.js.org/comunica-browser/versions/latest/packages/actor-init-sparql/comunica-browser.js', 'Comunica') as ComunicaExport
+import { StoreProxy } from './StoreProxy'
 
 const ONTOLOGY = `${location.protocol}//${location.hostname}:${location.port}/ttl/ontology.ttl`
 
-export class MarkingsStore {
+export class MarkingsStore extends EventTarget {
 
     #store
     #comunica
     #bookAbbreviation
 
+    public changes: Array<MarkingsEditorChange> = []
+
     constructor (store, bookAbbreviation) {
-        this.#store = store
+        super()
+        const [proxiedStore, storeEventTarget] = StoreProxy(store)
+        this.#store = proxiedStore
         this.#comunica = newEngine()
         this.#bookAbbreviation = bookAbbreviation
+
+        storeEventTarget.addEventListener('removeQuad', (event) => {
+            this.changes.push(['removed', event.detail, new Date()])
+        })
+
+        storeEventTarget.addEventListener('addQuad', (event) => {
+            this.changes.push(['removed', event.detail, new Date()])
+        })
     }
 
     get bookAbbreviation () {

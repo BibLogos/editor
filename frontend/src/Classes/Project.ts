@@ -25,11 +25,27 @@ export class Project {
         .replaceAll('-', ' ')
     }
 
+    get description () {
+        return this.#data.description
+    }
+
+    get owner () {
+        return this.#data.owner.name ?? this.#data.owner.login
+    }
+
+    get avatar () {
+        return this.#data.owner.avatar_url
+    }
+
     get slug () {
         return this.#data.full_name
     }
 
     get branch () {
         return this.#data.default_branch
+    }
+
+    get editorLink () {
+        return `/editor/${this.slug}`
     }
 }
