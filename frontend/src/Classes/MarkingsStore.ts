@@ -94,7 +94,6 @@ export class MarkingsStore {
     }
 
     async insertFact (object: FactObject) {
-        console.log(object.references)
         await this.deleteFact(object.uri)
         return await this.query(`
         PREFIX biblogos: <https://biblogos.info/ttl/ontology#>

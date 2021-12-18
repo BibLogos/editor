@@ -12,6 +12,9 @@ export class ReferenceProxy {
     private endVerse: number
     private endWord: number
 
+    private startNumber
+    private endNumber
+
     #reference: string
 
     constructor (reference) {
@@ -25,21 +28,30 @@ export class ReferenceProxy {
         const [endBook, endChapter, endVerse, endWord] = parseInts(end.split('.'))    
         const endObject = {endBook, endChapter, endVerse, endWord}
         Object.assign(this, endObject)
+
+        this.startNumber = this.toNumber(startChapter, startVerse, startWord)
+        this.endNumber = this.toNumber(endChapter, endVerse, endWord)
+    }
+
+    toNumber (chapter, verse, word) {
+        return chapter * 10000 + verse * 1000 + word
     }
 
     includes (book, chapter, verse, word) {
         // For now we only support references that span over one book.
         if (book !== this.startBook && book !== this.endBook) return
-        if (chapter < this.startChapter || chapter > this.endChapter) return
-        if (verse < this.startVerse || verse > this.endVerse) return
 
-        if (verse > this.startVerse && verse < this.endVerse) return true
-        if (verse === this.startVerse && word >= this.startWord && word <= this.endWord) return true
-        if (verse === this.endVerse && word >= this.startWord && word <= this.endWord) return true
+        const number = this.toNumber(chapter, verse, word)
+
+        return number >= this.startNumber && number <= this.endNumber
     }
 
     get isShort () {
         return this.startVerse + 4 > this.endVerse
+    }
+
+    get length () {
+        return this.endNumber - this.startNumber
     }
 
     toString () {

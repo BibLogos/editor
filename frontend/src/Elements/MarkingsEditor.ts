@@ -129,7 +129,9 @@ export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
     }
 
     wordMarkings (wordHighlights, isSpace = false, nextWordHighlights = []) {
-        wordHighlights = wordHighlights.filter(wordHighlight => wordHighlight.reference.isShort)
+        wordHighlights = wordHighlights
+        .filter(wordHighlight => wordHighlight.reference.isShort)
+        .sort((a, b) => b.reference.length - a.reference.length)
 
         return html`<span class="markings">${
             wordHighlights.map(wordHighlight => {
@@ -167,26 +169,24 @@ export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
             class="word" 
             word-number=${wordNumber} 
             line-number=${lineNumber}>${this.wordMarkings(wordHighlights, false, nextWordHighlights)}${word}</span><span 
-            class="word space">${this.wordMarkings(wordHighlights, false, nextWordHighlights)} </span>`
+            class="word space">${this.wordMarkings(wordHighlights, true, nextWordHighlights)} </span>`
     }
 
     async draw () {
         let { chapterId } = params
         const bookAbbreviation = this.book?.settings.book
-        let previousWordCount = null
 
         return render(this, this.text ? html`
 
         <${BookNavigation} />
 
         <div params=${JSON.stringify(params)} ref=${element => this.element = element} class="markings-editor">
-
-            ${this.text.map(([lineNumber, line, prefix, newLines]) => {
+            ${this.text.map(([lineNumber, line, prefix, newLines], index) => {
 
                 const prefixHighlights = this.markings
                 .filter(({ reference }) => {
                     return reference.includes(bookAbbreviation, parseInt(chapterId), lineNumber, 1) &&
-                    (lineNumber === 1 || reference.includes(bookAbbreviation, parseInt(chapterId), lineNumber - 1, previousWordCount))
+                    (lineNumber === 1 || reference.includes(bookAbbreviation, parseInt(chapterId), lineNumber - 1, this.text[index - 1].length))
                 })
 
                 const prefixMarkings = this.wordMarkings(prefixHighlights)
@@ -197,7 +197,6 @@ export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
                 
                 const words = line.split(' ')
                 .map((word, index) => this.wordTemplate(chapterId, lineNumber, index + 1, word))
-                previousWordCount = words.length
                 return html.for(words)`${prefix ? prefix(prefixMarkings) : null}${words}${newlinesOutput}`
             })}
 

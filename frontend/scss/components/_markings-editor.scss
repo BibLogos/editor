@@ -116,14 +116,15 @@
             font-size: 14px;
             border-radius: 10px;
             background-color: white;
-            writing-mode: sideways-lr;
+            transform: rotate(180deg);
+            writing-mode: sideways-rl;
             position: sticky;
-            max-height: 100%;
+            max-height: calc(100% - 60px);
             white-space: nowrap;
             left: 0;
             top: 40px;
             margin-inline: 13px;
-            transform-origin: left;
+            transform-origin: center;
             padding-inline: 10px;
         }
     }
