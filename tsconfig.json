@@ -3,6 +3,7 @@
         "module": "ESNext",
         "target": "ESNext",
         "moduleResolution": "node",
-        "experimentalDecorators": true
+        "experimentalDecorators": true,
+        "esModuleInterop": true
     }
 }

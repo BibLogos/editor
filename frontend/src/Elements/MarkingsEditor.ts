@@ -78,25 +78,6 @@ export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
             for (const el of removed) el.classList.remove('selected')
         })
         .on('stop', (event) => {
-            // Add "selected" class to spaces that should also be highlighted.
-            const spaces = [...this.element.querySelectorAll('.word.selected +.word.space')]
-            for (const space of spaces) {
-                if (space.nextElementSibling.classList.contains('selected')) {
-                    space.classList.add('selected')
-                }
-            }
-
-            // Remove "selected" class from spaces that should not be highlighted.
-            const selectedSpaces = [...this.element.querySelectorAll('.word.space.selected')]
-            for (const space of selectedSpaces) {
-                if (
-                    !space.previousElementSibling.classList.contains('selected') ||
-                    !space.nextElementSibling.classList.contains('selected')
-                ) {
-                    space.classList.remove('selected')
-                }
-            }
-
             // Create an array containing selections from the selected elements.
             const selections = [...this.element.querySelectorAll('.word.selected')]
             .filter(word => word.hasAttribute('line-number'))
@@ -130,7 +111,11 @@ export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
                 }
 
                 const previousSelection = currentSelectionGroup.at(-1)
-                if (selection.element.previousElementSibling.previousElementSibling !== previousSelection.element) {
+                let previousElement = selection.element.previousElementSibling.previousElementSibling
+                if (previousElement.classList.contains('space')) {
+                    previousElement = previousElement.previousElementSibling
+                }
+                if (previousElement !== previousSelection.element) {
                     if (currentSelectionGroup.length) selectionGroups.add(currentSelectionGroup)
                     currentSelectionGroup = []
                 }
@@ -182,12 +167,13 @@ export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
             class="word" 
             word-number=${wordNumber} 
             line-number=${lineNumber}>${this.wordMarkings(wordHighlights, false, nextWordHighlights)}${word}</span><span 
-            class="word space">${this.wordMarkings(wordHighlights, true, nextWordHighlights)} </span>`
+            class="word space">${this.wordMarkings(wordHighlights, false, nextWordHighlights)} </span>`
     }
 
     async draw () {
         let { chapterId } = params
         const bookAbbreviation = this.book?.settings.book
+        let previousWordCount = null
 
         return render(this, this.text ? html`
 
@@ -197,9 +183,11 @@ export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
 
             ${this.text.map(([lineNumber, line, prefix, newLines]) => {
 
-                // TODO LOWPRIO can we prevent the case where a bible verse is marked and then the first word of the sentence and then nothing?
                 const prefixHighlights = this.markings
-                .filter(({ reference }) => reference.includes(bookAbbreviation, parseInt(chapterId), lineNumber, 1))
+                .filter(({ reference }) => {
+                    return reference.includes(bookAbbreviation, parseInt(chapterId), lineNumber, 1) &&
+                    (lineNumber === 1 || reference.includes(bookAbbreviation, parseInt(chapterId), lineNumber - 1, previousWordCount))
+                })
 
                 const prefixMarkings = this.wordMarkings(prefixHighlights)
 
@@ -209,6 +197,7 @@ export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
                 
                 const words = line.split(' ')
                 .map((word, index) => this.wordTemplate(chapterId, lineNumber, index + 1, word))
+                previousWordCount = words.length
                 return html.for(words)`${prefix ? prefix(prefixMarkings) : null}${words}${newlinesOutput}`
             })}
 

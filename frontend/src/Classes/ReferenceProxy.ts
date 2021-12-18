@@ -1,5 +1,4 @@
 import { parseInts } from "../Helpers/parseInts"
-import { stringToColor } from "../Helpers/stringToColor"
 
 export class ReferenceProxy {
 
@@ -39,17 +38,8 @@ export class ReferenceProxy {
         if (verse === this.endVerse && word >= this.startWord && word <= this.endWord) return true
     }
 
-    isEnd (book, chapter, verse, word) {
-        // For now we only support references that span over one book.
-        if (book !== this.startBook && book !== this.endBook) return
-        if (chapter < this.startChapter || chapter > this.endChapter) return
-        if (verse < this.startVerse || verse > this.endVerse) return
-
-        if (verse === this.endVerse && word === this.endWord) return true
-    }
-
     get isShort () {
-        return this.startVerse + 2 > this.endVerse
+        return this.startVerse + 4 > this.endVerse
     }
 
     toString () {
