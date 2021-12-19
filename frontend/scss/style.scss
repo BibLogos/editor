@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif&family=PT+Sans&family=PT+Sans+Narrow&display=swap');
+
 @import './layout';
 @import './variables';
 
@@ -9,7 +11,11 @@
 @import './components/markings-editor';
 @import './components/selection-popup';
 @import './components/book-navigation';
+@import './components/site-header';
+@import './components/page-title';
+@import './components/markings-editor-change';
 
 @import './entities/project.teaser';
 
 @import './routes/editor';
+@import './routes/projects-overview';

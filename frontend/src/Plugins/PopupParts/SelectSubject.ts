@@ -28,7 +28,7 @@ export class SelectSubject extends PopupPartbase implements PopupPartInterface {
         })
 
         return html`
-        <span class="existing-item">
+        <span class="search-result">
             <span class="label">${t`Select the subject`}</span>
         </span>
         `

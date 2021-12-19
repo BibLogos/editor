@@ -2,6 +2,7 @@ import { HTML, render, html } from 'ube';
 import { github } from '../Services/Github';
 import { Project } from '../Classes/Project';
 import { ProjectTeaser } from './ProjectTeaser';
+import { t } from '../Helpers/t';
 
 export class ProjectsOverview extends (HTML.Div as typeof HTMLElement) {
 
@@ -9,14 +10,18 @@ export class ProjectsOverview extends (HTML.Div as typeof HTMLElement) {
 
     async upgradedCallback() {
         this.draw()
+        this.classList.add('projects-overview')
+        this.classList.add('route')
         this.projects = await github.getProjects()
         this.draw()
     }
 
     draw () {
         render(this, html`
+        <h2 class="page-title">${t`Projects overview`}</h2>
+
         ${!this.projects ? html`Loading...` : html`
-            <ul>${this.projects.map(project => html`<${ProjectTeaser} .project=${project} />`)}</ul>
+            ${this.projects.map(project => html`<${ProjectTeaser} .project=${project} />`)}
         `}
         `)
     }

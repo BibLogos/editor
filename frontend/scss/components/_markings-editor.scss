@@ -1,12 +1,11 @@
 .markings-editor {
     user-select: none;
-    font-size: 26px;
-    line-height: 50px;
-    max-width: 800px;
-    margin: var(--padding) auto;
-    padding-inline-start: 40px;
-    padding-inline-end: 40px;
+    margin-inline: auto;
     position: relative;
+    font-family: var(--font-serif);
+    font-size: 20px;
+    margin-top: 20px;
+    line-height: 40px;
 
     .word {
         cursor: pointer;
@@ -70,17 +69,22 @@
         }
 
         .markings {
-            top: calc(100% + 2px);
+            top: calc(100% + 1px);
         }
     }
 
-    .big-marking {
-        height: calc(var(--y2) - var(--y1));
-        width: 50px;
-        top: var(--y1);
-        position: absolute;
-        left: 0;
+    .start-of-big-marking {
+        margin-top: 20px;
+        display: inline-block;
+    }
 
+    .big-marking {
+        height: calc(var(--y2) - var(--y1) + 20px);
+        width: 100%;
+        top: calc(var(--y1) - 12px);
+        position: absolute;
+        right: 0;
+        pointer-events: none;
 
         &:before {
             border-radius: 2px;
@@ -88,12 +92,12 @@
             display: block;
             position: absolute;
             top: 0;
-            width: 300px;
-            left: calc(50% - 12px);
-            z-index: -1;
+            width: calc(100% + 40px);
+            left: -20px;
+            z-index: -100;
             opacity: .1;
             height: 100%;
-            background: linear-gradient(0.25turn, var(--color), white);
+            background: var(--color);
         }
 
         &:after {
@@ -102,30 +106,46 @@
             display: block;
             position: absolute;
             top: 0;
-            width: 3px;
-            left: calc(50% - 12px);
+            width: calc(100% + 40px);
+            left: -20px;
             z-index: -1;
             height: 100%;
-            background-color: var(--color);
+            border: 2px solid var(--color);
         }
 
         .text {
             line-height: 24px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            font-size: 14px;
+            font-family: var(--font-sans);
+            font-size: 13px;
             border-radius: 10px;
-            background-color: white;
-            transform: rotate(180deg);
-            writing-mode: sideways-rl;
+            background-color: var(--color);
+            color: white;
             position: sticky;
-            max-height: calc(100% - 60px);
-            white-space: nowrap;
-            left: 0;
-            top: 40px;
-            margin-inline: 13px;
+            top: 65px;
+            margin-top: -20px;
+            margin-bottom: 20px;
+            float: right;
             transform-origin: center;
             padding-inline: 10px;
+        }
+    }
+}
+
+
+@media screen and (min-width: $tablet) {
+    .markings-editor {
+        font-size: 26px;
+        line-height: 50px;
+        margin-top: 40px;
+
+        .big-marking {
+            .text {
+                top: 105px;
+            }
+
+            &:before {
+                background: linear-gradient(90deg, var(--color), white);
+            }
         }
     }
 }

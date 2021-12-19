@@ -10,8 +10,9 @@ body {
     margin: 0;
     padding: 0;
     max-height: 100%;
-    font-family: "Noto Serif", serif;
+    font-family: var(--font-sans);
     display: flex;
+    color: var(--color-black);
     flex-direction: column;
 }
 
@@ -19,4 +20,16 @@ body {
 *::before,
 *::after {
   box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  padding: 0;
+  margin: 0;
+}
+
+.route {
+  padding-inline: var(--padding);
+  max-width: var(--max-width);
+  margin-inline: auto;
+  width: 100%;
 }

@@ -15,6 +15,7 @@ select {
     flex: 1 1 auto;
     line-height: 30px;
     padding-inline-end: 25px;
+    font-weight: bold;
 
     // Stack above custom arrow
     z-index: 1;
@@ -44,18 +45,27 @@ select {
   cursor: pointer;
 
   // Custom arrow
+  &:not(.select--multiple)::before,
   &:not(.select--multiple)::after {
     content: "";
     justify-self: end;
     margin-inline-end: 10px;
-    width: 12px;
+    width: 8px;
     position: absolute;
     right: 0;
-    height: 8px;
+    height: 2px;
     flex: 0 0 12px;
     background-color: var(--color-gray-dark);
-    clip-path: polygon(100% 0%, 0 0%, 50% 100%);
   }
+
+  &:not(.select--multiple)::before {
+    transform: translateY(2px) translateX(-3px) rotate(40deg);
+  }
+
+  &:not(.select--multiple)::after {
+    transform: translateY(2px) translateX(3px) rotate(-40deg);
+  }
+
 }
 
 // Interim solution until :focus-within has better support
@@ -107,10 +117,10 @@ select[multiple] {
 }
 
 .select.mini {
-  font-size: .8rem;
+  font-size: .9rem;
   
   select {
     line-height: 16px;
-    padding: 0;
+    padding-block: 0;
   }
 }

@@ -25,6 +25,11 @@
         white-space: nowrap;
     }
 
+    &.medium {
+        font-size: 12px;
+        padding: 5px;
+    }
+
     @media screen and (min-width: $tablet) {
         &.mini {
             font-size: 12px;
@@ -45,10 +50,10 @@
     }
 
     &.secondary {
-        background-color: var(--color-secondary);
+        background-color: var(--color-gray-light);
 
         &:hover {
-            background-color: var(--color-gray-light);
+            background-color: var(--color-gray);
         }
     }
 }

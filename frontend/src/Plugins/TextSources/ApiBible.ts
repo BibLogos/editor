@@ -14,9 +14,11 @@ export class ApiBible extends TextSourceBase implements TextSource {
             const response = await fetch(`${env.API}/plugins/api.bible/bibles/${bible}/books/${book}/chapters`)
             const { data } = await response.json()
 
-            return data.map(({ number }) => {
-                const label = number === 'intro' ? 'Introduction' : number
-                return [number, label]
+            return data
+            .filter(({ number }) => number !== 'intro')
+            .map(({ number }) => {
+                const label = number === 'intro' ? 'Intro' : number
+                return [parseInt(number), label]
             })
         }
         catch (exception) {

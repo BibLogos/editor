@@ -8,21 +8,20 @@ export class ProjectTeaser extends (HTML.Div as typeof HTMLElement) {
 
     async upgradedCallback() {
         this.draw()
-        console.log(this.project)
+        this.classList.add('project')
+        this.classList.add('teaser')
     }
 
     draw () {
         render(this, html`
-        <div class="project teaser">
-            <img src=${this.project.avatar} class="left avatar">
+        <h3 class="title">${this.project.name}<em>, by ${this.project.owner}</em></h3>
+        <p class="description">${this.project.description}</p>
 
-            <div class="right">
-                <h3 class="title">${this.project.name}<em>, by ${this.project.owner}</em></h3>
-                <p class="description">${this.project.description}</p>
-            </div>
-
-            <a class="button primary" href=${this.project.editorLink}>${t`View`}</a>
+        <div class="actions">
+            <a class="button medium secondary edit" href=${this.project.editorLink}>${t`Edit`}</a>
+            <a class="button medium primary" href=${this.project.editorLink}>${t`View`}</a>
         </div>
+        
         `)
     }
 }

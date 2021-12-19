@@ -29,7 +29,11 @@ export class DeleteForm extends PopupPartbase implements PopupPartInterface {
         const type = lastPart(selectedMarking.predicate)
 
         return html`
-            <span class="label existing-item">${type}: ${selectedMarking.name}</span>
+            <span class="search-result">
+            <span class="label">
+            ${type}: ${selectedMarking.name}
+            </span>
+            </span>
 
             ${this.count > 1 ? html`
                 <button class="button nowrap" onclick=${async () => {

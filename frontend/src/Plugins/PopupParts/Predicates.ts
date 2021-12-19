@@ -9,7 +9,7 @@ export class Predicates extends PopupPartbase implements PopupPartInterface {
     private factPredicates
 
     applies () {
-        return this.selectionPopup.form === 'search' && !this.selectionPopup.predicateType
+        return this.selectionPopup.form === 'search'
     }
 
     template () {

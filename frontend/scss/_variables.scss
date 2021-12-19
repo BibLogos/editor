@@ -1,17 +1,20 @@
 :root {
   --padding: 20px;
   --radius: 5px;
-  --color-black: black;
+  --color-black: #454837;
   --max-width: 800px;
   --color-gray: rgb(189, 189, 189);
   --color-gray-light: rgb(236, 235, 235);
+  --color-gray-lighter: rgb(241, 241, 241);
   --color-gray-dark: rgb(83, 83, 83);
-  --color-primary: rgb(245, 212, 23);
+  --color-primary: #ffdf62;
   --color-primary-dark: rgb(182, 158, 21);
-  --color-secondary: rgb(245, 112, 23);
+  --color-secondary: #ff6600;
   --speed: .3s;
   --easing: ease-in-out;
-  --font-sans: Arial, Helvetica, sans-serif;
+  --font-sans: 'PT Sans', Arial, Helvetica, sans-serif;
+  --font-serif: 'Noto Serif', serif;
+  --font-logo: 'PT Sans Narrow', sans-serif;
 }
 
 $tablet: 720px;

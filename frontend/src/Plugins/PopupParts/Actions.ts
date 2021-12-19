@@ -18,7 +18,7 @@ export class Actions extends PopupPartbase implements PopupPartInterface {
             .map(marking => {
             const type = lastPart(marking.predicate).toLowerCase()
             return html`
-            <span class="existing-item">
+            <span class="search-result">
                 <span class="label">${type}: ${marking.name}</span>
                 <button class="button mini" onclick=${() => { 
                     this.selectionPopup.form = 'delete'

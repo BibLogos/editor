@@ -43,12 +43,12 @@ export class Search extends PopupPartbase implements PopupPartInterface {
                     this.searchResults = searchResults
                     this.selectionPopup.draw()
                 })
-            }, 100)} placeholder=${t`Search by text`}>
+            }, 100)} placeholder=${t`Search existing`}>
 
             <!--uhtml crashes without this-->
             ${this.searchResults !== null ? (this.searchResults.length ? html`${this.searchResults.map(searchResult => html`
-            <span class="existing-item">
-                <span onclick=${async () => {
+            <span class="search-result">
+                <span class="label" onclick=${async () => {
                     const { chapterId } = params
 
                     const book = this.selectionPopup.markingsStore.bookAbbreviation
@@ -64,7 +64,7 @@ export class Search extends PopupPartbase implements PopupPartInterface {
                     await this.selectionPopup.markingsStore.appendFactReferences(searchResult.predicate, references)
                     this.selectionPopup.remove()
                     app.render()
-                }} class="label">${searchResult.name}${searchResult.comment ? html`, ${searchResult.comment}` : html``}</span>
+                }}>${searchResult.name}${searchResult.comment ? html`, ${searchResult.comment}` : html``}</span>
             </span>
             `)}` : html``) : html``}
         `

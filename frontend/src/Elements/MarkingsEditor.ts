@@ -9,6 +9,7 @@ import { app } from '../app';
 import { t } from '../Helpers/t';
 import { MarkingsStore } from '../Classes/MarkingsStore';
 import { MarkingsEditorChanges } from './MarkingsEditorChanges';
+import { icon } from '../Helpers/icon';
 
 export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
 
@@ -19,6 +20,7 @@ export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
     private book
     private markingsStore: MarkingsStore
     private element
+    private chapters
 
     async upgradedCallback() {
         await this.draw()
@@ -30,15 +32,15 @@ export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
         let { ownerId, repoId, bookId, chapterId } = params
         const project = await github.getProject(ownerId, repoId)
         this.book = bookId ? project.books.find(book => book.name === bookId) : project.books[0]
+        this.chapters = await this.book.getChapters()
 
         if (!bookId || !chapterId) {
             if (!bookId) bookId = this.book.name
             if (!chapterId) {
-                const chapters = await this.book.getChapters()
-                const [firstChapterId, _label] = chapters[0]
+                const [firstChapterId, _label] = this.chapters[0]
                 chapterId = firstChapterId
             }
-            goTo(`/editor/${ownerId}/${repoId}/${bookId}/${chapterId}`)
+            goTo(`/editor/${ownerId}/${repoId}/${bookId}/${chapterId}`, true)
         }
        
         this.text = await this.book.getText(chapterId)
@@ -177,13 +179,22 @@ export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
         let { chapterId } = params
         const bookAbbreviation = this.book?.settings.book
 
+        const currentChapter = this.chapters?.find(([chapter]) => chapter.toString() === chapterId.toString())
+        const currentChapterIndex = this.chapters?.indexOf(currentChapter)
+
         return render(this, this.text ? html`
 
-        <${BookNavigation} />
+        <${MarkingsEditorChanges} ref=${(element) => element.draw ? element.draw() : null} .changes=${this.markingsStore.changes} />
 
-        <${MarkingsEditorChanges} .changes=${this.markingsStore.changes} />
+        ${currentChapterIndex !== undefined && currentChapterIndex > 0 ? html`
+            <a class="prev-chapter" href=${this.chapters[currentChapterIndex - 1][0]}>${icon('prev')}</a>
+        ` : null }
+        
+        ${currentChapterIndex !== undefined && currentChapterIndex !== this.chapters.length - 1 ? html`
+            <a class="next-chapter" href=${this.chapters[currentChapterIndex + 1][0]}>${icon('next')}</a>
+        ` : null }
 
-        <div params=${JSON.stringify(params)} ref=${element => this.element = element} class="markings-editor">
+        <div params=${JSON.stringify(params)} ref=${element => this.element = element} class=${`markings-editor ${this.bigMarkings.length ? 'has-big-marking' : ''}`}>
             ${this.text.map(([lineNumber, line, prefix, newLines], index) => {
 
                 const prefixHighlights = this.markings
@@ -210,6 +221,8 @@ export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
                         const startWord: HTMLElement = this.querySelector(`[chapter-id="${chapterId}"][line-number="${marking.reference.startVerse}"][word-number="${marking.reference.startWord}"]`)
                         const endWord: HTMLElement = this.querySelector(`[chapter-id="${chapterId}"][line-number="${marking.reference.endVerse}"][word-number="${marking.reference.endWord}"]`)
 
+                        startWord.classList.add('start-of-big-marking')
+
                         element.style.setProperty('--y1', (startWord.offsetTop - 6) + 'px')
                         element.style.setProperty('--y2', (endWord.offsetTop + 50) + 'px')
                         element.style.setProperty('--color', stringToColor(type.toLowerCase()))
@@ -221,9 +234,7 @@ export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
 
         </div>
 
-        <div class="right-spacer"></div>
-
-        ` : html`<span>${t`Loading...`}</span>`)
+        ` : html`<span class="markings-editor">${t`Loading...`}</span>`)
     }
 }
  

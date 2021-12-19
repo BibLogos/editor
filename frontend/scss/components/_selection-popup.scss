@@ -50,14 +50,13 @@
         padding-inline: 5px;
     }
 
-    .existing-item {
+    .search-result {
         display: flex;
         line-height: 32px;
         white-space: nowrap;
         align-items: center;
         background-color: var(--color-gray-light);
-        padding: 2px;
-        gap: 2px;
+        padding: 0;
         border-radius: var(--radius);
 
         svg  {
@@ -69,6 +68,20 @@
     .searching-text {
         color: white;
         line-height: 30px;
+    }
+}
+
+@media screen and (max-width: $tablet - 1px) {
+    .search-result {
+        .label + .button {
+            border-radius: 0;
+        }
+
+        .button + .button {
+            margin-left: -1px;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
     }
 }
 
@@ -93,6 +106,11 @@
     
         .cancel-button {
             display: none;
+        }
+
+        .search-result {
+            padding: 0 2px;
+            gap: 2px;
         }
     }
 }

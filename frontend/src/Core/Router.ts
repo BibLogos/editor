@@ -28,7 +28,7 @@ const routes = [
 
 export const Router = new UniversalRouter(routes)
 
-export const goTo = (path) => {
-  if (location.pathname !== path) history.pushState({}, '', path)
+export const goTo = (path, replace = false) => {
+  if (location.pathname !== path) history[replace ? 'replaceState' : 'pushState']({}, '', path)
   return app.render()
 }

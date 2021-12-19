@@ -1,6 +1,7 @@
 import { render, html } from 'ube'
 import { Router, params } from './Core/Router'
 import '../scss/style.scss'
+import { goTo } from './Core/Router'
 
 let previousRoute = null
 
@@ -8,6 +9,19 @@ class App extends EventTarget {
 
     constructor () {
         super()
+
+        document.body.addEventListener('click', (event: Event) => {
+            const element = (event as any).target.nodeName !== 'A' ? (event as any).target.closest('a') : (event as any).target
+            if (element) {
+                const href = element.getAttribute('href')
+                if (href && (href[0] === '/' || !href.startsWith('http'))) {
+                    event.preventDefault()
+                    setTimeout(() => goTo(href))
+              }
+            }
+        })
+
+        window.addEventListener('popstate', () => this.render())
         this.render()
     }
 
@@ -33,6 +47,7 @@ class App extends EventTarget {
                 if ((previousRoute !== route || !paramsWereSame) && route.load) {
                     route.load()
                 }
+                document.body.dataset.route = route.name
                 await render(document.body, route.template())
 
                 if (previousRoute !== route) this.dispatchEvent(new CustomEvent('route-change'))

@@ -8,6 +8,7 @@ export class MarkingsEditorChanges extends (HTML.Div as typeof HTMLElement) {
 
     async upgradedCallback() {
         this.draw()
+        this.classList.add('markings-editor-change')
     }
 
     draw () {

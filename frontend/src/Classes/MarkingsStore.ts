@@ -26,7 +26,7 @@ export class MarkingsStore extends EventTarget {
         })
 
         storeEventTarget.addEventListener('addQuad', (event) => {
-            this.changes.push(['removed', event.detail, new Date()])
+            this.changes.push(['added', event.detail, new Date()])
         })
     }
 

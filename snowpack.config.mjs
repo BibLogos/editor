@@ -16,6 +16,7 @@ export default {
     'frontend/src': '/',
     'frontend/html': '/',
     "frontend/scss": "/",
+    "frontend/assets": "/assets",
     "ttl": "/ttl",
   },
   plugins: [
