@@ -12,7 +12,7 @@ export class MarkingsEditorChanges extends (HTML.Div as typeof HTMLElement) {
     }
 
     draw () {
-        console.log(this.changes)
+        // console.log(this.changes)
         render(this, html`
         <ul class="changes">
 

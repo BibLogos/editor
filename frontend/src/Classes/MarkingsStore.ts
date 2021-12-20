@@ -1,7 +1,6 @@
 import { importGlobalScript } from '../Helpers/importGlobalScript'
 import { ReferenceProxy } from './ReferenceProxy'
 import { ComunicaExport, FactObject, MarkingsEditorChange } from '../types'
-const { newEngine } = await importGlobalScript('http://rdf.js.org/comunica-browser/versions/latest/packages/actor-init-sparql/comunica-browser.js', 'Comunica') as ComunicaExport
 import { StoreProxy } from './StoreProxy'
 
 const ONTOLOGY = `${location.protocol}//${location.hostname}:${location.port}/ttl/ontology.ttl`
@@ -18,7 +17,7 @@ export class MarkingsStore extends EventTarget {
         super()
         const [proxiedStore, storeEventTarget] = StoreProxy(store)
         this.#store = proxiedStore
-        this.#comunica = newEngine()
+
         this.#bookAbbreviation = bookAbbreviation
 
         storeEventTarget.addEventListener('removeQuad', (event) => {
@@ -36,6 +35,11 @@ export class MarkingsStore extends EventTarget {
 
     async query (query, sources: any, debug = false) {
         if (debug) console.log(query)
+        if (!this.#comunica) {
+            const { newEngine } = await importGlobalScript('http://rdf.js.org/comunica-browser/versions/latest/packages/actor-init-sparql/comunica-browser.js', 'Comunica') as ComunicaExport
+            this.#comunica = newEngine()
+        }
+
         const response = await this.#comunica.query(query, { sources })
 
         if (response.type === 'update') {

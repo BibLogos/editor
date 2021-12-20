@@ -19,7 +19,7 @@ export function select ({
 
         <div class=${`select ${extraCssClass}`}>
             <select onchange=${onchange}>
-                ${values.map(([value, label]) => html`<option ?disabled=${value === ''} ?selected=${value.toString() === currentValue.toString() ? true : null} value=${value}>${label}</option>`)}
+                ${values.map(([value, label]) => html`<option ?disabled=${value === ''} .selected=${value.toString() === currentValue.toString() ? true : null} value=${value}>${label}</option>`)}
             </select>
 
             <div class="focus"></div>

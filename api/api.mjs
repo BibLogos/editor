@@ -29,7 +29,7 @@ export default {
 
       if (parsedURL.pathname.startsWith('/plugins/')) {
         const [ , , pluginName, ...pluginArguments] = parsedURL.pathname.split('/')
-        if (pluginName in plugins) { return plugins[pluginName](request, env, ...pluginArguments) }
+        if (pluginName in plugins) { return plugins[pluginName](request, ctx, env, ...pluginArguments) }
       }
 
       if (parsedURL.pathname === '/token') {

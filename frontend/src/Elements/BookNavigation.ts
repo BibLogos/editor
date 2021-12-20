@@ -32,10 +32,14 @@ export class BookNavigation extends (HTML.Div as typeof HTMLElement) {
             return
         }
 
+        app.addEventListener('params-change', () => this.draw())
+
         this.draw()
     }
 
     draw () {
+        console.log(params.chapterId)
+
         if (!this.book) return
         render(this, html`
 

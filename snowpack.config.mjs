@@ -36,8 +36,12 @@ export default {
     },
   ],
   optimize: {
+    treeshake: true,
     bundle: true,
     minify: true,
-    target: 'es2018',
+    target: 'esnext',
+  },
+  buildOptions: {
+    out: 'docs'
   }
 };
