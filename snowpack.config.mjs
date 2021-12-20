@@ -28,7 +28,7 @@ export default {
       "src": ".*", 
       dest: (req, res) => {
         let indexText = fs.readFileSync('frontend/html/index.html', 'utf8')
-        indexText = indexText.replace('<script type="application/json" id="env-json"></script>', 
+        indexText = indexText.replace('<!-- __ENV_REPLACE_TOKEN__ -->', 
         `<script type="application/json" id="env-json">${JSON.stringify(env)}</script>`)
         res.writeHead(200)
         res.end(indexText)
