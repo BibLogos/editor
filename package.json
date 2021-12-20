@@ -8,7 +8,7 @@
     "dev": "concurrently \"cd api && npx miniflare dist/api.mjs --watch --debug --modules --env ../.env\" \"snowpack dev --polyfill-node\"",
     "test": "jest",
     "test:watch": "jest --watch",
-    "build": "snowpack build --polyfill-node"
+    "build": "snowpack build --polyfill-node && echo \"biblogos.info\" > docs/CNAME"
   },
   "author": "Daniel Beeke",
   "license": "GPL-3.0-only",
