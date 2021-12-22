@@ -36,7 +36,7 @@ export class MarkingsStore extends EventTarget {
     async query (query, sources: any, debug = false) {
         if (debug) console.log(query)
         if (!this.#comunica) {
-            const { newEngine } = await importGlobalScript('http://rdf.js.org/comunica-browser/versions/latest/packages/actor-init-sparql/comunica-browser.js', 'Comunica') as ComunicaExport
+            const { newEngine } = await importGlobalScript('https://rdf.js.org/comunica-browser/versions/latest/packages/actor-init-sparql/comunica-browser.js', 'Comunica') as ComunicaExport
             this.#comunica = newEngine()
         }
 
