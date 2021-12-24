@@ -74,14 +74,14 @@
     }
 
     .start-of-big-marking {
-        margin-top: 20px;
+        margin-top: 40px;
         display: inline-block;
     }
 
     .big-marking {
         height: calc(var(--y2) - var(--y1) + 20px);
         width: 100%;
-        top: calc(var(--y1) - 12px);
+        top: calc(var(--y1) - 32px);
         position: absolute;
         right: 0;
         pointer-events: none;
@@ -121,8 +121,8 @@
             background-color: var(--color);
             color: white;
             position: sticky;
-            top: 65px;
-            margin-top: -20px;
+            top: 80px;
+            margin-top: 14px;
             margin-bottom: 20px;
             float: right;
             transform-origin: center;
@@ -136,7 +136,6 @@
     .markings-editor {
         font-size: 26px;
         line-height: 50px;
-        margin-top: 40px;
 
         .big-marking {
             .text {

@@ -1,4 +1,6 @@
 .projects-overview.route {
+    padding-bottom: 40px;
+
     .project.teaser + .project.teaser {
         border-top: 1px solid var(--color-gray-light);
     }

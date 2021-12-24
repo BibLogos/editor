@@ -68,14 +68,10 @@
 }
 
 body {
-    padding-block-start: 54px;
+    padding-block-start: 70px;
 }
 
 @media screen and (min-width: $tablet) {
-    body {
-        padding-block-start: 74px;
-    }
-
     .site-header {
         gap: 10px;
 

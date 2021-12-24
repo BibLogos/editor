@@ -18,8 +18,8 @@ export class ProjectTeaser extends (HTML.Div as typeof HTMLElement) {
         <p class="description">${this.project.description}</p>
 
         <div class="actions">
-            <a class="button medium secondary edit" href=${this.project.editorLink}>${t`Edit`}</a>
-            <a class="button medium primary" href=${this.project.editorLink}>${t`View`}</a>
+            <a class="button medium secondary edit" href=${this.project.editorLink}>${t`Edit facts`}</a>
+            <a class="button medium primary" href=${this.project.editorLink}>${t`Explore data`}</a>
         </div>
         
         `)

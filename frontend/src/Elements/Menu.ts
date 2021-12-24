@@ -11,9 +11,10 @@ export class Menu extends (HTML.Div as typeof HTMLDivElement) {
     draw () {
         render(this, html`
 
-        ${this['menu-items']}
-
-        <div class="menu-toggle">
+        <div onclick=${() => {
+            console.log(document.body.dataset.menu)
+            document.body.dataset.showMenu = document.body.dataset.showMenu !== 'true' ? 'true' : 'false'
+        }} class="menu-toggle">
             <div class="bar"></div>
             <div class="bar"></div>
             <div class="bar"></div>

@@ -18,8 +18,6 @@ export class ProjectsOverview extends (HTML.Div as typeof HTMLElement) {
 
     draw () {
         render(this, html`
-        <h2 class="page-title">${t`Projects overview`}</h2>
-
         ${!this.projects ? html`Loading...` : html`
             ${this.projects.map(project => html`<${ProjectTeaser} .project=${project} />`)}
         `}
