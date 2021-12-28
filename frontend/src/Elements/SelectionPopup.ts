@@ -31,21 +31,19 @@ export class SelectionPopup extends (HTML.Span as typeof HTMLSpanElement) {
 
     public popupParts
 
-    private afterRenders: Array<Function> = []
-
     constructor (selections, markingsStore, markingsEditor) {
         super()
-        this.selections = selections
-        this.markingsStore = markingsStore
-        this.markingsEditor = markingsEditor
-        this.markings = selections.flatMap(words => words.flatMap(word => word.markings))
-        this.draw()
+        // this.selections = selections
+        // this.markingsStore = markingsStore
+        // this.markingsEditor = markingsEditor
+        // this.draw()
         this.addEventListener('mousedown', canceler)
         this.addEventListener('mouseup', canceler)
         this.addEventListener('click', canceler)
     }
 
     async upgradedCallback() {
+        this.markings = this.selections.flatMap(words => words.flatMap(word => word.markings))
         document.body.classList.add('has-selection-popup')
 
         this.popupParts = [
@@ -60,17 +58,12 @@ export class SelectionPopup extends (HTML.Span as typeof HTMLSpanElement) {
             new SelectSubject(this)
         ]
         this.classList.add('selection-popup')
+        this.draw()
     }
 
     async draw () {
         const popupPartsThatApply = this.popupParts.filter(popupPart => popupPart.applies())
         await render(this, html`${popupPartsThatApply.map(popupPart => popupPart.template())}`)
-        for (const afterRender of this.afterRenders) afterRender()     
-        this.afterRenders = []   
-    }
-
-    addAfterRender (callback) {
-        this.afterRenders.push(callback)
     }
 
     remove () {
@@ -78,4 +71,3 @@ export class SelectionPopup extends (HTML.Span as typeof HTMLSpanElement) {
         super.remove()
     }
 }
- 

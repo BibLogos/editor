@@ -136,7 +136,7 @@ export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
         .filter(wordHighlight => wordHighlight.reference.isShort)
         .sort((a, b) => b.reference.length - a.reference.length)
 
-        return html`<span class="markings">${
+        return wordHighlights.length ? html`<span class="markings">${
             wordHighlights.map(wordHighlight => {
                 const highlightExistsInNextWord = nextWordHighlights.find(nextHighlight => nextHighlight.predicate === wordHighlight.predicate)
 
@@ -146,7 +146,7 @@ export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
                     title=${wordHighlight?.comment}>
                 </span>`
             })
-        }</span>`
+        }</span>` : html``
     }
 
     wordTemplate (chapterId, lineNumber, wordNumber, word) {
@@ -165,14 +165,7 @@ export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
             return comment ? comment + ', ' + type : type
         }).join('\n')
 
-        return html`<span 
-            title=${title} 
-            person=${personMarking?.subject} 
-            chapter-id=${chapterId}
-            class="word" 
-            word-number=${wordNumber} 
-            line-number=${lineNumber}>${this.wordMarkings(wordHighlights, false, nextWordHighlights)}${word}</span><span 
-            class="word space">${this.wordMarkings(wordHighlights, true, nextWordHighlights)} </span>`
+        return html`<span title=${title ? title : null} person=${personMarking?.subject} chapter-id=${chapterId} class="word" word-number=${wordNumber} line-number=${lineNumber}>${this.wordMarkings(wordHighlights, false, nextWordHighlights)}${word}</span><span class="word space">${this.wordMarkings(wordHighlights, true, nextWordHighlights)} </span>`
     }
 
     async draw () {
