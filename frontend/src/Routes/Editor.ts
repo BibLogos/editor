@@ -13,13 +13,15 @@ export const Editor: Route = {
         return html`
             <${SiteHeader} .extra=${html`<${BookNavigation} />`} />
             <${MarkingsEditor} class="route" ref=${element => markingsEditor = element} onclick=${(event) => {
+                const parentPopup = (event.target as HTMLElement).closest('.selection-popup')
+                if (event.target.parentElement === null) return
+                if (parentPopup) return
+    
                 if (!event.target.classList.contains('word')) {
-                    console.log(1, event)
                     markingsEditor.clear()
                     document.querySelector('.selection-popup')?.remove()
                 }
             }} class="route-editor" onselection=${(event) => {
-                console.log(2, event)
                 const selections = event.detail
                 const firstWord = selections[0][0]?.element
                 document.querySelector('.selection-popup')?.remove()

@@ -70,7 +70,14 @@ export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
             boundaries: ['.markings-editor']
         })
         .on('beforedrag', () => false)
+        .on('beforestart', (event) => {
+            const parentPopup = (event.event.target as HTMLElement).closest('.selection-popup')
+            if (parentPopup) return false
+        })
         .on('start', ({ store, event }) => {
+            const parentPopup = (event.target as HTMLElement).closest('.selection-popup')
+            if (parentPopup) return
+
             if (!(event as MouseEvent).ctrlKey && !(event as MouseEvent).metaKey) {
                 for (const el of store.stored) el.classList.remove('selected')
                 this.selection.clearSelection()
@@ -168,24 +175,33 @@ export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
         return html`<span title=${title ? title : null} person=${personMarking?.subject} chapter-id=${chapterId} class="word" word-number=${wordNumber} line-number=${lineNumber}>${this.wordMarkings(wordHighlights, false, nextWordHighlights)}${word}</span><span class="word space">${this.wordMarkings(wordHighlights, true, nextWordHighlights)} </span>`
     }
 
+    arrows () {
+        let { chapterId } = params
+        const currentChapter = this.chapters?.find(([chapter]) => chapter.toString() === chapterId.toString())
+        const currentChapterIndex = this.chapters?.indexOf(currentChapter)
+
+        return html`
+            ${currentChapterIndex !== undefined && currentChapterIndex > 0 ? html`
+                <a class="prev-chapter" href=${this.chapters[currentChapterIndex - 1][0]}>${icon('prev')}</a>
+            ` : null }
+            
+            ${currentChapterIndex !== undefined && currentChapterIndex !== this.chapters.length - 1 ? html`
+                <a class="next-chapter" href=${this.chapters[currentChapterIndex + 1][0]}>${icon('next')}</a>
+            ` : null }
+        `
+    }
+
     async draw () {
         let { chapterId } = params
         const bookAbbreviation = this.book?.settings.book
 
-        const currentChapter = this.chapters?.find(([chapter]) => chapter.toString() === chapterId.toString())
-        const currentChapterIndex = this.chapters?.indexOf(currentChapter)
 
         return render(this, this.text ? html`
 
+        ${this.arrows()}
+
         <${MarkingsEditorChanges} ref=${(element) => element.draw ? element.draw() : null} .changes=${this.markingsStore.changes} />
 
-        ${currentChapterIndex !== undefined && currentChapterIndex > 0 ? html`
-            <a class="prev-chapter" href=${this.chapters[currentChapterIndex - 1][0]}>${icon('prev')}</a>
-        ` : null }
-        
-        ${currentChapterIndex !== undefined && currentChapterIndex !== this.chapters.length - 1 ? html`
-            <a class="next-chapter" href=${this.chapters[currentChapterIndex + 1][0]}>${icon('next')}</a>
-        ` : null }
 
         <div params=${JSON.stringify(params)} ref=${element => this.element = element} class=${`markings-editor ${this.bigMarkings.length ? 'has-big-marking' : ''}`}>
             ${this.text.map(([lineNumber, line, prefix, newLines], index) => {

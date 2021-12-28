@@ -38,8 +38,6 @@ export class BookNavigation extends (HTML.Div as typeof HTMLElement) {
     }
 
     draw () {
-        console.log(params.chapterId)
-
         if (!this.book) return
         render(this, html`
 
