@@ -11,7 +11,8 @@ export class MarkingsStore extends EventTarget {
     #comunica
     #bookAbbreviation
 
-    public changes: Array<MarkingsEditorChange> = []
+    public changes: Array<{ label: string, changes: Array<MarkingsEditorChange>}> = []
+    private transaction: { label: string, changes: Array<MarkingsEditorChange>}
 
     constructor (store, bookAbbreviation) {
         super()
@@ -21,12 +22,20 @@ export class MarkingsStore extends EventTarget {
         this.#bookAbbreviation = bookAbbreviation
 
         storeEventTarget.addEventListener('removeQuad', (event) => {
-            this.changes.push(['removed', event.detail, new Date()])
+            this.transaction.changes.push(['removed', event.detail, new Date()])
         })
 
         storeEventTarget.addEventListener('addQuad', (event) => {
-            this.changes.push(['added', event.detail, new Date()])
+            this.transaction.changes.push(['added', event.detail, new Date()])
         })
+    }
+
+    startTransaction (label: string) {
+        this.transaction = { changes: [], label }
+    }
+
+    endTransaction () {
+        if (this.transaction.changes.length) this.changes.push(this.transaction)
     }
 
     get bookAbbreviation () {
@@ -111,8 +120,9 @@ export class MarkingsStore extends EventTarget {
     }
 
     async insertFact (object: FactObject) {
-        await this.deleteFact(object.uri)
-        return await this.query(`
+        this.startTransaction('Created a new fact')
+        await this.deleteFact(object.uri, false)
+        const result = await this.query(`
         PREFIX biblogos: <https://biblogos.info/ttl/ontology#>
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
         INSERT DATA { 
@@ -131,10 +141,13 @@ export class MarkingsStore extends EventTarget {
             ` : ''}
         } 
         `, [ this.#store ])
+        this.endTransaction()
+        return result
     }
 
     async appendFactReferences (predicate: string, references: Array<string>) {
-        return this.query(`
+        this.startTransaction('Added a reference to an existing fact')
+        const result = await this.query(`
         PREFIX biblogos: <https://biblogos.info/ttl/ontology#>
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
         
@@ -144,10 +157,13 @@ export class MarkingsStore extends EventTarget {
             `)}
         }
         `, [ this.#store ])
+        this.endTransaction()
+        return result
     }
 
     async removeFactReferences (predicate: string, references: Array<string>) {
-        return this.query(`
+        this.startTransaction('Removed a reference to an existing fact')
+        const result = await this.query(`
         PREFIX biblogos: <https://biblogos.info/ttl/ontology#>
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
         
@@ -157,10 +173,13 @@ export class MarkingsStore extends EventTarget {
             `)}
         }
         `, [ this.#store ])
+        this.endTransaction()
+        return result
     }
 
-    async deleteFact (factUri: string) {
-        return this.query(`
+    async deleteFact (factUri: string, shouldStartTransaction = true) {
+        if (shouldStartTransaction) this.startTransaction('Removed an existing fact')
+        const result = await this.query(`
         PREFIX biblogos: <https://biblogos.info/ttl/ontology#>
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
         DELETE { 
@@ -177,6 +196,8 @@ export class MarkingsStore extends EventTarget {
             OPTIONAL { <${factUri}> biblogos:subject ?subject . }
         }        
         `, [ this.#store ])
+        if (shouldStartTransaction) this.endTransaction()
+        return result
     }
 
     async getReferencesCountForFact (factUri: string) {

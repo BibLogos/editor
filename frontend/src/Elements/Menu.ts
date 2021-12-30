@@ -1,5 +1,16 @@
 import { HTML, render, html } from 'ube';
 import { t } from '../Helpers/t';
+import { icon } from '../Helpers/icon';
+
+const menuItems = [
+    [t`Home`, '/'],
+    [t`About`, '/about'],
+    [t`GitHub`, 'https://github.com/BibLogos/editor'],
+]
+
+const toggleMenu = () => {
+    document.body.dataset.showMenu = document.body.dataset.showMenu !== 'true' ? 'true' : 'false'
+}
 
 export class Menu extends (HTML.Div as typeof HTMLDivElement) {
 
@@ -11,13 +22,17 @@ export class Menu extends (HTML.Div as typeof HTMLDivElement) {
     draw () {
         render(this, html`
 
-        <div onclick=${() => {
-            console.log(document.body.dataset.menu)
-            document.body.dataset.showMenu = document.body.dataset.showMenu !== 'true' ? 'true' : 'false'
-        }} class="menu-toggle">
+        <div onclick=${toggleMenu} class="menu-toggle">
             <div class="bar"></div>
             <div class="bar"></div>
             <div class="bar"></div>
+        </div>
+
+        <div class="menu-inner">
+            <ul>
+            <button class="close-menu button primary" onclick=${toggleMenu}>${icon('close')}</button>
+            ${menuItems.map(([title, link]) => html`<li><a onclick=${toggleMenu} href=${link}>${title}</a></li>`)}
+            </ul>
         </div>
         `)
     }

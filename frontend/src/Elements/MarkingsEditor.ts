@@ -67,7 +67,10 @@ export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
 
         this.selection = new SelectionArea({
             selectables: ['.word'],
-            boundaries: ['.markings-editor']
+            boundaries: ['.markings-editor'],
+            features: {
+                touch: false
+            }
         })
         .on('beforedrag', () => false)
         .on('beforestart', (event) => {
@@ -195,12 +198,11 @@ export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
         let { chapterId } = params
         const bookAbbreviation = this.book?.settings.book
 
-
         return render(this, this.text ? html`
 
         ${this.arrows()}
 
-        <${MarkingsEditorChanges} ref=${(element) => element.draw ? element.draw() : null} .changes=${this.markingsStore.changes} />
+        <${MarkingsEditorChanges} ref=${(element) => element.draw ? element.draw() : null} .markingsStore=${this.markingsStore} />
 
 
         <div params=${JSON.stringify(params)} ref=${element => this.element = element} class=${`markings-editor ${this.bigMarkings.length ? 'has-big-marking' : ''}`}>

@@ -1,3 +1,54 @@
 .markings-editor-change {
     position: fixed;
+    opacity: 0;
+    background-color: var(--color-primary);
+    z-index: 10;
+    bottom: var(--padding);
+    border: 1px solid var(--color-gray-dark);
+    max-width: calc(100vw - (var(--padding) * 2));
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--radius);
+    pointer-events: none;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, .2);
+
+    &[data-visible="true"] {
+        opacity: 1;
+        pointer-events: all;
+    }
+
+    .top {
+        padding: 10px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        border-bottom: 1px solid var(--color-gray);
+    }
+
+    .list {
+        padding-inline-start: 14px;
+    }
+
+    .changes {
+        background-color: var(--color-gray-light);
+        padding: 10px;
+        border-radius: var(--radius);
+
+        &[open] {
+            summary {
+                font-weight: bold;
+            }
+        }
+    }
+
+    summary {
+        cursor: pointer;
+    }
+}
+
+@media screen and (max-width: #{$tablet - 1px}) {
+    body.has-selection-popup .markings-editor-change {
+        opacity: 0;
+        pointer-events: none;
+    }
 }

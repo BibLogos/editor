@@ -9,6 +9,7 @@
     bottom: 0;
     transform: translateX(-50%);
     border-radius: var(--radius);
+    border-top-right-radius: 0;
     min-width: 80px;
     width: 100%;
     z-index: 20;
@@ -68,6 +69,20 @@
         color: white;
         line-height: 30px;
     }
+
+    .cancel-button {
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        right: 0;
+        display: flex;
+        box-shadow: none;
+        justify-content: center;
+        align-items: center;
+        padding: 3px;
+        bottom: calc(100% - 3px);
+        border: solid 4px var(--color-gray-dark);
+    }
 }
 
 @media screen and (max-width: #{$tablet - 1px}) {
@@ -87,6 +102,7 @@
 @media screen and (min-width: $tablet) {
     .selection-popup {
         position: absolute;
+        border-top-right-radius: var(--radius);
         bottom: auto;
         width: auto;
         top: calc(100% + 10px);

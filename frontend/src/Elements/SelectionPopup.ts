@@ -31,12 +31,8 @@ export class SelectionPopup extends (HTML.Span as typeof HTMLSpanElement) {
 
     public popupParts
 
-    constructor (selections, markingsStore, markingsEditor) {
+    constructor () {
         super()
-        // this.selections = selections
-        // this.markingsStore = markingsStore
-        // this.markingsEditor = markingsEditor
-        // this.draw()
         this.addEventListener('mousedown', canceler)
         this.addEventListener('mouseup', canceler)
         this.addEventListener('click', canceler)
@@ -47,6 +43,7 @@ export class SelectionPopup extends (HTML.Span as typeof HTMLSpanElement) {
         document.body.classList.add('has-selection-popup')
 
         this.popupParts = [
+            new Cancel(this),
             new Predicates(this),
             new Search(this), 
             new Actions(this), 
@@ -54,7 +51,6 @@ export class SelectionPopup extends (HTML.Span as typeof HTMLSpanElement) {
             new ObjectForm(this),
             new NewMarking(this),
             new CreateMarking(this), 
-            new Cancel(this),
             new SelectSubject(this)
         ]
         this.classList.add('selection-popup')

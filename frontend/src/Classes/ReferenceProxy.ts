@@ -19,7 +19,7 @@ export class ReferenceProxy {
 
     constructor (reference) {
         this.#reference = reference
-        const [start, end] = reference.split(':')
+        const [start, end] = reference.includes(':') ? reference.split(':') : [reference, reference]
 
         const [startBook, startChapter, startVerse, startWord] = parseInts(start.split('.'))
         const startObject = {startBook, startChapter, startVerse, startWord}

@@ -24,7 +24,7 @@ export class ObjectForm extends PopupPartbase implements PopupPartInterface {
                 const lastWord = words.at(-1)
                 const startReference = `${book}.${chapterId}.${firstWord.lineNumber}.${firstWord.wordNumber}`
                 const endReference = `${book}.${chapterId}.${lastWord.lineNumber}.${lastWord.wordNumber}`
-                return startReference + ':' + endReference 
+                return startReference === endReference ? startReference : startReference + ':' + endReference 
             })
 
             await this.selectionPopup.markingsStore.insertFact({
