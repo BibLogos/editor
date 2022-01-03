@@ -131,6 +131,11 @@
     }
 }
 
+@media screen and (max-width: #{$tablet - 1px}) {
+    body[data-has-changes="true"] .markings-editor {
+        padding-bottom: 60px;
+    }
+}
 
 @media screen and (min-width: $tablet) {
     .markings-editor {

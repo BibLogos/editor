@@ -19,23 +19,24 @@ export class MarkingsEditorChanges extends (HTML.Div as typeof HTMLElement) {
     draw () {
         const changeCount = this.markingsStore.changes.length
         this.dataset.visible = (!!changeCount).toString()
+
+        document.body.dataset.hasChanges = (!!changeCount).toString()
+
         render(this, changeCount ? html`
-        <div class="top">
-            <h3>${t`You have made changes.`}</h3>
-            <button class="primary button">${t`Save`}</button>
-        </div>
         <details class="changes">
-            <summary>${t`List of changes`}</summary>
+            <summary>
+                ${t`List of changes`} <em>(${this.markingsStore.changes.length})</em>
+                <button class="primary button">${t`Save`}</button>
+
+            </summary>
 
             <ul class="list">
                 ${this.markingsStore.changes.map(transaction => {
-                    console.log(transaction)
                     const referenceChange = transaction.changes.find(([action, quad]) => quad.predicate.value === REFERENCE)
                     const [ _referenceAction, referenceQuad ] = referenceChange ?? []
 
                     const nameChange = transaction.changes.find(([action, quad]) => quad.predicate.value === NAME)
                     const [ _nameAction, nameQuad ] = nameChange ?? []
-
 
                     const reference = referenceQuad?.object.value
                     const name = nameQuad?.object.value
