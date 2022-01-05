@@ -56,6 +56,7 @@ const run = async (command) => {
           return;
       }
 
+      console.log(stdout)
       resolve(stdout);
     });  
   })
