@@ -23,7 +23,7 @@ rl.question(`Specify version: (${npmPackage.version})`, async function (version)
   
   if (version !== npmPackage.version) {
     npmPackage.version = version
-    writeFileSync('package.json', JSON.stringify(npmPackage), null, 2)
+    writeFileSync('package.json', JSON.stringify(npmPackage, null, 2))
   }
 
   rl.close();
