@@ -1,1 +1,39 @@
-{"name":"biblogos","version":"0.0.2","description":"","type":"module","main":"index.js","scripts":{"dev":"concurrently \"cd api && npx miniflare dist/api.mjs --watch --debug --modules --env ../.env\" \"snowpack dev --polyfill-node\"","test":"jest","test:watch":"jest --watch","build":"snowpack build --polyfill-node && echo \"biblogos.info\" > docs/CNAME && cp docs/index.html docs/404.html","flush-cdn":"node flush-cloudflare.js","publish":"npm run build && npm run flush-cdn && node publish.js"},"author":"Daniel Beeke","license":"GPL-3.0-only","dependencies":{"@comunica/actor-init-sparql":"^1.22.3","@viselect/vanilla":"^3.0.0-beta.11","marked":"^4.0.8","n3":"^1.12.1","octokit":"^1.7.1","static-params":"^0.2.1","ube":"^0.2.1","universal-router":"^9.1.0"},"devDependencies":{"@snowpack/plugin-sass":"^1.4.0","@types/jest":"^27.0.3","concurrently":"^6.4.0","dotenv":"^10.0.0","jest":"^27.4.5","node-fetch":"^3.1.0","nodemon":"^2.0.14","snowpack":"^3.8.8","ts-jest":"^27.1.2","typescript":"^4.5.4"}}
+{
+  "name": "biblogos",
+  "version": "0.0.3",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"cd api && npx miniflare dist/api.mjs --watch --debug --modules --env ../.env\" \"snowpack dev --polyfill-node\"",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "build": "snowpack build --polyfill-node && echo \"biblogos.info\" > docs/CNAME && cp docs/index.html docs/404.html",
+    "flush-cdn": "node flush-cloudflare.js",
+    "publish": "npm run build && npm run flush-cdn && node publish.js"
+  },
+  "author": "Daniel Beeke",
+  "license": "GPL-3.0-only",
+  "dependencies": {
+    "@comunica/actor-init-sparql": "^1.22.3",
+    "@viselect/vanilla": "^3.0.0-beta.11",
+    "marked": "^4.0.8",
+    "n3": "^1.12.1",
+    "octokit": "^1.7.1",
+    "static-params": "^0.2.1",
+    "ube": "^0.2.1",
+    "universal-router": "^9.1.0"
+  },
+  "devDependencies": {
+    "@snowpack/plugin-sass": "^1.4.0",
+    "@types/jest": "^27.0.3",
+    "concurrently": "^6.4.0",
+    "dotenv": "^10.0.0",
+    "jest": "^27.4.5",
+    "node-fetch": "^3.1.0",
+    "nodemon": "^2.0.14",
+    "snowpack": "^3.8.8",
+    "ts-jest": "^27.1.2",
+    "typescript": "^4.5.4"
+  }
+}
