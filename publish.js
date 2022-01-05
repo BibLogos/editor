@@ -48,7 +48,7 @@ const run = async (command) => {
       }
       
       if (stderr) {
-          reject(`stderr: ${stderr}`);
+          resolve(`stderr: ${stderr}`);
           return;
       }
 
