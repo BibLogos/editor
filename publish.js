@@ -45,7 +45,7 @@ rl.question(`Specify version: (${npmPackage.version})`, async function (version)
 const run = async (command) => {
   return new Promise((resolve, reject) => {
     exec(command, (error, stdout, stderr) => {
-      
+      console.log(command, error, stdout, stderr)
       if (error) {
           reject(`error: ${error.message}`);
           return;
