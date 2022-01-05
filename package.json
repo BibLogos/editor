@@ -1,6 +1,6 @@
 {
   "name": "biblogos",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
   "type": "module",
   "main": "index.js",
@@ -8,7 +8,9 @@
     "dev": "concurrently \"cd api && npx miniflare dist/api.mjs --watch --debug --modules --env ../.env\" \"snowpack dev --polyfill-node\"",
     "test": "jest",
     "test:watch": "jest --watch",
-    "build": "snowpack build --polyfill-node && echo \"biblogos.info\" > docs/CNAME && cp docs/index.html docs/404.html"
+    "build": "snowpack build --polyfill-node && echo \"biblogos.info\" > docs/CNAME && cp docs/index.html docs/404.html",
+    "flush-cdn": "node flush-cloudflare.js",
+    "publish": "npm run build && npm run flush-cdn && node publish.js"
   },
   "author": "Daniel Beeke",
   "license": "GPL-3.0-only",
@@ -28,6 +30,7 @@
     "concurrently": "^6.4.0",
     "dotenv": "^10.0.0",
     "jest": "^27.4.5",
+    "node-fetch": "^3.1.0",
     "nodemon": "^2.0.14",
     "snowpack": "^3.8.8",
     "ts-jest": "^27.1.2",
