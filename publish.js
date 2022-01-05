@@ -1,5 +1,4 @@
 import { config } from 'dotenv'
-import fetch from 'node-fetch'
 import { exec } from 'child_process'
 import { readFileSync, writeFileSync } from 'fs'
 import readline from 'readline'
