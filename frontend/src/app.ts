@@ -25,16 +25,18 @@ class App extends EventTarget {
         this.render()
     }
 
-    async render () {
+    async render (force = false) {
+        if (force) app.dispatchEvent(new CustomEvent('rerender'))
+
         try {
             const route = await Router.resolve({ pathname: location.pathname })
             if (route.redirect) {
                 const newUrl = route.redirect()
                 if (newUrl.startsWith('http')) {
-                    location.replace(newUrl)
+                    location = newUrl
                 }
                 else {
-                    location.pathname = newUrl
+                    location = newUrl
                 }
             }
             else {

@@ -11,10 +11,28 @@ class githubClass {
 
     async init () {
         if (!this.#app) {
-            const tokenResponse = await fetch(`${env.API}/token`)
-            const { token } = await tokenResponse.json()    
-            this.#app = new Octokit({ auth: token })    
+            const settings: { auth?: string } = { }
+
+            if (localStorage.githubCode) {
+                const tokenResponse = await fetch(`${env.API}/token`, {
+                    method: 'POST',
+                    body: localStorage.githubCode
+                })
+                const { token } = await tokenResponse.json()    
+                localStorage.githubToken = token
+                delete localStorage.githubCode
+            }
+
+            if (localStorage.githubToken) {
+                settings.auth = localStorage.githubToken
+            }
+
+            this.#app = new Octokit(settings)
         }
+    }
+
+    get git () {
+        return this.#app.rest.git
     }
 
     @cache()
@@ -48,6 +66,88 @@ class githubClass {
         return transformedFiles
     }
 
+    async isLoggedIn () {
+        if (!localStorage.githubToken) return false
+
+        try {
+            await this.#app.rest.users.getAuthenticated()
+            return true   
+        }
+        catch (exception) {
+            console.log(exception)
+            return false
+        }
+    }
+    
+    async getLatestCommit (org: string, repo: string, branch: string = 'main') {
+        const { data } = await this.#app.rest.git.getRef({
+            owner: org,
+            repo,
+            ref: `heads/${branch}`,
+        })
+        return data.object.sha
+    }
+
+    async createCommit (org: string, repo: string, branch: string = 'main', files: Array<{file: string, content: string}>) {
+        const { data: refData } = await this.#app.rest.git.getRef({
+            owner: org,
+            repo,
+            ref: `heads/${branch}`,
+        })
+
+        const commitSha = refData.object.sha
+        const { data: commitData } = await this.#app.rest.git.getCommit({
+            owner: org,
+            repo,
+            commit_sha: commitSha,
+        })
+
+        const treeItems = []
+
+        for (const { file, content } of files) {
+            const gitBlob = await this.createBlobForFile(org, repo, content)
+            treeItems.push({
+                path: file,
+                sha: gitBlob.sha,
+                mode: "100644",
+                type: "blob"
+            });
+        }
+
+        const tree = await this.#app.rest.git.createTree({
+            owner: org,
+            repo,
+            tree: treeItems,
+            base_tree: commitData.tree.sha,
+        })
+
+        let commit = await this.#app.rest.git.createCommit({
+            owner: org,
+            repo,
+            message: `Updates on ${files.map(item => item.file).join(', ')}`,
+            tree: tree.data.sha,
+            parents: [commitSha]
+        })
+
+        await this.#app.rest.git.updateRef({
+            owner: org,
+            repo,
+            ref: `heads/${branch}`,
+            sha: commit.data.sha,
+        })
+
+    }
+
+    async createBlobForFile (org: string, repo: string, content: string) {
+        const blobData = await this.#app.rest.git.createBlob({
+          owner: org,
+          repo,
+          content,
+          encoding: 'utf-8',
+        })
+
+        return blobData.data
+      }
 }
 
 export const github = new githubClass()

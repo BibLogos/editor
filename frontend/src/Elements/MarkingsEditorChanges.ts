@@ -1,7 +1,12 @@
 import { HTML, render, html } from 'ube';
 import { MarkingsStore } from '../Classes/MarkingsStore';
+import { Project } from '../Classes/Project';
+import { params } from '../Core/Router';
+import { saveChanges } from '../Helpers/saveChanges';
 import { t } from '../Helpers/t';
-import { MarkingsEditorChange } from '../types'
+import { github } from '../Services/Github';
+import { env } from '../Core/Env';
+import { app } from '../app';
 
 const NAME = 'https://biblogos.info/ttl/ontology#name'
 const TYPE = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'
@@ -9,9 +14,19 @@ const REFERENCE = 'https://biblogos.info/ttl/ontology#reference'
 
 export class MarkingsEditorChanges extends (HTML.Div as typeof HTMLElement) {
 
+    private project: Project
     private markingsStore: MarkingsStore
+    private isLoggedIn: boolean
+    private isWorking: boolean
 
     async upgradedCallback() {
+        this.isLoggedIn = !!localStorage.githubToken
+        github.isLoggedIn().then(isReallyLoggedIn => {
+            this.isLoggedIn = isReallyLoggedIn
+            this.draw()
+        })
+        
+        this.isWorking = false
         this.draw()
         this.classList.add('markings-editor-change')
     }
@@ -26,7 +41,25 @@ export class MarkingsEditorChanges extends (HTML.Div as typeof HTMLElement) {
         <details class="changes">
             <summary>
                 ${t`List of changes`} <em>(${this.markingsStore.changes.length})</em>
-                <button class="primary button">${t`Save`}</button>
+
+                ${this.isLoggedIn ? html`
+                <button onclick=${async () => {
+                    this.isWorking = true
+                    this.draw()
+                    const turtle = await this.markingsStore.serialize()
+                    await saveChanges(this.project, params, turtle)
+                    this.markingsStore.changes = []
+                    app.render(true)
+                    this.isWorking = false
+                    this.draw()
+                }} class=${`primary button ${this.isWorking ? 'is-working': ''}`}>${this.isWorking ? t`Saving...` : t`Save`}</button>
+                ` : html`
+                <button onclick=${async () => {
+                    const redirectUrl = `${env.API}/login`
+                    localStorage.redirectUrl = location.pathname
+                    location.replace(redirectUrl)                
+                }} class="primary button">${t`Login with GitHub to save`}</button>
+                `}
 
             </summary>
 

@@ -6,6 +6,13 @@ export const OauthCallback: Route = {
         const search = new URLSearchParams(location.search)
         const code = search.get('code')
         localStorage.githubCode = code
-        return '/editor'
+        
+        if (localStorage.redirectUrl) {
+            const redirectUrl = localStorage.redirectUrl
+            localStorage.removeItem('redirectUrl')
+            return redirectUrl
+        }        
+
+        return '/'
     }
 }

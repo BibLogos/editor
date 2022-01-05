@@ -1,6 +1,7 @@
 import { Project } from "./Project"
 import { Store, Parser } from 'n3'
 import { MarkingsStore } from "./MarkingsStore"
+import { github } from "../Services/Github"
 
 export class TextSourceBase {
     
@@ -20,12 +21,13 @@ export class TextSourceBase {
 
     async getMarkingsStore () {
         if (this.#markingsStore) return this.#markingsStore
+        const { slug, branch, owner, repo } = this.#project
+        const gitSnapshotTarget = await github.getLatestCommit(owner, repo, branch) ?? branch
 
         const store = new Store()
         const parser = new Parser()
-        const { slug, branch } = this.#project
         const sources: Array<string> = await Promise.all(this.settings.files.map(async fileMeta => {
-            const url = `https://raw.githubusercontent.com/${slug}/${branch}/${fileMeta.file}`
+            const url = `https://raw.githubusercontent.com/${slug}/${gitSnapshotTarget}/${fileMeta.file}?${(new Date()).getTime()}`
             if (this.#fileCache.has(url)) return this.#fileCache.get(url)
             const response = await fetch(url)
             const text = await response.text()
@@ -43,7 +45,7 @@ export class TextSourceBase {
             })
         }
 
-        this.#markingsStore = new MarkingsStore(store, this.settings.book)
+        this.#markingsStore = new MarkingsStore(store, this.settings.book, allPrefixes)
         return this.#markingsStore
     }
 

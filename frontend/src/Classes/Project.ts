@@ -37,6 +37,10 @@ export class Project {
         return this.#data.owner.avatar_url
     }
 
+    get repo () {
+        return this.#data.name
+    }
+
     get slug () {
         return this.#data.full_name
     }
@@ -47,5 +51,9 @@ export class Project {
 
     get editorLink () {
         return `/editor/${this.slug}`
+    }
+
+    get hasWriteAccess () {
+        return this.#data.permissions.push
     }
 }

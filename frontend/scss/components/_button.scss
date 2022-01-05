@@ -12,6 +12,7 @@
     color: var(--color-gray-dark);
     box-shadow: 0 2px 2px rgba(0, 0, 0, .2);
     font-family: var(--font-sans);
+    position: relative;
 
     &:hover {
         background-color: var(--color-secondary);
@@ -55,5 +56,39 @@
         &:hover {
             background-color: var(--color-gray);
         }
+    }
+
+    &.is-working {
+        pointer-events: none;
+
+        &:after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background-image: linear-gradient(
+                            -45deg,
+                            var(--color-primary-dark) 25%,
+                            transparent 25%,
+                            transparent 50%,
+                            var(--color-primary-dark) 50%,
+                            var(--color-primary-dark) 75%,
+                            transparent 75%,
+                            transparent
+            );
+            opacity: .4;
+            z-index: 1;
+            background-size: 50px 50px;
+            animation: move 2s linear infinite;
+            overflow: hidden;
+        }
+    }
+}
+
+@keyframes move {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 50px 50px;
     }
 }

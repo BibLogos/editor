@@ -13,6 +13,7 @@ import { icon } from '../Helpers/icon';
 
 export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
 
+    private project
     private text
     public selection
     private markings
@@ -26,11 +27,13 @@ export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
         await this.draw()
         await this.loadData()
         app.addEventListener('params-change', () => this.loadData())
+        app.addEventListener('rerender', () => this.loadData())
     }
 
     async loadData () {
         let { ownerId, repoId, bookId, chapterId } = params
         const project = await github.getProject(ownerId, repoId)
+        this.project = project
         this.book = bookId ? project.books.find(book => book.name === bookId) : project.books[0]
         this.chapters = await this.book.getChapters()
 
@@ -202,7 +205,7 @@ export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
 
         ${this.arrows()}
 
-        <${MarkingsEditorChanges} ref=${(element) => element.draw ? element.draw() : null} .markingsStore=${this.markingsStore} />
+        <${MarkingsEditorChanges} ref=${(element) => element.draw ? element.draw() : null} .project=${this.project} .markingsStore=${this.markingsStore} />
 
 
         <div params=${JSON.stringify(params)} ref=${element => this.element = element} class=${`markings-editor ${this.bigMarkings.length ? 'has-big-marking' : ''}`}>

@@ -2,24 +2,31 @@ import { importGlobalScript } from '../Helpers/importGlobalScript'
 import { ReferenceProxy } from './ReferenceProxy'
 import { ComunicaExport, FactObject, MarkingsEditorChange } from '../types'
 import { StoreProxy } from './StoreProxy'
+import { params } from '../Core/Router'
+import { hash } from '../Helpers/sha1'
+import { DataFactory, Store, Writer } from 'n3'
 
 const ONTOLOGY = `${location.protocol}//${location.hostname}:${location.port}/ttl/ontology.ttl`
 
 export class MarkingsStore extends EventTarget {
 
-    #store
+    #store: Store
     #comunica
     #bookAbbreviation
+    #prefixes
 
     public changes: Array<{ label: string, changes: Array<MarkingsEditorChange>}> = []
     private transaction: { label: string, changes: Array<MarkingsEditorChange>}
 
-    constructor (store, bookAbbreviation) {
+    constructor (store, bookAbbreviation, prefixes) {
         super()
+        this.#prefixes = prefixes
         const [proxiedStore, storeEventTarget] = StoreProxy(store)
         this.#store = proxiedStore
 
         this.#bookAbbreviation = bookAbbreviation
+
+        this.loadPreviousChanges()
 
         storeEventTarget.addEventListener('removeQuad', (event) => {
             this.transaction.changes.push(['removed', event.detail, new Date()])
@@ -30,12 +37,54 @@ export class MarkingsStore extends EventTarget {
         })
     }
 
+    loadPreviousChanges () {
+        const id = hash(JSON.stringify(params))
+        if (localStorage[id]) {
+            const { changes } = JSON.parse(localStorage[id])
+            this.changes = changes
+
+            for (const transaction of this.changes) {
+                for (const [type, quad] of transaction.changes) {
+                    this.#store[type === 'added' ? 'addQuad' : 'removeQuad'](quad)
+                }
+            }
+        }
+    }
+
     startTransaction (label: string) {
         this.transaction = { changes: [], label }
     }
 
     endTransaction () {
         if (this.transaction.changes.length) this.changes.push(this.transaction)
+
+        const data = { params, changes: this.changes }
+        const dataString = JSON.stringify(data)
+        const id = hash(JSON.stringify(params))
+        localStorage[id] = dataString
+    }
+
+    async serialize () {
+        const writer = new Writer({ prefixes: this.#prefixes });
+        await this.#store.forEach(async (quad) => {
+            if (quad.predicate.value === 'https://biblogos.info/ttl/ontology#reference') {
+                const reference = quad.object.value
+                const referenceSplit = reference.split(':')
+                if (referenceSplit.length === 2 && referenceSplit[0] === referenceSplit[1]) {
+                    await writer.addQuad(quad.subject, quad.predicate, DataFactory.literal(referenceSplit[0]), quad.graph)
+                }
+                else {
+                    await writer.addQuad(quad.subject, quad.predicate, quad.object, quad.graph)
+                }
+            }
+            else {
+                await writer.addQuad(quad.subject, quad.predicate, quad.object, quad.graph)
+            }
+        }, null, null, null, null)
+
+        return new Promise((resolve) => {
+            writer.end((error, result) => resolve(result));
+        })
     }
 
     get bookAbbreviation () {
