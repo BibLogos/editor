@@ -32,6 +32,9 @@ rl.question(`Specify version: (${npmPackage.version})`, async function (version)
     await run('git add -A')
     await run(`git commit -m "build for ${version}"`)
     await run(`git push`) 
+    console.log('='.repeat(40))
+    console.log(`Deployed version: ${version}`)
+    console.log('='.repeat(40))
   }
   catch (exception) {
     console.log(exception)
@@ -56,8 +59,3 @@ const run = async (command) => {
     });  
   })
 }
-
-// await run('git add docs')
-// await run(`git commit -m "new build"`)
-// await run(`git push`)
-// git add docs && git commit -m \"new build\" && git push && cd api && wrangler publish
