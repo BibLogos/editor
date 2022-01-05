@@ -32,7 +32,7 @@ rl.question(`Specify version: (${npmPackage.version})`, async function (version)
     await run(`git commit -m "build for ${version}"`)
     await run(`git push`) 
     await run(`cd api && wrangler publish`) 
-    console.clear()
+
     console.log('='.repeat(40))
     console.log(`Deployed version: ${version}`)
     console.log('='.repeat(40))
