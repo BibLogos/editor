@@ -34,7 +34,9 @@ rl.question(`Specify version: (${npmPackage.version})`, async function (version)
     await run(`cd api && wrangler publish`) 
 
     console.log('='.repeat(40))
+    console.log('\n')
     console.log(`Deployed version: ${version}`)
+    console.log('\n')
     console.log('='.repeat(40))
   }
   catch (exception) {
@@ -57,7 +59,9 @@ const run = async (command) => {
       }
 
       console.log(stdout)
-      resolve(stdout);
+      console.log('='.repeat(40))
+      console.log('\n')
+        resolve(stdout);
     });  
   })
 }
