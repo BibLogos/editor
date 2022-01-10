@@ -1,6 +1,7 @@
 import { Octokit } from 'octokit'
 import type { Octokit as OctokitType } from 'octokit'
 import yaml from 'js-yaml'
+import { ProjectData } from '../types'
 import { Project } from '../Classes/Project'
 import { cache } from '../Decorators/cache'
 import { env } from '../Core/Env'
@@ -35,11 +36,12 @@ class githubClass {
         return this.#app.rest.git
     }
 
-    @cache()
+    // @cache()
     async getProjects (): Promise<Array<Project>> {
         await this.init()
         const response = await this.#app.rest.search.repos({ q: 'topic:biblogos' })
         const repos = response.data.items
+
         return await Promise.all(repos.map(repo => {
             const project = new Project()
             return project.init(repo)
@@ -49,8 +51,10 @@ class githubClass {
     @cache()
     async getProject (owner: string, repo: string) {
         await this.init()
-        return (await this.getProjects())
-        .find(project => project.slug === `${owner}/${repo}`)
+        const { data: repoData } = await this.#app.rest.repos.get({ owner, repo })
+        const project = new Project()
+        return project.init((repoData as unknown as ProjectData))
+
     }
 
     async getBooks (owner: string, repo: string, branch: string) {
@@ -74,18 +78,62 @@ class githubClass {
             return true   
         }
         catch (exception) {
-            console.log(exception)
             return false
         }
     }
     
+    async getForkRepo (originalOwner: string, forkOwner: string, repo: string) {
+        const { data: repos } = await this.#app.rest.repos.listForks({ owner: originalOwner, repo })
+        const forkOfCurrentUser = repos.find(repo => repo.owner.login === forkOwner)
+        return forkOfCurrentUser
+    }
+
+    async createForkRepo (originalOwner: string, repo: string) {
+        return await this.#app.rest.repos.createFork({ owner: originalOwner, repo })
+    }
+
+    async getCurrentUser () {
+        if (!localStorage.githubToken) return null
+
+        try {
+            const { data } = await this.#app.rest.users.getAuthenticated()
+            return data
+        }
+        catch (exception) {
+            return null
+        }
+    }
+
     async getLatestCommit (org: string, repo: string, branch: string = 'main') {
+        // TODO get default branch name if no branch is given.
         const { data } = await this.#app.rest.git.getRef({
             owner: org,
             repo,
             ref: `heads/${branch}`,
         })
         return data.object.sha
+    }
+
+    async createBranchOnFork (org: string, originalOwner: string, repo: string, branch: string) {
+        const lastestCommit = await this.getLatestCommit(originalOwner, repo)
+
+        return await this.#app.rest.git.createRef({
+            owner: org,
+            repo,
+            ref: `refs/heads/${branch}`,
+            sha: lastestCommit
+        })
+    }
+
+    async createMergeRequest (org: string, originalOwner: string, repo: string, branch: string, sha: string) {
+        return this.#app.rest.pulls.create({
+            owner: originalOwner,
+            repo,
+            title: 'Created via biblogos.info, please review',
+            body: 'Created via biblogos.info, please review',
+            head: `${org}:${branch}`,
+            base: 'main',
+        })
     }
 
     async createCommit (org: string, repo: string, branch: string = 'main', files: Array<{file: string, content: string}>) {
@@ -129,13 +177,12 @@ class githubClass {
             parents: [commitSha]
         })
 
-        await this.#app.rest.git.updateRef({
+        return await this.#app.rest.git.updateRef({
             owner: org,
             repo,
             ref: `heads/${branch}`,
             sha: commit.data.sha,
         })
-
     }
 
     async createBlobForFile (org: string, repo: string, content: string) {

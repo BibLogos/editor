@@ -58,6 +58,10 @@
         }
     }
 
+    &.error {
+        background-color: var(--color-error);
+    }
+
     &.is-working {
         pointer-events: none;
 

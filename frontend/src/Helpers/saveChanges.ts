@@ -5,7 +5,7 @@ import { hash } from "./sha1"
 
 export async function saveChanges (project: Project, params, turtle) {
   const book = project.books.find(book => book.name === params.bookId)
-  // TODO make multiple files work.
+  const bookCid = hash(JSON.stringify(params))
 
   // Redundant ensuring of a Github session.
   if (! (await github.isLoggedIn())) {
@@ -13,20 +13,34 @@ export async function saveChanges (project: Project, params, turtle) {
     localStorage.redirectUrl = location.pathname
     location.replace(redirectUrl)
   }
+
+  const commitData = [{
+    // TODO make multiple files work.
+    file: book.settings.files[0].file,
+    content: turtle
+  }]
   
+  // If the user is a collaborator on the source repository, save it directly.
   if (project.hasWriteAccess) {
-    await github.createCommit(params.ownerId, params.repoId, project.branch, [
-      {
-        file: book.settings.files[0].file,
-        content: turtle
-      }
-    ])  
+    await github.createCommit(params.ownerId, params.repoId, project.branch, commitData)  
+  }
+  else {
+    const user = await github.getCurrentUser()
+    let forkRepo = await github.getForkRepo(params.ownerId, user.login, params.repoId)
 
-    const id = hash(JSON.stringify(params))
-    delete localStorage[id]
+    // Ensure a fork of the source repo for the current user.
+    if (!forkRepo) {
+      const forkCreateResponse = await github.createForkRepo(params.ownerId, params.repoId)
+      forkRepo = forkCreateResponse.data
+      if (!forkRepo) throw new Error('Could not fork the repo')
+    }
 
-    return true
+    const branchName = 'biblogos-' + hash(turtle)
+    await github.createBranchOnFork(user.login, params.ownerId, params.repoId, branchName)
+    const { data: commit } = await github.createCommit(user.login, params.repoId, branchName, commitData)  
+    await github.createMergeRequest(user.login, params.ownerId, params.repoId, branchName, commit.object.sha)
   }
 
-  throw new Error('Implement forking flow.')
+  delete localStorage[bookCid]
+  return true
 }

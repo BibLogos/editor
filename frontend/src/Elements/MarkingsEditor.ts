@@ -10,10 +10,11 @@ import { t } from '../Helpers/t';
 import { MarkingsStore } from '../Classes/MarkingsStore';
 import { MarkingsEditorChanges } from './MarkingsEditorChanges';
 import { icon } from '../Helpers/icon';
+import { Project } from '../Classes/Project';
 
 export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
 
-    private project
+    private project: Project
     private text
     public selection
     private markings
@@ -31,9 +32,15 @@ export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
     }
 
     async loadData () {
+        const user = await github.getCurrentUser()
+        let forkRepo = await github.getForkRepo(params.ownerId, user.login, params.repoId)
+
         let { ownerId, repoId, bookId, chapterId } = params
+        if (forkRepo?.owner?.login) ownerId = forkRepo.owner.login
+
         const project = await github.getProject(ownerId, repoId)
         this.project = project
+
         this.book = bookId ? project.books.find(book => book.name === bookId) : project.books[0]
         this.chapters = await this.book.getChapters()
 

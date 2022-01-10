@@ -18,8 +18,10 @@ export class MarkingsEditorChanges extends (HTML.Div as typeof HTMLElement) {
     private markingsStore: MarkingsStore
     private isLoggedIn: boolean
     private isWorking: boolean
+    private hasError: string = ''
 
     async upgradedCallback() {
+        this.hasError = ''
         this.isLoggedIn = !!localStorage.githubToken
         github.isLoggedIn().then(isReallyLoggedIn => {
             this.isLoggedIn = isReallyLoggedIn
@@ -46,13 +48,30 @@ export class MarkingsEditorChanges extends (HTML.Div as typeof HTMLElement) {
                 <button onclick=${async () => {
                     this.isWorking = true
                     this.draw()
-                    const turtle = await this.markingsStore.serialize()
-                    await saveChanges(this.project, params, turtle)
-                    this.markingsStore.changes = []
-                    app.render(true)
+
+                    try {
+                        const turtle = await this.markingsStore.serialize()
+                        await saveChanges(this.project, params, turtle)
+                        this.markingsStore.changes = []
+                        app.render(true)
+                    }
+                    catch (exception) {
+                        console.log(exception)
+                        this.hasError = t`Error`
+                        this.draw()
+                    }
+
                     this.isWorking = false
                     this.draw()
-                }} class=${`primary button ${this.isWorking ? 'is-working': ''}`}>${this.isWorking ? t`Saving...` : t`Save`}</button>
+                }} class=${`primary button ${this.isWorking ? 'is-working': ''} ${this.hasError ? 'error' : ''}`}>
+
+                    ${this.hasError ? html`
+                        ${this.hasError}
+                    ` : html`
+                        ${this.isWorking ? t`Saving...` : t`Save`}
+                    `}
+
+                </button>
                 ` : html`
                 <button onclick=${async () => {
                     const redirectUrl = `${env.API}/login`

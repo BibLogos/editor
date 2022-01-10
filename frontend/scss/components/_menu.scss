@@ -45,7 +45,11 @@
     flex-direction: column;
     margin-inline: auto;
     margin-block: 0;
+    display: flex;
+    width: 100%;
     position: relative;
+    justify-content: center;
+    height: 100%;
   }
 
   li {
@@ -55,9 +59,13 @@
 
   a {
     padding: 10px;
-    font-size: 18px;
+    font-size: 22px;
     text-decoration: none;
     color: var(--color-black);
+
+    &:hover {
+      color: black;
+    }
   }
 }
 

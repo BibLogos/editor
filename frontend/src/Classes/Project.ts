@@ -49,6 +49,10 @@ export class Project {
         return this.#data.default_branch
     }
 
+    get exploreLink () {
+        return `/explore?source=${this.slug}`
+    }
+
     get editorLink () {
         return `/editor/${this.slug}`
     }
