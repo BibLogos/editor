@@ -33,7 +33,7 @@ export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
 
     async loadData () {
         const user = await github.getCurrentUser()
-        let forkRepo = await github.getForkRepo(params.ownerId, user.login, params.repoId)
+        let forkRepo = user ? await github.getForkRepo(params.ownerId, user.login, params.repoId) : null
 
         let { ownerId, repoId, bookId, chapterId } = params
         if (forkRepo?.owner?.login) ownerId = forkRepo.owner.login
