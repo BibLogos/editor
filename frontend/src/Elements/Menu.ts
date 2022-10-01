@@ -1,10 +1,12 @@
 import { HTML, render, html } from 'ube';
 import { t } from '../Helpers/t';
 import { icon } from '../Helpers/icon';
+import { env } from '../Core/Env';
 
 const menuItems = [
     [t`Home`, '/'],
     [t`About`, '/about'],
+    [t`Login`, `${env.API}/login`],
     [t`GitHub`, 'https://github.com/BibLogos/editor'],
 ]
 

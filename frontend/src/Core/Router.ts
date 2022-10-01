@@ -5,6 +5,7 @@ import { Editor } from '../Routes/Editor'
 import { OauthCallback } from '../Routes/OauthCallback'
 import { Login } from '../Routes/Login'
 import { NotFound } from '../Routes/NotFound'
+import { Page } from '../Routes/Page'
 
 import { app } from '../app'
 
@@ -23,6 +24,7 @@ const routes = [
   { path: '/editor/:ownerId/:repoId/:bookId?/:chapterId?', action: wrapAction(Editor) },
   { path: '/login', action: wrapAction(Login) },
   { path: '/oauth-callback', action: wrapAction(OauthCallback) },
+  { path: '/:name', action: wrapAction(Page) },
   { path: '(.*)', action: wrapAction(NotFound) }
 ]
 

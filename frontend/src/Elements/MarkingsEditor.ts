@@ -33,11 +33,12 @@ export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
 
     async loadData () {
         const user = await github.getCurrentUser()
-        let forkRepo = user ? await github.getForkRepo(params.ownerId, user.login, params.repoId) : null
+        // let forkRepo = user ? await github.getForkRepo(params.ownerId, user.login, params.repoId) : null
 
         let { ownerId, repoId, bookId, chapterId } = params
-        if (forkRepo?.owner?.login) ownerId = forkRepo.owner.login
+        // if (forkRepo?.owner?.login) ownerId = forkRepo.owner.login
 
+        // TODO this returns the main branch of the fork in case of having forked before
         const project = await github.getProject(ownerId, repoId)
         this.project = project
 

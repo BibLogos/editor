@@ -1,3 +1,8 @@
+/**
+ * Known bugs:
+ * - If there is no commit to be made (no changes) it will break.
+ */
+
 import { config } from 'dotenv'
 import { exec } from 'child_process'
 import { readFileSync, writeFileSync } from 'fs'
