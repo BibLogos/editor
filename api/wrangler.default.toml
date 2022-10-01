@@ -1,12 +1,8 @@
-name = "login"
-type = "javascript"
-
-account_id = ""
+name = "api"
+main = "./api.mjs"
 workers_dev = false
-route = "YourDomain.YourTld/login"
-zone_id = "YourZoneId"
-compatibility_date = "2021-11-28"
+route = { pattern = "api.biblogos.info", custom_domain = true, zone_name = "biblogos.info" }
+compatibility_date = "2022-10-01"
 
-kv_namespaces = [ 
-  { binding = "Environment", id = "YourNamespaceID" }
-]
+[build]
+command = "npm install && npm run build"
