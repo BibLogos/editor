@@ -17,6 +17,7 @@
   "dependencies": {
     "@viselect/vanilla": "^3.0.0-beta.11",
     "front-matter": "^4.0.2",
+    "lodash-es": "^4.17.21",
     "marked": "^4.0.8",
     "n3": "*",
     "octokit": "*",

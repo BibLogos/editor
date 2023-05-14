@@ -17,13 +17,22 @@ export class NewMarking extends PopupPartbase implements PopupPartInterface {
     }
 
     buttonClick () {
-        const words = this.selectionPopup.selections.flatMap(words => words.map(word => word.text).join(' ')).join(' ')
-        const subject = this.selectionPopup.subject ? lastPart(this.selectionPopup.subject) : null
-        
-        this.selectionPopup.name = words
-        this.selectionPopup.identifier = toCamelCase((subject ?? '') + ' ' + words)
-        this.selectionPopup.form = 'create'
-        this.selectionPopup.draw()
+        if (this.selectionPopup.predicateType === 'label') {
+            const type = this.selectionPopup.predicate.split(/\/|#/g).pop()
+            this.selectionPopup.name = type
+            this.selectionPopup.identifier = type
+            this.selectionPopup.form = 'create'
+            this.selectionPopup.draw() 
+        }
+        else {
+            const words = this.selectionPopup.selections.flatMap(words => words.map(word => word.text).join(' ')).join(' ')
+            const subject = this.selectionPopup.subject ? lastPart(this.selectionPopup.subject) : null
+            
+            this.selectionPopup.name = words
+            this.selectionPopup.identifier = toCamelCase((subject ?? '') + ' ' + words)
+            this.selectionPopup.form = 'create'
+            this.selectionPopup.draw()    
+        }
     }
 
     template () {

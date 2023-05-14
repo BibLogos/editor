@@ -12,7 +12,9 @@ export class Search extends PopupPartbase implements PopupPartInterface {
     public searchResults = null
 
     applies () {
-        return this.selectionPopup.predicate && this.selectionPopup.form === 'search'
+        return this.selectionPopup.predicate && 
+        this.selectionPopup.form === 'search' &&
+        ['textual', 'mention'].includes(this.selectionPopup.predicateType)
     }
 
     template () {

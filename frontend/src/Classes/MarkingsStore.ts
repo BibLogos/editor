@@ -164,6 +164,9 @@ export class MarkingsStore extends EventTarget {
             { ?predicate a rdfs:Class } UNION { ?predicate a rdfs:Property } .
             ?predicate rdfs:label ?label .
             ?predicate biblogos:predicateType ?type .
+            OPTIONAL {
+                ?predicate biblogos:predicateGroup ?group .
+            }
         }
         `, [ ONTOLOGY ])
     }

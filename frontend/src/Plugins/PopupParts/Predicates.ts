@@ -25,7 +25,7 @@ export class Predicates extends PopupPartbase implements PopupPartInterface {
             currentValue: this.selectionPopup.predicate  ? this.selectionPopup.predicate + '|' + this.selectionPopup.predicateType : '',
             values: [
                 ['', '- Select -'],
-                ...this.factPredicates.map(factPredicate => [factPredicate.predicate + '|' + factPredicate.type, factPredicate.label])
+                ...this.factPredicates.map(factPredicate => [factPredicate.predicate + '|' + factPredicate.type, factPredicate.label, factPredicate.group].filter(Boolean))
             ].filter(([value]) => !this.selectionPopup.markings.find(marking => marking.predicate === value)), 
             onchange: (event: Event) => {
                 const [predicate, type] = (event.target as HTMLSelectElement).value.split('|')

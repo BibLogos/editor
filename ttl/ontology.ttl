@@ -48,8 +48,37 @@ biblogos:Concept a rdfs:Class ;
     biblogos:predicateType "mention" ;
     rdfs:comment "A specific concept." .
 
+biblogos:PlotAnalysis a rdfs:Class .
 
+biblogos:PlotAnalysisBeginning a rdfs:Class ;
+    rdfs:label "Beginning" ;
+    biblogos:predicateType "label" ;
+    biblogos:predicateGroup biblogos:PlotAnalysis ;
+    rdfs:comment "The beginning of a plot" .
 
+biblogos:PlotAnalysisRisingAction a rdfs:Class ;
+    rdfs:label "Rising Action" ;
+    biblogos:predicateType "label" ;
+    biblogos:predicateGroup biblogos:PlotAnalysis ;
+    rdfs:comment "The rising action of a plot" .
+
+biblogos:PlotAnalysisClimax a rdfs:Class ;
+    rdfs:label "Climax" ;
+    biblogos:predicateType "label" ;
+    biblogos:predicateGroup biblogos:PlotAnalysis ;
+    rdfs:comment "The climax of a plot" .
+
+biblogos:PlotAnalysisFallingAction a rdfs:Class ;
+    rdfs:label "Falling Action" ;
+    biblogos:predicateType "label" ;
+    biblogos:predicateGroup biblogos:PlotAnalysis ;
+    rdfs:comment "The falling action of a plot" .
+
+biblogos:PlotAnalysisEnd a rdfs:Class ;
+    rdfs:label "End" ;
+    biblogos:predicateType "label" ;
+    biblogos:predicateGroup biblogos:PlotAnalysis ;
+    rdfs:comment "The end of a plot" .
 
 
 biblogos:name a rdfs:Property ;
