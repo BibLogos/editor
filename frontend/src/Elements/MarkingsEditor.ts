@@ -243,6 +243,8 @@ export class MarkingsEditor extends (HTML.Div as typeof HTMLElement) {
                         const startWord: HTMLElement = this.querySelector(`[chapter-id="${chapterId}"][line-number="${marking.reference.startVerse}"][word-number="${marking.reference.startWord}"]`)
                         const endWord: HTMLElement = this.querySelector(`[chapter-id="${chapterId}"][line-number="${marking.reference.endVerse}"][word-number="${marking.reference.endWord}"]`)
 
+                        if (!(startWord && endWord)) return
+
                         startWord.classList.add('start-of-big-marking')
 
                         element.style.setProperty('--y1', (startWord.offsetTop - 6) + 'px')

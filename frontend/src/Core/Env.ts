@@ -1,3 +1,3 @@
-export const env = document.querySelector('#env-json') ? JSON.parse(document.querySelector('#env-json').innerHTML) : {
-    API: 'https://api.biblogos.info'
+export const env = {
+    API: location.hostname === 'localhost' ? 'http://127.0.0.1:8787' : 'https://api.biblogos.info'
 }

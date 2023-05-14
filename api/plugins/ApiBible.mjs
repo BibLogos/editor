@@ -3,6 +3,7 @@ export default {
         const parsedURL = new URL(request.url)
         const apiUrl = `https://api.scripture.api.bible/v1/${pathParts.join('/')}${parsedURL.search}`
         const cache = caches.default
+
         const proxyRequest = new Request(apiUrl, { headers: { 'api-key': env.API_BIBLE_KEY } })
 
         let response = await cache.match(proxyRequest)

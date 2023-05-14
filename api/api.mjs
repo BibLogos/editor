@@ -4,7 +4,6 @@ const plugins = Object.assign({}, ApiBible)
 
 export default {
   async fetch(request, env, ctx) {
-  
     const client_id = await env.CLIENT_ID
     const client_secret = await env.CLIENT_SECRET
     const parsedURL = new URL(request.url)
@@ -15,7 +14,7 @@ export default {
       return Response.redirect(`https://github.com/login/oauth/authorize?client_id=${client_id}&scope=${scopes.join(' ')}`, 302)
     }
 
-    if (!['http://localhost:8080', 'https://biblogos.info'].includes(request.headers.get('origin'))) {
+    if (!['http://localhost:5173', 'https://biblogos.info'].includes(request.headers.get('origin'))) {
       return new Response('Acces denied by CORS', {
         status: 401,
       });
