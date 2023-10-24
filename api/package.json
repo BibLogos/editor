@@ -12,8 +12,5 @@
   "license": "MIT",
   "dependencies": {
     "rollup": "^2.60.2"
-  },
-  "devDependencies": {
-    "miniflare": "^1.4.1"
   }
 }

@@ -1,24 +1,27 @@
-import { env } from '../../Core/Env'
-import { cache } from '../../Decorators/cache'
-import { TextSource } from '../../Classes/TextSource'
-import { TextSourceBase } from '../../Classes/TextSourceBase'
-import { html } from 'ube'
+import { api } from '../../Helpers/api'
 
-export class ApiBible extends TextSourceBase implements TextSource {
+type Options = { bible: string, book: string }
 
-    @cache()
+export class ApiBible {
+
+    public options: Options
+
+    constructor (options: Options) {
+        this.options = options
+    }
+
     async getChapters () {
-        const { bible, book } = this.settings
+        const { bible, book } = this.options
 
         try {
-            const response = await fetch(`${env.API}/plugins/api.bible/bibles/${bible}/books/${book}/chapters`)
+            const response = await fetch(`${api}/plugins/api.bible/bibles/${bible}/books/${book}/chapters`)
             const { data } = await response.json()
 
             return data
-            .filter(({ number }) => number !== 'intro')
-            .map(({ number }) => {
+            .filter(({ number }: { number: number | string }) => number !== 'intro')
+            .map(({ number }: { number: number | string }) => {
                 const label = number === 'intro' ? 'Intro' : number
-                return [parseInt(number), label]
+                return [parseInt(number.toString()), label]
             })
         }
         catch (exception) {
@@ -26,12 +29,11 @@ export class ApiBible extends TextSourceBase implements TextSource {
         }
     }
 
-    @cache()
     async getText(chapter: string): Promise<Array<[paragraphId: string | number, text: string, prefix?: any, newlines?: number]>> {
-        const { bible, book } = this.settings
+        const { bible, book } = this.options
 
         try {
-            const response = await fetch(`${env.API}/plugins/api.bible/bibles/${bible}/chapters/${`${book}.${chapter}?content-type=text`}`)
+            const response = await fetch(`${api}/plugins/api.bible/bibles/${bible}/chapters/${`${book}.${chapter}?content-type=text`}`)
             const { data } = await response.json()
             const regex = /\[(\d+)\]([^[]*)/g
             const matches = [...data.content.matchAll(regex)]
@@ -45,8 +47,7 @@ export class ApiBible extends TextSourceBase implements TextSource {
                 
                 const verse = parseInt(match[1])
                 const text = match[2].trim() 
-                const prefix = (markings) => html`<span class="verse-number word">${verse}${markings} </span>`
-                return [verse, text, prefix, newlinesMatches?.length ?? 0]
+                return [verse, text, newlinesMatches?.length ?? 0]
             })
         }
         catch (exception) {

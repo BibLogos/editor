@@ -14,7 +14,7 @@ export default {
       return Response.redirect(`https://github.com/login/oauth/authorize?client_id=${client_id}&scope=${scopes.join(' ')}`, 302)
     }
 
-    if (!['http://localhost:5173', 'https://biblogos.info'].includes(request.headers.get('origin'))) {
+    if (request.headers.get('origin') && !['http://localhost:5173', 'https://biblogos.info'].includes(request.headers.get('origin'))) {
       return new Response('Acces denied by CORS', {
         status: 401,
       });

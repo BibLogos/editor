@@ -1,42 +1,39 @@
 {
   "name": "biblogos",
-  "version": "0.0.6",
-  "description": "",
+  "version": "0.0.7",
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently \"cd api && npx miniflare dist/api.mjs --watch --debug --modules --env ../.env\" \"vite dev\"",
+    "dev-backend": "cd api && npm run build && npx wrangler dev dist/api.mjs",
+    "dev-frontend": "cd frontend && vite dev",
+    "dev": "concurrently npm:dev-*",
     "test": "jest",
     "test:watch": "jest --watch",
-    "build": "vite build && echo \"biblogos.info\" > docs/CNAME && cp docs/index.html docs/404.html",
-    "flush-cdn": "node flush-cloudflare.js",
-    "publish": "npm run build && npm run flush-cdn && node publish.js"
+    "build": "vite build && cp docs/index.html docs/404.html"
   },
   "author": "Daniel Beeke",
   "license": "GPL-3.0-only",
   "dependencies": {
-    "@viselect/vanilla": "^3.0.0-beta.11",
-    "front-matter": "^4.0.2",
-    "marked": "^4.0.8",
-    "n3": "*",
-    "octokit": "*",
-    "static-params": "*",
-    "ube": "*",
-    "universal-router": "*"
+    "annot": "^0.0.2",
+    "js-yaml": "^4.1.0",
+    "octokit": "^3.1.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.17.0"
   },
   "devDependencies": {
-    "@snowpack/plugin-sass": "*",
-    "@types/jest": "^27.0.3",
+    "@types/js-yaml": "^4.0.8",
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "@vitejs/plugin-react-swc": "^3.3.2",
     "concurrently": "^6.4.0",
-    "dotenv": "^10.0.0",
-    "isomorphic-fetch": "^3.0.0",
-    "jest": "^27.4.5",
-    "mime": "^3.0.0",
-    "node-fetch": "^3.1.0",
-    "nodemon": "^2.0.14",
-    "snowpack": "*",
-    "ts-jest": "^27.1.2",
-    "typescript": "*",
-    "vite": "^4.3.5"
+    "eslint": "^8.45.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.3",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5",
+    "wrangler": "^3.14.0"
   }
 }
