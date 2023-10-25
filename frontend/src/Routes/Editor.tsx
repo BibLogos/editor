@@ -1,8 +1,13 @@
 import { Annot } from "../Components/Annot"
 import type { SelectionEvent } from '../Components/Annot'
-import { useParams } from "react-router-dom"
-import { projects } from "../Services/Projects"
-import { useEffect } from "react"
+import { useNavigate, useParams } from "react-router-dom"
+import { Project } from "../Models/Project"
+import { useEffect, useState } from "react"
+import { Chapter } from "../../types"
+import namespace from '@rdfjs/namespace'
+
+const biblogos = namespace('https://biblogos.info/ttl/ontology#')
+const rdf = namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
 
 const createSelection = (event: SelectionEvent) => {
   const { start, end, highlight, text } = event
@@ -11,31 +16,45 @@ const createSelection = (event: SelectionEvent) => {
 }
 
 export default function Editor() {
-  const { 
-    ownerId,
-    repoId,
-    bookId,
-    chapterId
-  } = useParams()
+  const { ownerId, repoId, bookId, chapterId } = useParams()
+  const [text, setText] = useState<Array<Chapter>>([])
+  const [highlights, setHighlights] = useState([])
+  const navigate = useNavigate()
 
   useEffect(() => {
-    projects.getProject(ownerId!, repoId!).then(async (project) => {
-      console.log(project.books)
+    const project = new Project(ownerId!, repoId!)
+    project.fetch().then(async (books) => {
+      if (!bookId) {
+        const bookId = books[0].options.book
+        const selectedBook = books.find(book => book.options.book === bookId)
+        const chapterId = (await selectedBook!.getChapters())[0][0]
+        navigate(`/editor/${ownerId}/${repoId}/${bookId}/${chapterId}`)
+      }
+
+      if (chapterId) {
+        const selectedBook = books.find(book => book.options.book === bookId)
+        const text = await selectedBook?.getText(chapterId)
+        if (text) setText(text)
+
+        const { file } = selectedBook!.options.files[0]
+        const pointer = await project.getPointer(file)
+        const objects = pointer
+          .clone([rdf('type')])
+          .hasOut([biblogos('reference')])
+
+        for (const object of objects) {
+          const references = object.out([biblogos('reference')]).values
+          const comment = object.out([biblogos('comment')]).value
+          const type = object.out([rdf('type')]).value
+
+          console.log(references, comment, type)
+        }
+
+      }      
     })
-  }, [])
+  }, [ navigate, ownerId, repoId, bookId, chapterId ])
 
-  return (
-    <>
-    <h1>test</h1>
-
-    <Annot onSelection={createSelection}>
-
-      <p data-chapter="1">Curabitur volutpat dignissim nulla, a interdum neque interdum eget. Quisque sit amet est sit amet quam blandit tincidunt. Curabitur ac sodales justo, nec laoreet nulla.</p>
-        
-      <p data-chapter="2">Lorem ipsum dolor <strong>sit amet</strong>, consectetur <em>adipiscing elit. </em> blandit mollis magna.  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut non arcu eleifend, dictum turpis aliquet, scelerisque risus. Cras id viverra enim. Donec in nisi sit amet diam aliquam ultrices sit amet a nibh. Aenean libero elit, euismod in accumsan sit amet, pellentesque et mauris. Praesent nec dapibus nulla. Phasellus bibendum ante sed magna sodales, eget pharetra libero varius. Vivamus suscipit neque et sem lobortis imperdiet. Integer ut pellentesque ex. Fusce diam odio, pulvinar tincidunt neque eget, accumsan aliquam turpis. Curabitur volutpat dignissim nulla, a interdum neque interdum eget. Quisque sit amet est sit amet quam blandit tincidunt. Curabitur ac sodales justo, nec laoreet nulla. </p>
-
+  return <Annot onSelection={createSelection}>
+      {text.length ? text.map(([number, line]) => <p key={number.toString()} data-number={number}>{line}</p>) : null}
     </Annot>
-
-    </>
-  )
 }

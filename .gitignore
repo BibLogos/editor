@@ -13,3 +13,4 @@ node_modules/
 .cargo-ok
 wrangler.toml
 api/dist
+.wrangler

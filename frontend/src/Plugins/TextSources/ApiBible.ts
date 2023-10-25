@@ -1,14 +1,11 @@
 import { api } from '../../Helpers/api'
+import { Book, Chapter } from '../../../types'
 
 type Options = { bible: string, book: string }
 
 export class ApiBible {
 
-    public options: Options
-
-    constructor (options: Options) {
-        this.options = options
-    }
+    constructor (public options: Book<Options>) {}
 
     async getChapters () {
         const { bible, book } = this.options
@@ -29,7 +26,7 @@ export class ApiBible {
         }
     }
 
-    async getText(chapter: string): Promise<Array<[paragraphId: string | number, text: string, prefix?: any, newlines?: number]>> {
+    async getText(chapter: string): Promise<Array<Chapter>> {
         const { bible, book } = this.options
 
         try {
@@ -43,11 +40,9 @@ export class ApiBible {
 
             return matches
             .map(match => {
-                const newlinesMatches = /\r|\n/.exec(match[2])
-                
                 const verse = parseInt(match[1])
                 const text = match[2].trim() 
-                return [verse, text, newlinesMatches?.length ?? 0]
+                return [verse, text]
             })
         }
         catch (exception) {
